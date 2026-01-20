@@ -1,0 +1,9 @@
+.dashboard {
+  display: flex;
+  height: calc(100vh - 80px);
+}
+
+.content {
+  flex: 1;
+  padding: 24px;
+}
