@@ -1,0 +1,89 @@
+<div class="certificate">
+
+  <div class="corner left-top"></div>
+  <div class="corner left-bottom"></div>
+  <div class="corner right-top"></div>
+  <!-- Background Shapes -->
+  <div class="bg-left"></div>
+  <div class="bg-corner right"></div>
+
+  <!-- Top Left Intern Logo -->
+  <div class="top-left-logo">
+    <img src="/images/logo.png" alt="Intern">
+  </div>
+
+  <!-- Top Center Logos -->
+  <div class="top-center-logos">
+    <img src="/images/tidco.png" alt="TIDCO">
+    <img src="/images/tansam.png" alt="TANSAM">
+    <img src="/images/siemens1.png" alt="Siemens">
+  </div>
+
+  <!-- Title -->
+  <h1>Internship Completion Certificate</h1>
+  <p class="presented">Presented to</p>
+
+  <!-- Editable Name -->
+  <h2 class="name">
+    <input
+      type="text"
+      [(ngModel)]="certificateData.name"
+      class="editable-text name-input">
+  </h2>
+
+  <!-- Content -->
+  <p class="content">
+    This is to certify that
+    <b>
+      <input type="text"
+             [(ngModel)]="certificateData.name"
+             class="editable-text inline">
+    </b>
+    of <b> <input type="text"
+             [(ngModel)]="certificateData.institution"
+             class="editable-text inline"></b>
+    pursuing Department of
+    <b>
+      <input type="text"
+             [(ngModel)]="certificateData.department"
+             class="editable-text inline">
+    </b>
+    has successfully completed the Internship Programme on
+    <b>
+      <input type="text"
+             [(ngModel)]="certificateData.programme"
+             class="editable-text programme-input">
+    </b>
+    in <b>TANSAM</b> during
+    <b>
+      <span class="date-range">
+        <input type="date"
+               [(ngModel)]="certificateData.startDate"
+               class="editable-date">
+        –
+        <input type="date"
+               [(ngModel)]="certificateData.endDate"
+               class="editable-date">
+      </span>
+    </b>.
+  </p>
+
+  <!-- Signature -->
+  <div class="signature-section">
+    <div class="signature-line"></div>
+    <p><b>Chief Executive Officer</b></p>
+    <p>TANSAM</p>
+  </div>
+
+  <!-- Certificate Number -->
+  <div class="certificate-number">
+    Certificate Number –
+    <input
+      type="text"
+      [(ngModel)]="certificateData.certificateNo"
+      class="editable-text small">
+  </div>
+
+</div> <!-- ✅ ONLY ONE closing .certificate -->
+
+

@@ -1,0 +1,77 @@
+<h2 class="title">Employee Attendance Sheet</h2>
+
+<div class="legend">
+  <span class="present">Y = Present</span>
+  <span class="absent">A = Absent</span>
+  <span class="holiday">H = Holiday</span>
+</div>
+
+<table class="attendance-table">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Employee</th>
+      <th>Programme</th>
+      <th *ngFor="let _ of employees[0].attendance; let i = index">
+        {{ formatDate(i) }}
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let emp of employees">
+
+      <!-- Type -->
+      <td>{{ emp.Type }}</td>
+
+      <!-- Employee -->
+      <td [class.special-name]="isIndustry(emp)">
+        {{ emp.name }}
+      </td>
+
+      <!-- Programme -->
+      <td>{{ emp.programme }}</td>
+
+      <!-- Attendance -->
+<td *ngFor="let day of emp.attendance; let i = index"
+    [ngClass]="{
+      holiday: isSunday(i) && !isEditable(i),
+      present: !isEditable(i) && emp.attendance[i] === 'Y',
+      absent: !isEditable(i) && emp.attendance[i] === 'A'
+    }">
+
+  <!-- Editable today -->
+  <input
+    *ngIf="isEditable(i)"
+    type="text"
+    maxlength="1"
+    [value]="emp.attendance[i]"
+    #att
+    (input)="updateAttendance(emp, i, att.value)"
+    [ngStyle]="{
+      'background-color': (emp.attendance[i].toUpperCase() === 'Y') ? 'blue' :
+                          (emp.attendance[i].toUpperCase() === 'A') ? 'lightcoral' : 'white',
+      color: (emp.attendance[i].toUpperCase() === 'Y' || emp.attendance[i].toUpperCase() === 'A') ? 'white' : 'black'
+    }"
+  />
+
+  <!-- Non-editable -->
+  <span *ngIf="!isEditable(i) && (isPast(i) || isToday(i))">
+    {{ emp.attendance[i] }}
+  </span>
+
+  <!-- Future Sunday -->
+  <span *ngIf="isFuture(i) && isSunday(i)">
+    H
+  </span>
+
+  <!-- Future working day -->
+  <span *ngIf="isFuture(i) && !isSunday(i)">
+    &nbsp;
+  </span>
+</td>
+
+
+    </tr>
+  </tbody>
+</table>

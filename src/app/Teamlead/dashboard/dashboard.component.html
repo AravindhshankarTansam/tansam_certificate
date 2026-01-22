@@ -1,0 +1,90 @@
+<div class="dashboard-container">
+  <h1>Team Lead Dashboard</h1>
+
+  <!-- NAVIGATION BUTTON -->
+  <div class="dashboard-nav">
+<button routerLink="/attendance" class="attendance-btn">
+  Attendance
+</button>
+
+  </div>
+
+  <!-- MONTH FILTER -->
+  <div class="month-filter">
+    <label for="monthSelect">Select Month:</label>
+    <select id="monthSelect" [(ngModel)]="selectedMonth" (change)="onMonthChange()">
+      <option *ngFor="let m of months" [value]="m">{{ m }}</option>
+    </select>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-cards">
+    <div class="card">
+      <h3>Total Employees</h3>
+      <p>{{ employees.length }}</p>
+    </div>
+    <div class="card">
+      <h3>Today Attendance</h3>
+      <p>{{ getTodayAttendanceCount() }}</p>
+    </div>
+    <div class="card">
+      <h3>Average Attendance %</h3>
+      <p>{{ getAverageAttendancePercentage() }}%</p>
+    </div>
+    <div class="card">
+      <h3>Certificates Generated</h3>
+      <p>{{ getCertificatesCount() }}</p>
+    </div>
+  </div>
+
+  <!-- PIE CHART -->
+  <div class="attendance-summary">
+    <h2>Overall Attendance</h2>
+    <div class="chart-wrapper">
+      <canvas #pieChart></canvas>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <h2>Employee Attendance</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Present</th>
+        <th>Total</th>
+        <th>Attendance %</th>
+        <th>Certification</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let emp of employees">
+        <td>{{ emp.name }}</td>
+        <td>{{ getAttendance(emp).present }}</td>
+        <td>{{ getAttendance(emp).total }}</td>
+        <td
+          [ngClass]="{
+            green: getAttendancePercentage(emp) >= 90,
+            red: getAttendancePercentage(emp) < 90
+          }"
+        >
+          {{ getAttendancePercentage(emp) }}%
+        </td>
+        <td>
+<button
+  [disabled]="getAttendancePercentage(emp) < 90"
+  routerLink="/certificate"
+>
+  Generate Certificate
+</button>
+
+
+          <span *ngIf="getAttendancePercentage(emp) < 90" class="not-eligible">
+            Not Eligible
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

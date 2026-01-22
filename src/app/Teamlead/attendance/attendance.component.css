@@ -1,0 +1,72 @@
+.attendance-table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+}
+
+.attendance-table th,
+.attendance-table td {
+  border: 1px solid #ccc;
+  padding: 6px;
+  min-width: 50px;
+  font-weight: bold;
+}
+
+/* Colored cells */
+.attendance-table td.present {
+  background-color: blue;
+  color: white;
+}
+
+.attendance-table td.absent {
+  background-color: lightcoral;
+  color: white;
+}
+
+.attendance-table td.holiday {
+  background-color: lightgray;
+  color: black;
+}
+
+/* Input styling for today (editable) */
+.attendance-table input {
+  width: 100%;
+  text-align: center;
+  border: none;
+  outline: none;
+  font-weight: bold;
+  background: transparent;
+  color: inherit;
+}
+
+/* Employee names from Industry */
+.special-name {
+  font-weight: bold;
+  color: #2a2a2a;
+}
+
+/* Legend styling */
+.legend {
+  margin-bottom: 10px;
+}
+
+.legend span {
+  display: inline-block;
+  padding: 4px 8px;
+  margin-right: 10px;
+  border-radius: 4px;
+  color: white;
+}
+
+.legend .present {
+  background-color: blue;
+}
+
+.legend .absent {
+  background-color: lightcoral;
+}
+
+.legend .holiday {
+  background-color: lightgray;
+  color: black;
+}
