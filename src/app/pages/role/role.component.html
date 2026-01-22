@@ -1,0 +1,25 @@
+<h2>Role Master</h2>
+
+<input
+  type="text"
+  [(ngModel)]="roleName"
+  placeholder="Enter role name"
+/>
+
+<button (click)="addRole()">Submit</button>
+
+<table *ngIf="roles.length > 0" border="1" cellpadding="6">
+  <tr>
+    <th>S.No</th>
+    <th>Role</th>
+    <th>Action</th>
+  </tr>
+
+  <tr *ngFor="let role of roles; let i = index">
+    <td>{{ i + 1 }}</td>
+    <td>{{ role }}</td>
+    <td>
+      <button (click)="deleteRole(i)">Delete</button>
+    </td>
+  </tr>
+</table>

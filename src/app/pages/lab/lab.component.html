@@ -1,0 +1,12 @@
+<h2>Lab Master</h2>
+
+<table>
+  <tr>
+    <th>S.No</th>
+    <th>Lab</th>
+  </tr>
+  <tr *ngFor="let l of labs; index as i">
+    <td>{{ i + 1 }}</td>
+    <td>{{ l }}</td>
+  </tr>
+</table>
