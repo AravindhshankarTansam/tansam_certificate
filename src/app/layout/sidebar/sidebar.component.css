@@ -1,0 +1,18 @@
+.sidebar {
+  width: 220px;
+  background: #1d2a7a;
+  color: white;
+  padding: 16px;
+}
+
+.menu-item,
+.submenu-item {
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.menu-item:hover,
+.submenu-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+}

@@ -1,0 +1,39 @@
+.header {
+  height: 100px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  height: 80px;
+  width: auto;
+}
+
+.title {
+  font-size: 25px;
+  font-weight: 600;
+  color: #1a237e;
+}
+
+.right-section {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+}
+
+.admin-text {
+  padding: 6px 14px;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+}
