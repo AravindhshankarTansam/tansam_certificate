@@ -10,6 +10,7 @@
   background: #ffffff;
   font-family: "Times New Roman", serif;
   overflow: hidden;
+  border: 10px solid #0b8f94;
 }
 
 /* =========================
@@ -29,62 +30,95 @@
 /* =========================
    LEFT BIG DIAGONAL STRIP
 ========================= */
-.bg-left {
-  position: absolute;
-  top: 0;
-  left: -160px;
-  width: 460px;
-  height: 100%;
-  background: linear-gradient(135deg, #0b8f94, #2fbcc0);
-  clip-path: polygon(0 0, 85% 0, 60% 100%, 0 100%);
-  z-index: 0;
-}
 
-.bg-left::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #2fbcc0, #b9f8fb);
-  opacity: 0.6;
-  clip-path: polygon(0 0, 75% 0, 50% 100%, 0 100%);
-}
 
 /* =========================
    TOP LEFT CORNER
 ========================= */
-.corner.left-top {
+.corner.left-top1 {
   position: absolute;
   top: 0;
   left: 0;
-  width: 280px;
-  height: 260px;
-  background: linear-gradient(135deg, #0b8f94, #2fbcc0);
+  width: 360px;
+  height: 500px;
+  background: #60edf2;
   clip-path: polygon(0 0, 100% 0, 0 100%);
   z-index: 1;
 }
 
+.corner.left-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 800px;
+  background: linear-gradient(135deg, #0b8f94, #2fbcc0);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  z-index: 1;
+}
+/* =========================
+   middle shape
+========================= */
+
+.middle-shape {
+    position: absolute;
+    top: 520px;        /* fine-tune vertically */
+    left: 0;           /* anchor to left edge */
+
+    width: 190px;
+    height: 240px;
+
+    background: #4FD0D0;
+
+    clip-path: polygon(0 0, 80% 0, 50% 100%, 0 100%);
+
+  transform: rotate(25deg) scale(1.5);
+   transform-origin: left center;
+
+    z-index: 1;
+}
+
+
 /* =========================
    TOP RIGHT FOLD
 ========================= */
-.corner.right-top {
+
+.corner.right-top::before {
+  content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 200px;
-  height: 200px;
-  background: linear-gradient(135deg, #2fbcc0, #0b8f94);
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  top: 20px;
+  right: 50px;     /* moved slightly left */
+  width: 300px;    /* increased width */
+  height: 220px;   /* increased height */
+  background:linear-gradient(135deg, #2fbcc0, #0b8f94);
+  clip-path: polygon(
+    100% 100%,  /* bottom-right */
+    88% 100%,   /* bottom-right inner */
+    88% 16%,    /* vertical leg */
+    22% 16%,    /* horizontal leg */
+    22% 0,      /* top-left inner */
+    100% 0      /* top-right corner */
+  );
   z-index: 1;
 }
-
 .corner.right-top::after {
   content: "";
   position: absolute;
-  inset: 26px;
-  background: rgba(255,255,255,0.25);
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
+  top: 70px;       /* inside the big L */
+  right: 100px;     /* adjust to fit */
+  width: 120px;    /* smaller width */
+  height: 80px;    /* smaller height */
+  background: linear-gradient(135deg, #67e1e5, #04878b); /* slightly different shade */
+  clip-path: polygon(
+    100% 100%,  
+    88% 100%,   
+    88% 16%,    
+    22% 16%,    
+    22% 0,      
+    100% 0      
+  );
+  z-index: 2;
 }
-
 /* =========================
    BOTTOM LEFT SHAPE
 ========================= */
@@ -92,26 +126,53 @@
   position: absolute;
   bottom: -40px;
   left: -60px;
-  width: 360px;
-  height: 320px;
+  width: 600px;
+  height: 500px;
   background: linear-gradient(135deg, #0b8f94, #2fbcc0);
   clip-path: polygon(0 100%, 0 0, 70% 100%);
   z-index: 1;
+  overflow: hidden;
 }
 
-/* =========================
-   BOTTOM RIGHT SOFT CUT
-========================= */
-.bg-corner.right {
+.corner.left-bottom::before {
+  content: "";
   position: absolute;
-  bottom: -90px;
-  right: -90px;
+  bottom: 70px;
+  left: 80px;
   width: 260px;
-  height: 260px;
-  background: rgba(120, 190, 190, 0.45);
-  clip-path: polygon(0 100%, 100% 100%, 100% 0);
-  z-index: 0;
+  height: 180px;
+  background: #aaf1f4;
+  clip-path: polygon(
+    0 0,
+    12% 0,
+    12% 84%,
+    78% 84%,
+    78% 100%,
+    0 100%
+  );
+  z-index: 1;
 }
+
+.corner.left-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 110px;   /* increased spacing from bottom */
+  left: 120px;    /* increased spacing from left */
+  width: 160px;   /* slightly smaller than before */
+  height: 116px;  /* 180 - 2*(22+10) */
+  background: #6fdde1;
+  clip-path: polygon(
+    0 0,
+    12% 0,
+    12% 84%,
+    78% 84%,
+    78% 100%,
+    0 100%
+  );
+  z-index: 2;
+}
+
+
 
 /* =========================
    CONTENT LAYER
@@ -159,14 +220,15 @@ h1,
 ========================= */
 h1 {
   text-align: center;
-  font-size: 36px;
-  margin-top: 90px;
+  font-size: 50px;          /* increased */
+  margin-top: 110px;        /* pushed down from top band */
 }
 
 .presented {
   text-align: center;
   font-style: italic;
-  margin-top: 10px;
+  margin-top: 30px;
+  font-size: 18px;
 }
 
 /* =========================
@@ -174,11 +236,12 @@ h1 {
 ========================= */
 .name {
   text-align: center;
-  margin: 25px 0;
+  margin: 22px 0; 
+  margin-top: 30px;          /* tightened */
 }
 
 .name-input {
-  font-size: 28px;
+  font-size: 32px;          /* increased */
   font-weight: bold;
 }
 
@@ -186,9 +249,13 @@ h1 {
    CONTENT
 ========================= */
 .content {
-  font-size: 18px;
-  line-height: 1.7;
+  margin-top: 50px;
+  padding-bottom: 0px;
+  font-size: 20px;          /* increased */
+  line-height: 1.6;         /* tighter */
   text-align: justify;
+  padding-left: 120px;      /* prevents left band overlap */
+  padding-right: 60px;
 }
 
 /* =========================
@@ -200,37 +267,47 @@ h1 {
   background: transparent;
   font-family: inherit;
   text-align: center;
+  font-size: 18px;          /* increased */
 }
 
-.editable-text.inline { width: 180px; }
-.programme-input { width: 320px; }
-.editable-text.small { width: 170px; font-size: 13px; }
+.editable-text.inline {
+  width: 200px;             /* increased */
+}
+
+.programme-input {
+  width: 360px;             /* increased */
+}
+
+.editable-text.small {
+  width: 190px;
+  font-size: 14px;
+}
 
 .editable-date {
   border: none;
   border-bottom: 1px solid #000;
   background: transparent;
-  width: 135px;
+  width: 150px;
   text-align: center;
+  font-size: 15px;
 }
-
-.date-range { white-space: nowrap; }
 
 /* =========================
    SIGNATURE
 ========================= */
 .signature-section {
   position: absolute;
-  bottom: 80px;
+  margin-top: 20px;
+  bottom: 140px;            /* moved closer to content */
   right: 80px;
   text-align: center;
 }
 
 .signature-line {
-  width: 220px;
+  width: 240px;             /* increased */
   height: 2px;
   background: #2fbcc0;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 /* =========================
@@ -238,7 +315,7 @@ h1 {
 ========================= */
 .certificate-number {
   position: absolute;
-  bottom: 30px;
+  bottom: 40px;
   right: 80px;
-  font-size: 13px;
+  font-size: 14px;
 }
