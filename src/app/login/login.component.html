@@ -1,0 +1,66 @@
+<div class="container">
+
+  <!-- LEFT SIDE -->
+  <div class="left">
+
+    <div class="overlay">
+      <!-- <h1>WELCOME BACK</h1> -->
+       <h1>Tansam Internship Certificate Management System</h1>
+    </div>
+
+  </div>
+
+
+  <!-- RIGHT SIDE -->
+  <div class="right">
+
+     <!-- NEW IMAGE -->
+<!-- <img src="./public/logo_img/tansamlogo.png" class="top-logo"> -->
+<img src="/logo_img/tansamlogo.png" class="top-logo">
+
+
+
+    <div class="card">
+
+      <h2>Login Account</h2>
+
+      <!-- Email -->
+      <input
+        type="email"
+        placeholder="Email ID"
+        [(ngModel)]="email"
+      />
+
+      <!-- Password -->
+      <input
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="password"
+      />
+
+      <!-- Captcha -->
+      <div class="captcha">
+        <span>{{ num1 }} + {{ num2 }} = ?</span>
+
+        <input
+          type="number"
+          inputmode="numeric"
+          placeholder="Answer"
+          [(ngModel)]="userAnswer"
+        />
+
+        <button type="button" (click)="generateCaptcha()" class="refresh">
+          ↻
+        </button>
+      </div>
+
+      <!-- Login Button -->
+      <button class="login-btn" (click)="login()" [disabled]="loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

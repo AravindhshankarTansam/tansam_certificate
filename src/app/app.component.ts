@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from './layout/header/header.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { RouterOutlet } from '@angular/router';
+import { ToastComponent } from './shared/toast/toast.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HeaderComponent, DashboardComponent],
+  imports: [RouterOutlet, ToastComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent {}
