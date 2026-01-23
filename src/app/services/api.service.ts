@@ -10,6 +10,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
+
   /* ========================
      AUTH
   ======================== */
@@ -21,5 +22,34 @@ export class ApiService {
       { withCredentials: true }
     );
   }
+
+
+  /* ========================
+     LABS (YOUR CUSTOM PATHS)
+  ======================== */
+
+getLabs() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/admin/master-table/labs/get`,
+    { withCredentials: true }
+  );
+}
+
+addLab(name: string) {
+  return this.http.post(
+    `${this.BASE_URL}/admin/master-table/labs/post`,
+    { name },
+    { withCredentials: true }
+  );
+}
+
+updateLab(id: number, name: string) {
+  return this.http.put(
+    `${this.BASE_URL}/admin/master-table/labs/update/${id}`,
+    { name },
+    { withCredentials: true }
+  );
+}
+
 
 }

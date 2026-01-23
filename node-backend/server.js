@@ -6,6 +6,8 @@ const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 
 const authRoutes = require('./routes/auth.routes');
+const labRoutes = require('./routes/admin/master-table/labs.routes');
+
 
 const app = express();
 
@@ -39,6 +41,8 @@ app.use(session({
 }));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/admin/master-table/labs', labRoutes);
+
 
 const PORT = process.env.PORT || 5055;
 
