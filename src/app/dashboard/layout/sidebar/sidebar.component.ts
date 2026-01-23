@@ -1,12 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+import { ROLE_MENUS, MenuItem } from './sidebar.config';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
 
+  menuItems: MenuItem[] = [];
+
+  ngOnInit(): void {
+    // 🔹 get role (change this later to AuthService if needed)
+    const role = localStorage.getItem('role') || 'ADMIN';
+
+    this.menuItems = ROLE_MENUS[role] || [];
+  }
+  
+  // 🔹 toggle dropdown open/close
+  toggle(item: any) {
+    item.open = !item.open;
+  }
 }

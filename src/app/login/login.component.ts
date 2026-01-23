@@ -71,23 +71,32 @@ export class LoginComponent {
         password: this.password,
       })
       .subscribe({
-        next: (res: any) => {
-          this.loading = false;
+next: (res: any) => {
+  this.loading = false;
 
-          this.toast.show('Login successful', 'success');
+  this.toast.show('Login successful', 'success');
 
-          // save role (optional but useful later)
-          localStorage.setItem('role', res.role);
+  // save role
+localStorage.setItem('role', res.role.toUpperCase());
 
-          // role based routing
-          if (res.role === 'Admin') {
-            this.router.navigate(['/dashboard/admin']);
-          } else if (res.role === 'User') {
-            this.router.navigate(['/dashboard/user']);
-          } else if (res.role === 'Manager') {
-            this.router.navigate(['/dashboard/manager']);
-          }
-        },
+  /* =========================
+     🔥 CONSOLE LOGS (ADD THIS)
+  ========================= */
+  console.log('========= LOGIN SUCCESS =========');
+  console.log('Email:', this.email);
+  console.log('Role:', res.role);
+  console.log('Full Response:', res);
+  console.log('================================');
+
+  // role based routing
+  if (res.role === 'Admin') {
+    this.router.navigate(['/dashboard/admin/dashboard']);
+  } else if (res.role === 'User') {
+    this.router.navigate(['/dashboard/user']);
+  } else if (res.role === 'Manager') {
+    this.router.navigate(['/dashboard/manager']);
+  }
+},
 
         error: () => {
           this.loading = false;

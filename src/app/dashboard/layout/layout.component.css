@@ -22,7 +22,6 @@ app-header {
 .content {
   margin-left: 260px;   /* same as sidebar width */
   margin-top: 60px;     /* same as header height */
-
   padding: 20px;
   height: calc(100vh - 60px);
   background: #f5f6fa;
