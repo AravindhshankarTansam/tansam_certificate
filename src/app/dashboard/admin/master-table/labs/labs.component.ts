@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../../../services/api.service';
+// import { ToastService } from '../../../../shared/toast/toast.service';
+import { ToastService } from '../../../../services/toast.service';
 
 @Component({
   selector: 'app-labs',
@@ -9,30 +12,55 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './labs.component.html',
   styleUrls: ['./labs.component.css']
 })
-export class LabsComponent {
+export class LabsComponent implements OnInit {
 
   showModal = false;
 
   labName = '';
 
-  labs: string[] = [];
+  labs: any[] = [];
 
-  editingIndex: number | null = null; // ⭐ track edit
+  editingLab: any = null;
+
+
+  constructor(
+    private api: ApiService,
+    private toast: ToastService
+  ) {}
+
+
+  /* ================= LOAD ON PAGE ================= */
+  ngOnInit() {
+    this.loadLabs();
+  }
+
+
+  /* ================= FETCH FROM API ================= */
+  loadLabs() {
+    this.api.getLabs().subscribe({
+      next: (res: any) => {
+        this.labs = res;
+      },
+      error: () => {
+        this.toast.show('Failed to load labs ', 'error');
+      }
+    });
+  }
 
 
   /* ================= OPEN ADD ================= */
   openModal() {
     this.showModal = true;
-    this.editingIndex = null;
     this.labName = '';
+    this.editingLab = null;
   }
 
 
   /* ================= OPEN EDIT ================= */
-  editLab(index: number) {
+  editLab(lab: any) {
     this.showModal = true;
-    this.editingIndex = index;
-    this.labName = this.labs[index]; // pre-fill input
+    this.labName = lab.name;
+    this.editingLab = lab;
   }
 
 
@@ -40,22 +68,44 @@ export class LabsComponent {
   closeModal() {
     this.showModal = false;
     this.labName = '';
-    this.editingIndex = null;
+    this.editingLab = null;
   }
 
 
   /* ================= SAVE / UPDATE ================= */
   saveLab() {
 
-    if (!this.labName.trim()) return;
-
-    // edit mode
-    if (this.editingIndex !== null) {
-      this.labs[this.editingIndex] = this.labName.trim();
+    if (!this.labName.trim()) {
+      this.toast.show('Lab name required', 'info');
+      return;
     }
-    // add mode
+
+    // UPDATE
+    if (this.editingLab) {
+      this.api.updateLab(this.editingLab.id, this.labName)
+        .subscribe({
+          next: () => {
+            this.toast.show('Lab updated successfully', 'success');
+            this.loadLabs();
+          },
+          error: () => {
+            this.toast.show('Update failed', 'error');
+          }
+        });
+    }
+
+    // ADD
     else {
-      this.labs.push(this.labName.trim());
+      this.api.addLab(this.labName)
+        .subscribe({
+          next: () => {
+            this.toast.show('Lab added successfully', 'success');
+            this.loadLabs();
+          },
+          error: () => {
+            this.toast.show('Add failed', 'error');
+          }
+        });
     }
 
     this.closeModal();
