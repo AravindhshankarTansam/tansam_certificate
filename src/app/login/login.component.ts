@@ -2,16 +2,16 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../services/api.service';
 import { ToastService } from '../services/toast.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-
   email = '';
   password = '';
 
@@ -25,7 +25,8 @@ export class LoginComponent {
 
   constructor(
     private api: ApiService,
-    private toast: ToastService   // ⭐ added toast
+    private toast: ToastService,
+    private router: Router,
   ) {
     this.generateCaptcha();
   }
@@ -41,45 +42,58 @@ export class LoginComponent {
     this.userAnswer = null;
   }
 
-  /* =========================
-     LOGIN
-  ========================= */
   login() {
+    /* =========================
+     1️⃣ EMPTY FIELD CHECK FIRST
+  ========================= */
+    if (!this.email || !this.password) {
+      this.toast.show('Please enter email and password', 'info');
+      return;
+    }
 
-    /* captcha check */
+    /* =========================
+     2️⃣ CAPTCHA CHECK
+  ========================= */
     if (this.userAnswer !== this.captchaAnswer) {
-      this.toast.show('Captcha incorrect ❌', 'error');
+      this.toast.show('Captcha incorrect', 'error');
       this.generateCaptcha();
       return;
     }
 
+    /* =========================
+     3️⃣ API LOGIN
+  ========================= */
     this.loading = true;
 
-    this.api.login({
-      email: this.email,
-      password: this.password
-    }).subscribe({
+    this.api
+      .login({
+        email: this.email,
+        password: this.password,
+      })
+      .subscribe({
+        next: (res: any) => {
+          this.loading = false;
 
-      next: (res: any) => {
+          this.toast.show('Login successful', 'success');
 
-        this.loading = false;
+          // save role (optional but useful later)
+          localStorage.setItem('role', res.role);
 
-        if (res.role === 'Admin') {
+          // role based routing
+          if (res.role === 'Admin') {
+            this.router.navigate(['/dashboard/admin']);
+          } else if (res.role === 'User') {
+            this.router.navigate(['/dashboard/user']);
+          } else if (res.role === 'Manager') {
+            this.router.navigate(['/dashboard/manager']);
+          }
+        },
 
-          this.toast.show('Login successful ✅', 'success');
-
-          // small delay so user sees toast
-          setTimeout(() => {
-            window.location.href = 'https://tansam.org';
-          }, 800);
-        }
-      },
-
-      error: () => {
-        this.loading = false;
-        this.toast.show('Invalid credentials ❌', 'error');
-        this.generateCaptcha();
-      }
-    });
+        error: () => {
+          this.loading = false;
+          this.toast.show('Invalid credentials ❌', 'error');
+          this.generateCaptcha();
+        },
+      });
   }
 }

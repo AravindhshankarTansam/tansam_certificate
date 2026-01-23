@@ -1,80 +1,31 @@
-/* FULL PAGE */
 .container {
-  height: 100vh;
-  display: flex;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #009999 0%, #00c6c6 100%);
-}
-
-
-/* ================= LEFT SIDE ================= */
-.left {
-  flex: 1.5;
-  position: relative;
-
-  /* logo smaller + classy */
-  /* background: url('../../assets/logo_img/tansamlogo1.png') center 35% no-repeat; */
-  background: url('./../../../public/logo_img/tansamlogo1.png') center 35% no-repeat;
-  background-size: 55%;
-
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: url('/images/background.png') center center no-repeat;
+  background-size: cover;
   overflow: hidden;
+  font-family: 'Nunito Sans', sans-serif;
 }
 
-/* soft glowing overlay */
-.overlay {
-  width: 100%;
-  height: 100%;
 
-  background: linear-gradient(
-    to bottom right,
-    rgba(255,255,255,0.15),
-    rgba(255,255,255,0.05)
-  );
 
-  backdrop-filter: blur(8px);
-
+/* CENTER COLUMN */
+.center-box {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-
+  gap: 20px;
   text-align: center;
-  padding: 60px;
-  color: white;
-}
-
-/* title */
-.overlay h1 {
-  font-size: 42px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  line-height: 1.3;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.25);
-}
-
-
-/* ================= RIGHT SIDE ================= */
-.right {
-  flex: 1;
-  display: flex;
-  flex-direction: column; /* stack image + card */
-  justify-content: center;
-  align-items: center;
-  gap: 25px; /* space between image & card */
-  background: #f7fafa;
 }
 
 /* top image */
 .top-logo {
-  width: 120px;   /* adjust size */
+  width: 150px;   /* adjust size */
   height: auto;
   object-fit: contain;
-
   filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
-
   animation: float 3s ease-in-out infinite;
 }
 
@@ -83,11 +34,33 @@
   50% { transform: translateY(-6px); }
 }
 
+.title {
+  color: #009999;
+
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1.4;
+
+  padding: 14px 28px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.25); /* glass */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+
+  text-align: center;
+}
+
+
 
 /* ================= CARD (Glass effect) ================= */
 .card {
-  width: 400px;
-  padding: 40px;
+  width: 420px;
+  padding: 30px;
   border-radius: 20px;
 
   background: rgba(255,255,255,0.85);
