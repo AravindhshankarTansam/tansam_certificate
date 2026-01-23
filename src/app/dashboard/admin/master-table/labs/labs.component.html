@@ -1,0 +1,76 @@
+<div class="labs-container">
+
+  <!-- Header -->
+  <div class="header">
+    <h2>Labs</h2>
+
+    <button class="add-btn" (click)="openModal()">
+      + Add Lab
+    </button>
+  </div>
+
+
+  <!-- ================= TABLE ================= -->
+
+  <div class="table-wrapper">
+
+    <table *ngIf="labs.length > 0" class="lab-table">
+
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Lab Name</th>
+          <th style="width:120px">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let lab of labs; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ lab }}</td>
+          <td>
+            <button class="edit-btn" (click)="editLab(i)">
+              Edit
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+
+    <div *ngIf="labs.length === 0" class="empty">
+      No labs added yet
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ================= MODAL ================= -->
+
+<div class="modal-backdrop" *ngIf="showModal">
+
+  <div class="modal">
+
+    <h3>
+      {{ editingIndex !== null ? 'Edit Lab' : 'Add Lab' }}
+    </h3>
+
+    <input
+      type="text"
+      [(ngModel)]="labName"
+      placeholder="Enter lab name"
+    />
+
+    <div class="actions">
+      <button class="cancel" (click)="closeModal()">Cancel</button>
+      <button class="save" (click)="saveLab()">
+        {{ editingIndex !== null ? 'Update' : 'Save' }}
+      </button>
+    </div>
+
+  </div>
+
+</div>

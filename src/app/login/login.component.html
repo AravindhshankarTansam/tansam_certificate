@@ -1,0 +1,45 @@
+<div class="container">
+
+  <div class="center-box">
+
+    <!-- Top Logo -->
+    <img src="/logo_img/tansamlogo.png" class="top-logo" />
+
+    <!-- Title -->
+    <h1 class="title">
+      Tansam Internship Certificate Management System
+    </h1>
+
+    <!-- Login Card -->
+    <div class="card">
+
+      <h2>Login Account</h2>
+
+      <input type="email" placeholder="Email ID" [(ngModel)]="email" />
+
+      <input type="password" placeholder="Password" [(ngModel)]="password" />
+
+      <div class="captcha">
+        <span>{{ num1 }} + {{ num2 }} = ?</span>
+
+        <input
+          type="number"
+          inputmode="numeric"
+          placeholder="Answer"
+          [(ngModel)]="userAnswer"
+        />
+
+        <button type="button" (click)="generateCaptcha()" class="refresh">
+          ↻
+        </button>
+      </div>
+
+      <button class="login-btn" (click)="login()" [disabled]="loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,83 @@
+<div class="sidebar-wrapper">
+
+  <!-- Logo -->
+  <div class="logo">
+    <img src="/logo_img/tansamlogo.png" class="top-logo" />
+    <p class="simple-text">
+      Internship Certificate Management System
+    </p>
+  </div>
+
+  <div class="sidebar-divider"></div>
+
+  <ul class="nav">
+
+    <ng-container *ngFor="let item of menuItems">
+
+      <!-- ================= NORMAL LINK ================= -->
+      <li *ngIf="!item.children" class="nav-item">
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          {{ item.label }}
+        </a>
+      </li>
+
+
+      <!-- ================= DROPDOWN ================= -->
+      <li *ngIf="item.children" class="nav-item">
+
+        <!-- parent title -->
+        <div class="nav-link dropdown-title" (click)="toggle(item)">
+          {{ item.label }}
+          <span class="arrow">
+            {{ item.open ? '▲' : '▼' }}
+          </span>
+        </div>
+
+        <!-- submenu -->
+        <ul *ngIf="item.open" class="submenu">
+
+          <ng-container *ngFor="let child of item.children">
+
+            <!-- child normal link -->
+            <li *ngIf="!child.children">
+              <a [routerLink]="child.route" routerLinkActive="active">
+                {{ child.label }}
+              </a>
+            </li>
+
+
+            <!-- nested dropdown -->
+            <li *ngIf="child.children">
+
+              <div class="dropdown-title" (click)="toggle(child)">
+                {{ child.label }}
+                <span class="arrow">
+                  {{ child.open ? '▲' : '▼' }}
+                </span>
+              </div>
+
+              <ul *ngIf="child.open" class="submenu nested">
+                <li *ngFor="let sub of child.children">
+                  <a [routerLink]="sub.route" routerLinkActive="active">
+                    {{ sub.label }}
+                  </a>
+                </li>
+              </ul>
+
+            </li>
+
+          </ng-container>
+
+        </ul>
+
+      </li>
+
+    </ng-container>
+
+  </ul>
+
+</div>

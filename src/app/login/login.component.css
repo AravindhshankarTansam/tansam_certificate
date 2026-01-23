@@ -1,0 +1,177 @@
+.container {
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('/images/background.png') center center no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+
+
+/* CENTER COLUMN */
+.center-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+/* top image */
+.top-logo {
+  width: 150px;   /* adjust size */
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.title {
+  color: #009999;
+
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1.4;
+
+  padding: 14px 28px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.25); /* glass */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+
+  text-align: center;
+}
+
+
+
+/* ================= CARD (Glass effect) ================= */
+.card {
+  width: 420px;
+  padding: 30px;
+  border-radius: 20px;
+
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.08),
+    0 2px 8px rgba(0,0,0,0.05);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+
+/* heading */
+.card h2 {
+  text-align: center;
+  color: #009999;
+  font-weight: 700;
+  font-variant: small-caps;
+}
+
+
+/* ================= INPUTS ================= */
+input {
+  padding: 13px 14px;
+  border-radius: 10px;
+  border: 1px solid #e6e6e6;
+  font-size: 14px;
+
+  background: #fafafa;
+  transition: 0.25s;
+}
+
+input:focus {
+  background: white;
+  border-color: #00b3b3;
+  box-shadow: 0 0 0 3px rgba(0,153,153,0.15);
+  outline: none;
+}
+
+
+/* ================= CAPTCHA ================= */
+.captcha {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.captcha input {
+  width: 60px;
+  text-align: center;
+}
+/* Chrome, Edge, Safari */
+.captcha input::-webkit-outer-spin-button,
+.captcha input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.captcha input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+/* ================= LOGIN BUTTON ================= */
+.login-btn {
+  background: linear-gradient(135deg, #009999, #00c6c6);
+  color: white;
+
+  padding: 13px;
+  border-radius: 30px;
+  border: none;
+
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,153,153,0.35);
+}
+
+.login-btn:disabled {
+  background: gray;
+}
+
+
+/* refresh button */
+.refresh {
+  padding: 7px 11px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #eee;
+  transition: 0.2s;
+}
+
+.refresh:hover {
+  background: #ddd;
+}

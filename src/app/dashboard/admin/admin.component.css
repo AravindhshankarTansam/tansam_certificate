@@ -1,0 +1,81 @@
+/* Layout Containers */
+.dashboard-container {
+  padding: 20px;
+}
+
+.stats-row, .visual-row, .bottom-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.stats-row > div, .visual-row > div {
+  flex: 1;
+  min-width: 240px;
+}
+
+.bottom-row > div {
+  flex: 1;
+  min-width: 450px;
+}
+
+/* Common Card Base */
+.card-mini, .card-main, .card-table {
+  background: white;
+  border-radius: 6px;
+  position: relative;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* Floating Header Logic */
+.mini-header, .visual-header, .table-header {
+  position: absolute;
+  top: -20px;
+  left: 15px;
+  border-radius: 3px;
+  padding: 15px;
+  box-shadow: 0 4px 20px 0 rgba(0,0,0,0.14), 0 7px 10px -5px rgba(0,0,0,0.4);
+}
+
+/* Mini Stats Specifics */
+.card-mini { height: 110px; padding: 15px; margin-top: 20px;}
+.mini-header { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; color: white; }
+.mini-content { text-align: right; }
+.mini-content .label { color: #999; font-size: 14px; }
+.mini-content .value { margin: 5px 0 0; font-weight: 300; }
+.mini-footer { border-top: 1px solid #eee; margin-top: 25px; padding-top: 10px; font-size: 12px; color: #999; }
+
+/* Visual/Chart Card Specifics */
+.card-main { margin-top: 30px; }
+.visual-header {
+  right: 15px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+.card-body { padding: 160px 20px 10px 20px; } /* Space for absolute header */
+.card-body h4 { margin: 0; font-weight: 300; }
+.card-body p { color: #999; font-size: 14px; }
+
+/* Table Header Specifics */
+.table-header { right: 15px; color: white; }
+.card-table .card-body { padding: 60px 20px 20px 20px; }
+
+/* Color Palette */
+.orange { background: #ffa726; }
+.green { background: #66bb6a; }
+.red { background: #ef5350; }
+.blue { background: #26c6da; }
+
+.green-grad { background: linear-gradient(60deg, #66bb6a, #43a047); }
+.orange-grad { background: linear-gradient(60deg, #ffa726, #fb8c00); }
+.red-grad { background: linear-gradient(60deg, #ef5350, #e53935); }
+.purple { background: linear-gradient(60deg, #ab47bc, #8e24aa); }
+.yellow { background: linear-gradient(60deg, #ffa726, #fb8c00); }
+
+/* Text Helpers */
+.warning-text { color: #f44336; }
+.success-text { color: #4caf50; }
