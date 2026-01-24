@@ -174,4 +174,37 @@ export class ApiService {
     );
   }
 
+  /* ================= SDP (SUB ADMIN) ================= */
+
+getSDP() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/subadmin/sdp/get`,
+    { withCredentials: true }
+  );
+}
+
+addSDP(data: any) {
+  return this.http.post(
+    `${this.BASE_URL}/subadmin/sdp/post`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+updateSDP(id: number, data: any) {
+  return this.http.put(
+    `${this.BASE_URL}/subadmin/sdp/update/${id}`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+deleteSDP(id: number) {
+  return this.http.delete(
+    `${this.BASE_URL}/subadmin/sdp/delete/${id}`,
+    { withCredentials: true }
+  );
+}
+
+
 }

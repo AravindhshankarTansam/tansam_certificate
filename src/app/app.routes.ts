@@ -8,6 +8,12 @@ import { AddLeadsComponent } from './dashboard/admin/master-table/add-leads/add-
 import { CertificateSignatureComponent } from './dashboard/admin/master-table/certificate-signature/certificate-signature.component';
 import { RolesComponent } from './dashboard/admin/master-table/roles/roles.component';
 import { SubAdminComponent } from './dashboard/sub-admin/sub-admin.component';
+import { SdpComponent } from './dashboard/sub-admin/program-intern/sdp/sdp.component';
+import { FdpComponent } from './dashboard/sub-admin/program-intern/fdp/fdp.component';
+import { IndustryComponent } from './dashboard/sub-admin/program-intern/industry/industry.component';
+import { BulkUploadComponent } from './dashboard/sub-admin/bulk-upload/bulk-upload.component';
+import { ReportsComponent } from './dashboard/sub-admin/reports/reports.component';
+
 
 
 export const routes: Routes = [
@@ -27,7 +33,14 @@ export const routes: Routes = [
       { path: 'admin/roles', component: RolesComponent },
 
       // Sub Admin Routes
-      { path: 'sub-admin/dashboard', component: SubAdminComponent }
+      { path: 'sub-admin/dashboard', component: SubAdminComponent },
+      { path: 'sub-admin/sdp', component: SdpComponent },
+      { path: 'sub-admin/fdp', component: FdpComponent },
+      { path: 'sub-admin/industry', component: IndustryComponent },
+      { path: 'sub-admin/bulk-upload', component: BulkUploadComponent },
+      { path: 'sub-admin/reports', component: ReportsComponent}
+      // ... more routes can be added here ...
+
     ]
   },
 

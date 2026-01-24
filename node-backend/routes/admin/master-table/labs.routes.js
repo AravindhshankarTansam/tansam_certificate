@@ -5,11 +5,11 @@ const labsController = require('../../../controllers/adminController/master-tabl
 
 const { isAuth } = require('../../../middleware/auth.middleware');
 const { isAdmin } = require('../../../middleware/role.middleware');
-
+const { isSubAdmin } = require('../../../middleware/role.middleware');
 
 /* ================= ROUTES ================= */
 
-router.get('/get', isAuth, isAdmin, labsController.getLabs);
+router.get('/get', isAuth, isSubAdmin, labsController.getLabs);
 
 router.post('/post', isAuth, isAdmin, labsController.addLab);
 

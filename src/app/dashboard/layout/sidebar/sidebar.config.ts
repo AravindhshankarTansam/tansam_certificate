@@ -41,7 +41,8 @@ SUB_ADMIN: [
     ]
   },
 
-  { label: 'Bulk Upload', route: '/dashboard/sub-admin/bulk-upload' }
+  { label: 'Bulk Upload', route: '/dashboard/sub-admin/bulk-upload' },
+  { label: 'Reports', route: '/dashboard/sub-admin/reports' }
 ],
 
   // ================= TEAM LEAD =================
