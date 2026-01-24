@@ -1,1 +1,95 @@
-<p>add-user works!</p>
+<div class="leads-container">
+
+  <div class="header">
+    <h2>Users</h2>
+
+    <button class="add-btn" (click)="openModal()">
+      <i class="fa-solid fa-plus"></i> Add User
+    </button>
+  </div>
+
+
+  <div class="table-wrapper">
+    <table class="lead-table">
+
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Mobile</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+
+      <tbody>
+        <tr *ngFor="let u of users; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{u.name}}</td>
+          <td>{{u.email}}</td>
+          <td>{{u.mobile}}</td>
+          <td>{{u.role_name}}</td>
+
+          <td>
+            <span [class.active]="u.is_active" [class.inactive]="!u.is_active">
+              {{u.is_active?'Active':'Inactive'}}
+            </span>
+          </td>
+
+          <td>
+            <button class="edit-btn" (click)="openModal(u)">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+</div>
+
+
+<!-- MODAL -->
+<div class="modal-backdrop" *ngIf="showModal">
+  <div class="modal">
+
+    <input [(ngModel)]="form.name" placeholder="Name">
+    <input [(ngModel)]="form.email" placeholder="Email">
+    <input [(ngModel)]="form.mobile" placeholder="Mobile">
+
+    <!-- PASSWORD -->
+    <div class="password-wrapper">
+      <input [type]="showPassword?'text':'password'"
+             [(ngModel)]="form.password"
+             placeholder="Password">
+
+      <i class="fa-solid"
+         [class.fa-eye]="!showPassword"
+         [class.fa-eye-slash]="showPassword"
+         (click)="showPassword=!showPassword"></i>
+    </div>
+
+    <!-- ROLE -->
+    <select [(ngModel)]="form.role_id">
+      <option value="">Select Role</option>
+      <option *ngFor="let r of roles" [value]="r.id">{{r.name}}</option>
+    </select>
+
+    <!-- TOGGLE -->
+    <label class="switch">
+      <input type="checkbox" [(ngModel)]="form.is_active">
+      <span class="slider">
+        <span class="toggle-text">{{form.is_active?'Active':'Inactive'}}</span>
+      </span>
+    </label>
+
+    <div class="actions-btn">
+      <button class="cancel" (click)="close()">Cancel</button>
+      <button class="save" (click)="save()">Save</button>
+    </div>
+
+  </div>
+</div>

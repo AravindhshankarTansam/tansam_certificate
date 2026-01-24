@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
 
-/* ================= ROOT ================= */
+/* ================= ROOT VARIABLES ================= */
 :root {
   --glass-bg: rgba(255,255,255,0.1);
   --glass-border: rgba(255,255,255,0.2);
   --glass-blur: blur(20px);
+
   --lab-blue: #00d4ff;
   --lab-green: #00ff88;
-  --lab-purple: #8b5cf6;
+
   --shadow-glow: 0 8px 32px rgba(0,212,255,0.3);
 }
 
@@ -31,10 +32,11 @@
 
 .header h2 {
   margin: 0;
-  font-size: 1.9rem;
+  font-size: 2rem;
   font-weight: 700;
 
   background: linear-gradient(135deg, var(--lab-blue), var(--lab-green));
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -45,8 +47,11 @@
   background: #009999;
   color: white;
   border: none;
+
   padding: 12px 22px;
   border-radius: 14px;
+
+  font-weight: 600;
   cursor: pointer;
 
   display: flex;
@@ -59,6 +64,7 @@
 
 .add-btn:hover {
   transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,212,255,0.45);
 }
 
 
@@ -79,23 +85,26 @@
 }
 
 .lead-table thead {
-  background: linear-gradient(135deg,
-      rgba(0,212,255,0.2),
-      rgba(0,255,136,0.2));
+  background: linear-gradient(
+    135deg,
+    rgba(0,212,255,0.2),
+    rgba(0,255,136,0.2)
+  );
 }
 
 .lead-table th {
   padding: 16px;
   text-align: left;
-  color: #00d4ff;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
   text-transform: uppercase;
+  color: var(--lab-blue);
 }
 
 .lead-table td {
   padding: 14px 16px;
+  color: #009999;
   border-bottom: 1px solid rgba(255,255,255,0.08);
-  color: #d1f7ff;
 }
 
 .lead-table tbody tr:hover {
@@ -103,52 +112,56 @@
 }
 
 
-/* ================= IMAGE PREVIEW ================= */
-.lead-table img {
-  height: 40px;
-  border-radius: 6px;
-  border: 1px solid var(--glass-border);
-  background: white;
-  padding: 3px;
+/* ================= ACTION BUTTONS ================= */
+.actions {
+  display: flex;
+  gap: 10px;
 }
 
-
-/* ================= STATUS BADGES ================= */
-.active,
-.inactive {
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.active {
-  background: rgba(0,255,136,0.2);
-  color: var(--lab-green);
-}
-
-.inactive {
-  background: rgba(239,68,68,0.2);
-  color: #ef4444;
-}
-
-
-/* ================= ACTION BUTTON ================= */
-.edit-btn {
+.edit-btn,
+.delete-btn {
   width: 36px;
   height: 36px;
+
   border-radius: 10px;
   border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   cursor: pointer;
-
-  background: rgba(0,212,255,0.2);
-  color: #00d4ff;
-
   transition: 0.25s;
+}
+
+/* edit */
+.edit-btn {
+  background: rgba(59,130,246,0.25);
+  color: #60a5fa;
 }
 
 .edit-btn:hover {
   transform: scale(1.1);
+  background: rgba(59,130,246,0.4);
+}
+
+/* delete */
+.delete-btn {
+  background: rgba(239,68,68,0.25);
+  color: #f87171;
+}
+
+.delete-btn:hover {
+  transform: scale(1.1);
+  background: rgba(239,68,68,0.4);
+}
+
+
+/* ================= EMPTY ================= */
+.empty {
+  text-align: center;
+  padding: 30px;
+  color: rgba(255,255,255,0.6);
 }
 
 
@@ -177,7 +190,7 @@
   border-radius: 20px;
 
   padding: 28px;
-  width: 360px;
+  width: 350px;
 
   display: flex;
   flex-direction: column;
@@ -186,8 +199,14 @@
   box-shadow: var(--shadow-glow);
 }
 
+.modal h3 {
+  margin: 0;
+  text-align: center;
+  color: white;
+}
 
-/* ================= INPUTS ================= */
+
+/* ================= INPUT ================= */
 .modal input {
   padding: 12px 14px;
   border-radius: 12px;
@@ -205,81 +224,11 @@
 .modal input:focus {
   outline: none;
   border-color: var(--lab-blue);
-  box-shadow: 0 0 0 2px rgba(0,212,255,0.3);
+  box-shadow: 0 0 0 2px rgba(0,212,255,0.25);
 }
 
 
-/* ================= FILE INPUT ================= */
-.modal input[type="file"] {
-  background: transparent;
-  color: white;
-  border: none;
-}
-
-.modal input[type="file"]::-webkit-file-upload-button {
-  background: var(--lab-blue);
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-
-/* ================= TOGGLE ================= */
-.switch {
-  position: relative;
-  width: 110px;
-  height: 32px;
-}
-
-.switch input {
-  display: none;
-}
-
-.slider {
-  position: absolute;
-  inset: 0;
-
-  border-radius: 20px;
-  background: rgba(239,68,68,0.3);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.slider::before {
-  content: '';
-  position: absolute;
-
-  width: 24px;
-  height: 24px;
-
-  top: 4px;
-  left: 4px;
-
-  border-radius: 50%;
-  background: white;
-
-  transition: .3s;
-}
-
-.toggle-text {
-  font-size: 12px;
-  font-weight: 600;
-}
-
-input:checked + .slider {
-  background: rgba(0,255,136,0.3);
-}
-
-input:checked + .slider::before {
-  transform: translateX(74px);
-}
-
-
-/* ================= MODAL BUTTONS ================= */
+/* ================= BUTTONS ================= */
 .actions-btn {
   display: flex;
   justify-content: flex-end;
@@ -292,6 +241,7 @@ input:checked + .slider::before {
   padding: 8px 16px;
   border-radius: 10px;
   color: white;
+  cursor: pointer;
 }
 
 .cancel {
@@ -300,6 +250,7 @@ input:checked + .slider::before {
   padding: 8px 16px;
   border-radius: 10px;
   color: white;
+  cursor: pointer;
 }
 
 
@@ -308,4 +259,9 @@ input:checked + .slider::before {
   .modal {
     width: 90%;
   }
+}
+.lead-table th:first-child,
+.lead-table td:first-child {
+  width: 50px;
+  text-align: center;
 }

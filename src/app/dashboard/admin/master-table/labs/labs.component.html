@@ -27,10 +27,10 @@
       <tbody>
         <tr *ngFor="let lab of labs; let i = index">
           <td>{{ i + 1 }}</td>
-          <td>{{ lab.name }}</td>   <!-- ⭐ FIXED -->
+          <td>{{ lab.name }}</td>
           <td>
-            <button class="edit-btn" (click)="editLab(lab)"> <!-- ⭐ FIXED -->
-              Edit
+            <button class="edit-btn" (click)="editLab(lab)">
+              <i class="fa-solid fa-pen-to-square"></i>
             </button>
           </td>
         </tr>
@@ -55,7 +55,7 @@
   <div class="modal">
 
     <h3>
-      {{ editingLab ? 'Edit Lab' : 'Add Lab' }}  <!-- ⭐ FIXED -->
+      {{ editingLab ? 'Edit Lab' : 'Add Lab' }}
     </h3>
 
     <input
@@ -67,7 +67,7 @@
     <div class="actions">
       <button class="cancel" (click)="closeModal()">Cancel</button>
       <button class="save" (click)="saveLab()">
-        {{ editingLab ? 'Update' : 'Save' }} <!-- ⭐ FIXED -->
+        {{ editingLab ? 'Update' : 'Save' }}
       </button>
     </div>
 

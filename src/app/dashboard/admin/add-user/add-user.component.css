@@ -1,0 +1,356 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
+
+/* =================================================
+   ROOT VARIABLES
+================================================= */
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-blur: blur(20px);
+
+  --lab-blue: #00d4ff;
+  --lab-green: #00ff88;
+
+  --shadow-glow: 0 8px 32px rgba(0, 212, 255, 0.3);
+}
+
+
+/* =================================================
+   PAGE CONTAINER
+================================================= */
+.leads-container {
+  padding: 30px;
+  font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+}
+
+
+/* =================================================
+   HEADER
+================================================= */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+
+  background: linear-gradient(135deg, var(--lab-blue), var(--lab-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* =================================================
+   ADD BUTTON
+================================================= */
+.add-btn {
+  background: #009999;
+  color: white;
+
+  border: none;
+  padding: 12px 22px;
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  box-shadow: var(--shadow-glow);
+  transition: 0.3s;
+}
+
+.add-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0,212,255,0.45);
+}
+
+
+/* =================================================
+   TABLE WRAPPER
+================================================= */
+.table-wrapper {
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow-glow);
+}
+
+
+/* =================================================
+   TABLE
+================================================= */
+.lead-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.lead-table thead {
+  background: linear-gradient(
+    135deg,
+    rgba(0,212,255,0.2),
+    rgba(0,255,136,0.2)
+  );
+}
+
+.lead-table th {
+  text-align: left;
+  padding: 16px;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--lab-blue);
+}
+
+.lead-table td {
+  padding: 14px 16px;
+  color: #e0f7ff;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.lead-table tbody tr:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+
+/* =================================================
+   STATUS BADGES
+================================================= */
+.active,
+.inactive {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.active {
+  background: rgba(0,255,136,0.2);
+  color: var(--lab-green);
+}
+
+.inactive {
+  background: rgba(239,68,68,0.2);
+  color: #ef4444;
+}
+
+
+/* =================================================
+   ACTION BUTTONS
+================================================= */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+
+  background: rgba(59,130,246,0.25);
+  color: #60a5fa;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.edit-btn:hover {
+  transform: scale(1.1);
+  background: rgba(59,130,246,0.4);
+}
+
+
+/* =================================================
+   MODAL BACKDROP
+================================================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(10px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+}
+
+
+/* =================================================
+   MODAL
+================================================= */
+.modal {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+
+  padding: 28px;
+  width: 360px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  box-shadow: var(--shadow-glow);
+}
+
+
+/* =================================================
+   INPUTS
+================================================= */
+.modal input,
+.modal select {
+  padding: 12px 14px;
+
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+
+  background: rgba(255,255,255,0.1);
+  color: white;
+
+  font-size: 14px;
+}
+
+.modal input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: var(--lab-blue);
+  box-shadow: 0 0 0 2px rgba(0,212,255,0.25);
+}
+
+
+/* =================================================
+   PASSWORD FIELD
+================================================= */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+}
+
+.password-wrapper i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: white;
+}
+
+
+/* =================================================
+   TOGGLE SWITCH
+================================================= */
+.switch {
+  position: relative;
+  width: 110px;
+  height: 32px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 20px;
+  background: rgba(239,68,68,0.25);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.slider::before {
+  content: '';
+  position: absolute;
+
+  width: 22px;
+  height: 22px;
+
+  left: 4px;
+  top: 5px;
+
+  border-radius: 50%;
+  background: white;
+
+  transition: 0.3s;
+}
+
+.toggle-text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+input:checked + .slider {
+  background: rgba(0,255,136,0.25);
+}
+
+input:checked + .slider::before {
+  transform: translateX(76px);
+}
+
+
+/* =================================================
+   MODAL BUTTONS
+================================================= */
+.actions-btn {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.save {
+  background: linear-gradient(135deg, var(--lab-blue), var(--lab-green));
+  border: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+.cancel {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid var(--glass-border);
+  padding: 8px 16px;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+
+/* =================================================
+   RESPONSIVE
+================================================= */
+@media (max-width: 768px) {
+  .modal {
+    width: 90%;
+  }
+}
