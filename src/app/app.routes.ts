@@ -7,6 +7,8 @@ import { LabsComponent } from './dashboard/admin/master-table/labs/labs.componen
 import { AddLeadsComponent } from './dashboard/admin/master-table/add-leads/add-leads.component';
 import { CertificateSignatureComponent } from './dashboard/admin/master-table/certificate-signature/certificate-signature.component';
 import { RolesComponent } from './dashboard/admin/master-table/roles/roles.component';
+import { SubAdminComponent } from './dashboard/sub-admin/sub-admin.component';
+
 
 export const routes: Routes = [
 
@@ -23,7 +25,11 @@ export const routes: Routes = [
       { path: 'admin/leads', component: AddLeadsComponent },
       { path: 'admin/signature', component: CertificateSignatureComponent },
       { path: 'admin/roles', component: RolesComponent },
+
+      // Sub Admin Routes
+      { path: 'sub-admin/dashboard', component: SubAdminComponent }
     ]
-  }
+  },
+
 
 ];

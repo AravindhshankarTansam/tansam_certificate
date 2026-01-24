@@ -24,25 +24,25 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
   ],
 
   // ================= SUB ADMIN =================
-  SUB_ADMIN: [
-    { label: 'Dashboard Home', route: '/dashboard' },
+SUB_ADMIN: [
+  { label: 'Dashboard Home', route: '/dashboard/sub-admin/dashboard' },
 
-    {
-      label: 'Program Intern',
-      children: [
-        {
-          label: 'Academic',
-          children: [
-            { label: 'SDP', route: '/sdp' },
-            { label: 'FDP', route: '/fdp' }
-          ]
-        },
-        { label: 'Industry', route: '/industry' }
-      ]
-    },
+  {
+    label: 'Program Intern',
+    children: [
+      {
+        label: 'Academic',
+        children: [
+          { label: 'SDP', route: '/dashboard/sub-admin/sdp' },
+          { label: 'FDP', route: '/dashboard/sub-admin/fdp' }
+        ]
+      },
+      { label: 'Industry', route: '/dashboard/sub-admin/industry' }
+    ]
+  },
 
-    { label: 'Bulk Upload', route: '/bulk-upload' }
-  ],
+  { label: 'Bulk Upload', route: '/dashboard/sub-admin/bulk-upload' }
+],
 
   // ================= TEAM LEAD =================
   TL: [
