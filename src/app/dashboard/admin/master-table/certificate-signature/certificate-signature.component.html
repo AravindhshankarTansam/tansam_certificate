@@ -1,1 +1,79 @@
-<p>certificate-signature works!</p>
+<div class="leads-container">
+
+  <div class="header">
+    <h2>Certificate Signatures</h2>
+
+    <button class="add-btn" (click)="openModal()">
+      <i class="fa-solid fa-plus"></i> Add Signature
+    </button>
+  </div>
+
+
+  <div class="table-wrapper">
+    <table class="lead-table">
+
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Designation</th>
+          <th>Preview</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let s of list">
+          <td>{{ s.name }}</td>
+          <td>{{ s.designation }}</td>
+
+          <td>
+            <img [src]="'http://localhost:5055/uploads/signatures/' + s.signature"
+                 height="40">
+          </td>
+
+          <td>
+            <span [class.active]="s.is_active" [class.inactive]="!s.is_active">
+              {{ s.is_active ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+
+          <td>
+            <button class="edit-btn" (click)="openModal(s)">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+<!-- modal -->
+<div class="modal-backdrop" *ngIf="showModal">
+  <div class="modal">
+
+    <input [(ngModel)]="form.name" placeholder="Name" />
+    <input [(ngModel)]="form.designation" placeholder="Designation" />
+
+    <input type="file" accept="image/png" (change)="fileChange($event)" />
+
+    <label class="switch">
+      <input type="checkbox" [(ngModel)]="form.is_active">
+      <span class="slider">
+        <span class="toggle-text">
+          {{ form.is_active ? 'Active' : 'Inactive' }}
+        </span>
+      </span>
+    </label>
+
+    <div class="actions-btn">
+      <button class="cancel" (click)="showModal=false">Cancel</button>
+      <button class="save" (click)="save()">Save</button>
+    </div>
+
+  </div>
+</div>

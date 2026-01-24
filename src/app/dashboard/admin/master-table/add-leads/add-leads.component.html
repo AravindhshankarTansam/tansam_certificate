@@ -1,1 +1,136 @@
-<p>add-leads works!</p>
+<div class="leads-container">
+
+  <div class="header">
+    <h2>Team Leads</h2>
+
+    <button class="add-btn" (click)="openModal()">
+      <i class="fa-solid fa-plus"></i> Add Lead
+    </button>
+  </div>
+
+
+  <!-- TABLE -->
+  <div class="table-wrapper">
+
+    <table *ngIf="leads.length > 0" class="lead-table">
+
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Lab</th>
+          <th>Status</th>
+          <th style="width:120px">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let l of leads; let i = index">
+
+          <td>{{ i + 1 }}</td>
+          <td>{{ l.name }}</td>
+          <td>{{ l.email }}</td>
+          <td>{{ l.phone }}</td>
+          <td>{{ l.lab_name }}</td>
+
+          <td>
+            <span [class.active]="l.is_active" [class.inactive]="!l.is_active">
+              {{ l.is_active ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+
+          <td class="actions">
+            <button class="edit-btn" (click)="editLead(l)">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+
+            <!-- <button class="delete-btn" (click)="deleteLead(l.id)">
+              <i class="fa-solid fa-trash"></i>
+            </button> -->
+          </td>
+
+        </tr>
+      </tbody>
+
+    </table>
+
+    <div *ngIf="leads.length === 0" class="empty">
+      No leads added yet
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" *ngIf="showModal">
+
+  <div class="modal">
+
+    <h3>{{ editingLead ? 'Edit Lead' : 'Add Lead' }}</h3>
+
+    <input type="text" [(ngModel)]="lead.name" placeholder="Name" />
+    <input
+      type="email"
+      [(ngModel)]="lead.email"
+      placeholder="Email"
+      [class.invalid]="errors.email"
+    />
+    <small class="error" *ngIf="errors.email">{{ errors.email }}</small>
+
+    <input
+      type="text"
+      maxlength="10"
+      [(ngModel)]="lead.phone"
+      placeholder="Phone"
+      [class.invalid]="errors.phone"
+    />
+    <small class="error" *ngIf="errors.phone">{{ errors.phone }}</small>
+
+
+    <!-- CUSTOM DROPDOWN -->
+    <div class="custom-select" (click)="toggleDropdown()">
+
+      <div class="selected">
+        {{ getSelectedLabName() || 'Select Lab' }}
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+
+      <div class="options" *ngIf="dropdownOpen">
+        <div
+          class="option"
+          *ngFor="let lab of labs"
+          (click)="selectLab(lab, $event)"
+        >
+          {{ lab.name }}
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- toggle -->
+<label class="switch">
+
+  <input type="checkbox" [(ngModel)]="lead.is_active">
+
+  <span class="slider">
+    <span class="toggle-text">
+      {{ lead.is_active ? 'Active' : 'Inactive' }}
+    </span>
+  </span>
+
+</label>
+
+
+    <div class="actions-btn">
+      <button class="cancel" (click)="closeModal()">Cancel</button>
+      <button class="save" (click)="saveLead()">
+        {{ editingLead ? 'Update' : 'Save' }}
+      </button>
+    </div>
+
+  </div>
+
+</div>

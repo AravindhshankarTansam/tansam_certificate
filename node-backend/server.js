@@ -7,6 +7,10 @@ const MySQLStore = require('express-mysql-session')(session);
 
 const authRoutes = require('./routes/auth.routes');
 const labRoutes = require('./routes/admin/master-table/labs.routes');
+const teamLeadsRoutes = require('./routes/admin/master-table/teamLeads.routes');
+const certificateRoutes = require('./routes/admin/master-table/certificate-signature.routes');
+const roleRoutes = require('./routes/admin/master-table/roles.routes');
+const userRoutes = require('./routes/admin/master-table/users.routes');
 
 
 const app = express();
@@ -42,7 +46,11 @@ app.use(session({
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin/master-table/labs', labRoutes);
-
+app.use('/api/admin/master-table/team-leads', teamLeadsRoutes);
+app.use('/api/admin/master-table/certificate-signature', certificateRoutes);
+app.use('/uploads', express.static('uploads'));
+app.use('/api/admin/master-table/roles', roleRoutes);
+app.use('/api/admin/master-table/users', userRoutes);
 
 const PORT = process.env.PORT || 5055;
 
