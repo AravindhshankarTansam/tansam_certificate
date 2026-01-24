@@ -6,29 +6,74 @@ exports.login = async (req, res) => {
 
   try {
 
-    const [rows] = await db.query(
-      'SELECT * FROM admin_user WHERE email = ?',
+    /* =========================
+       1️⃣ CHECK SUPER ADMIN
+    ========================= */
+    const [adminRows] = await db.query(
+      'SELECT * FROM admin_user WHERE email=?',
       [email]
     );
 
-    if (!rows.length)
-      return res.status(401).json({ message: 'Admin not found' });
+    if (adminRows.length) {
 
-    const admin = rows[0];
+      const admin = adminRows[0];
 
-    const valid = await bcrypt.compare(password, admin.password);
+      const valid = await bcrypt.compare(password, admin.password);
+      if (!valid)
+        return res.status(401).json({ message: 'Wrong password' });
+
+      req.session.user = {
+        id: admin.id,
+        role: 'Admin'
+      };
+
+      return res.json({
+        role: 'Admin',
+        name: admin.name
+      });
+    }
+
+
+    /* =========================
+       2️⃣ CHECK SUB ADMIN / USERS
+    ========================= */
+    const [userRows] = await db.query(`
+      SELECT u.*, r.name AS role_name
+      FROM users u
+      JOIN roles r ON r.id = u.role_id
+      WHERE u.email=?
+    `, [email]);
+
+    if (!userRows.length)
+      return res.status(401).json({ message: 'User not found' });
+
+    const user = userRows[0];
+
+    const valid = await bcrypt.compare(password, user.password);
 
     if (!valid)
       return res.status(401).json({ message: 'Wrong password' });
 
-    /* ✅ session */
+    if (!user.is_active)
+      return res.status(403).json({ message: 'User inactive' });
+
+
+    /* =========================
+       3️⃣ SESSION
+    ========================= */
     req.session.user = {
-      id: admin.id,
-      email: admin.email,
-      role: admin.role
+      id: user.id,
+      role: user.role_name
     };
 
-    res.json({ role: admin.role });
+
+    /* =========================
+       4️⃣ RESPONSE
+    ========================= */
+    res.json({
+      role: user.role_name,
+      name: user.name
+    });
 
   } catch (err) {
     res.status(500).json(err);

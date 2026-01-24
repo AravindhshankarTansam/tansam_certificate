@@ -77,30 +77,35 @@ next: (res: any) => {
   this.toast.show('Login successful', 'success');
 
   // save role
-localStorage.setItem('role', res.role.toUpperCase());
+const roleKey = res.role.replace(/\s+/g, '_').toUpperCase();
+localStorage.setItem('role', roleKey);
+
 
   /* =========================
      🔥 CONSOLE LOGS (ADD THIS)
   ========================= */
-  console.log('========= LOGIN SUCCESS =========');
-  console.log('Email:', this.email);
-  console.log('Role:', res.role);
-  console.log('Full Response:', res);
-  console.log('================================');
+console.log('========= LOGIN SUCCESS =========');
+console.log('Email:', this.email);
+console.log('Role:', res.role);
+console.log('Full Response:', res);
+console.log('================================');
+
 
   // role based routing
-  if (res.role === 'Admin') {
-    this.router.navigate(['/dashboard/admin/dashboard']);
-  } else if (res.role === 'User') {
-    this.router.navigate(['/dashboard/user']);
-  } else if (res.role === 'Manager') {
-    this.router.navigate(['/dashboard/manager']);
-  }
+if (roleKey === 'ADMIN') {
+  this.router.navigate(['/dashboard/admin/dashboard']);
+}
+else if (roleKey === 'SUB_ADMIN') {
+  this.router.navigate(['/dashboard/sub-admin/dashboard']);
+}
+else if (roleKey === 'TEAM_LEAD') {
+  this.router.navigate(['/dashboard/team-lead']);
+}
 },
 
         error: () => {
           this.loading = false;
-          this.toast.show('Invalid credentials ❌', 'error');
+          this.toast.show('Invalid credentials', 'error');
           this.generateCaptcha();
         },
       });

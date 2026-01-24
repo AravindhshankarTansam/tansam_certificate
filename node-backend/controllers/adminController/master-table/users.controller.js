@@ -54,13 +54,27 @@ exports.updateUser = async (req, res) => {
   try {
 
     const { id } = req.params;
-    const { name, email, mobile, role_id, is_active } = req.body;
+    const { name, email, mobile, role_id, is_active, password } = req.body;
 
-    await db.query(`
-      UPDATE users
-      SET name=?, email=?, mobile=?, role_id=?, is_active=?
-      WHERE id=?
-    `, [name, email, mobile, role_id, is_active, id]);
+    if (password) {
+
+      const hash = await bcrypt.hash(password, 10);
+
+      await db.query(`
+        UPDATE users
+        SET name=?, email=?, mobile=?, role_id=?, is_active=?, password=?
+        WHERE id=?
+      `, [name, email, mobile, role_id, is_active, hash, id]);
+
+    } else {
+
+      await db.query(`
+        UPDATE users
+        SET name=?, email=?, mobile=?, role_id=?, is_active=?
+        WHERE id=?
+      `, [name, email, mobile, role_id, is_active, id]);
+
+    }
 
     res.json({ message: 'Updated successfully' });
 
@@ -68,3 +82,4 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
