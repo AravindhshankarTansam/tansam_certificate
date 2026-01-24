@@ -11,6 +11,8 @@ const teamLeadsRoutes = require('./routes/admin/master-table/teamLeads.routes');
 const certificateRoutes = require('./routes/admin/master-table/certificate-signature.routes');
 const roleRoutes = require('./routes/admin/master-table/roles.routes');
 const userRoutes = require('./routes/admin/master-table/users.routes');
+// Sub admin
+const sdpRoutes = require('./routes/subadmin/sdp.routes');
 
 
 const app = express();
@@ -51,6 +53,8 @@ app.use('/api/admin/master-table/certificate-signature', certificateRoutes);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/admin/master-table/roles', roleRoutes);
 app.use('/api/admin/master-table/users', userRoutes);
+// Sub admin
+app.use('/api/subadmin/sdp', sdpRoutes);
 
 const PORT = process.env.PORT || 5055;
 

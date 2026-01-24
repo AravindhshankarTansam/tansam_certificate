@@ -1,0 +1,97 @@
+<div class="sdp-container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h2>SDP Registration</h2>
+
+    <button class="add-btn" (click)="openModal()">
+      <i class="fa-solid fa-plus"></i> Add Student
+    </button>
+  </div>
+
+
+  <!-- ================= TABLE ================= -->
+
+  <div class="table-wrapper">
+
+    <table *ngIf="students.length">
+
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Register</th>
+          <th>Programme</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let s of students; let i=index">
+
+          <td>{{i+1}}</td>
+          <td>{{s.student_name}}</td>
+          <td>{{s.register_no}}</td>
+          <td>{{s.lab_name}}</td>
+          <td>{{s.from_date}}</td>
+          <td>{{s.to_date}}</td>
+
+          <td>
+            <button class="edit-btn" (click)="openModal(s)">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+          </td>
+
+        </tr>
+      </tbody>
+
+    </table>
+
+    <div *ngIf="!students.length" class="empty">
+      No students added yet
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- ================= MODAL FORM ================= -->
+
+<div class="modal-backdrop" *ngIf="showModal">
+
+  <div class="modal">
+
+    <h3>{{ editingId ? 'Edit Student' : 'Add Student' }}</h3>
+
+    <input placeholder="Student Name" [(ngModel)]="form.student_name">
+    <input placeholder="Register No" [(ngModel)]="form.register_no">
+    <input placeholder="College Name" [(ngModel)]="form.college_name">
+    <input placeholder="Department" [(ngModel)]="form.department">
+    <input placeholder="Phone" maxlength="10" [(ngModel)]="form.phone">
+    <input placeholder="Email" [(ngModel)]="form.email">
+
+    <select [(ngModel)]="form.lab_id">
+      <option value="">Select Programme</option>
+      <option *ngFor="let l of labs" [value]="l.id">
+        {{l.name}}
+      </option>
+    </select>
+
+    <div class="date-row">
+      <input type="date" [(ngModel)]="form.from_date">
+      <input type="date" [(ngModel)]="form.to_date">
+    </div>
+
+    <div class="actions-btn">
+      <button class="cancel" (click)="closeModal()">Cancel</button>
+      <button class="save" (click)="save()">
+        {{ editingId ? 'Update' : 'Save' }}
+      </button>
+    </div>
+
+  </div>
+
+</div>

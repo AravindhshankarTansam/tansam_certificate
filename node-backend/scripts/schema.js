@@ -101,6 +101,27 @@ const db = require('../db');
       )
     `);
 
+    /* =========================
+      SDP STUDENTS
+    ========================= */
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS sdp_students (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        student_name VARCHAR(150),
+        register_no VARCHAR(100),
+        college_name VARCHAR(255),
+        department VARCHAR(255),
+        phone VARCHAR(20),
+        email VARCHAR(150),
+        lab_id INT,
+        from_date DATE,
+        to_date DATE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+        FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL
+      )
+    `);
+
 
 
 
