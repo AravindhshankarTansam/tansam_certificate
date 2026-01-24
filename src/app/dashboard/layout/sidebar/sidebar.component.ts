@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
+
 
 import { ROLE_MENUS, MenuItem } from './sidebar.config';
 
@@ -14,6 +16,8 @@ import { ROLE_MENUS, MenuItem } from './sidebar.config';
 export class SidebarComponent implements OnInit {
 
   menuItems: MenuItem[] = [];
+  constructor(private router: Router) {}
+
 
   ngOnInit(): void {
     // 🔹 get role (change this later to AuthService if needed)
@@ -26,4 +30,13 @@ export class SidebarComponent implements OnInit {
   toggle(item: any) {
     item.open = !item.open;
   }
+  logout() {
+  // clear everything
+  localStorage.clear();
+  sessionStorage.clear();
+
+  // navigate to login
+  this.router.navigate(['/login']);
+}
+
 }

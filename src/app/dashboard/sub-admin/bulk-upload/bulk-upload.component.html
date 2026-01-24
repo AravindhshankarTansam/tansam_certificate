@@ -1,1 +1,27 @@
-<p>bulk-upload works!</p>
+<div class="bulk-container">
+
+  <h2>Bulk Upload</h2>
+
+  <div class="upload-card">
+
+    <input
+      type="file"
+      accept=".csv,.xlsx,.xls"
+      (change)="onFileChange($event)"
+    />
+
+    <p class="filename" *ngIf="fileName">
+      Selected: {{ fileName }}
+    </p>
+
+    <p class="error" *ngIf="errorMsg">
+      {{ errorMsg }}
+    </p>
+
+    <button (click)="upload()" class="upload-btn">
+      Upload
+    </button>
+
+  </div>
+
+</div>

@@ -105,3 +105,22 @@
   font-size: 9px;
   opacity: 0.6;
 }
+
+.logout-section {
+  padding: 12px;
+  border-top: 1px solid #eee;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #c0392b;
+}

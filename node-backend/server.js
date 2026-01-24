@@ -13,6 +13,9 @@ const roleRoutes = require('./routes/admin/master-table/roles.routes');
 const userRoutes = require('./routes/admin/master-table/users.routes');
 // Sub admin
 const sdpRoutes = require('./routes/subadmin/sdp.routes');
+const fdpRoutes = require('./routes/subadmin/fdp.routes');
+const industryRoutes = require('./routes/subadmin/industry.routes');
+
 
 
 const app = express();
@@ -55,6 +58,9 @@ app.use('/api/admin/master-table/roles', roleRoutes);
 app.use('/api/admin/master-table/users', userRoutes);
 // Sub admin
 app.use('/api/subadmin/sdp', sdpRoutes);
+app.use('/api/subadmin/fdp', fdpRoutes);
+app.use('/api/subadmin/industry', industryRoutes);
+
 
 const PORT = process.env.PORT || 5055;
 

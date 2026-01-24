@@ -1,1 +1,124 @@
-<p>fdp works!</p>
+<div class="fdp-container">
+
+  <!-- ================= HEADER ================= -->
+  <div class="header">
+    <h2>FDP Registration</h2>
+
+    <button class="add-btn" (click)="openModal()">
+      + Add Staff
+    </button>
+  </div>
+
+
+  <!-- ================= TABLE ================= -->
+  <div class="table-wrapper" *ngIf="staffs.length; else empty">
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Staff ID</th>
+          <th>College</th>
+          <th>Department</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Lab</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let row of staffs; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ row.staff_name }}</td>
+          <td>{{ row.staff_id_no }}</td>
+          <td>{{ row.college_name }}</td>
+          <td>{{ row.department }}</td>
+          <td>{{ row.phone }}</td>
+          <td>{{ row.email }}</td>
+          <td>{{ row.lab_name }}</td>
+          <td>{{ row.from_date | date }}</td>
+          <td>{{ row.to_date | date }}</td>
+
+          <td>
+            <button class="edit-btn" (click)="openModal(row)">
+              Edit
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- ================= EMPTY ================= -->
+  <ng-template #empty>
+    <div class="empty">
+      No FDP records found
+    </div>
+  </ng-template>
+
+
+  <!-- ================= MODAL ================= -->
+  <div class="modal-backdrop" *ngIf="showModal">
+
+    <div class="modal">
+
+      <h3>
+        {{ editingId ? 'Edit Staff' : 'Add Staff' }}
+      </h3>
+
+      <form (ngSubmit)="save()">
+
+        <div class="grid">
+
+          <input [(ngModel)]="form.staff_name" name="name" placeholder="Staff Name" required>
+
+          <input [(ngModel)]="form.staff_id_no" name="staffid" placeholder="Staff ID No">
+
+          <input [(ngModel)]="form.college_name" name="college" placeholder="College Name">
+
+          <input [(ngModel)]="form.department" name="dept" placeholder="Department">
+
+          <input [(ngModel)]="form.phone" name="phone" placeholder="Phone">
+
+          <input [(ngModel)]="form.email" name="email" placeholder="Email">
+
+          <select [(ngModel)]="form.lab_id" name="lab">
+            <option value="">Select Lab</option>
+            <option *ngFor="let lab of labs" [value]="lab.id">
+              {{ lab.name }}
+            </option>
+          </select>
+
+          <div>
+            <label>From Date</label>
+            <input type="date" [(ngModel)]="form.from_date" name="from">
+          </div>
+
+          <div>
+            <label>To Date</label>
+            <input type="date" [(ngModel)]="form.to_date" name="to">
+          </div>
+
+        </div>
+
+        <!-- buttons -->
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeModal()">
+            Cancel
+          </button>
+
+          <button type="submit" class="save-btn">
+            {{ editingId ? 'Update' : 'Save' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
