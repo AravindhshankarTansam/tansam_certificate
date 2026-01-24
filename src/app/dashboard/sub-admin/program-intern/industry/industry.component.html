@@ -1,1 +1,94 @@
-<p>industry works!</p>
+<div class="industry-container">
+
+  <div class="header">
+    <h2>Industry Registration</h2>
+
+    <button class="add-btn" (click)="openModal()">
+      + Add Staff
+    </button>
+  </div>
+
+
+  <div class="table-wrapper" *ngIf="list.length; else empty">
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Industry</th>
+          <th>Designation</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Lab</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let row of list; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ row.industry_staff_name }}</td>
+          <td>{{ row.industry_staff_id }}</td>
+          <td>{{ row.industry_name }}</td>
+          <td>{{ row.designation_name }}</td>
+          <td>{{ row.phone }}</td>
+          <td>{{ row.email }}</td>
+          <td>{{ row.lab_name }}</td>
+          <td>{{ row.from_date | date }}</td>
+          <td>{{ row.to_date | date }}</td>
+          <td>
+            <button class="edit-btn" (click)="openModal(row)">Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+
+  <ng-template #empty>
+    <div class="empty">No Industry records found</div>
+  </ng-template>
+
+
+  <div class="modal-backdrop" *ngIf="showModal">
+
+    <div class="modal">
+
+      <h3>{{ editingId ? 'Edit Industry Staff' : 'Add Industry Staff' }}</h3>
+
+      <form (ngSubmit)="save()">
+
+        <div class="grid">
+
+          <input [(ngModel)]="form.industry_staff_name" name="name" placeholder="Industry Staff Name" required>
+          <input [(ngModel)]="form.industry_staff_id" name="id" placeholder="Industry Staff ID">
+          <input [(ngModel)]="form.industry_name" name="industry" placeholder="Industry/Company Name">
+          <input [(ngModel)]="form.designation_name" name="designation" placeholder="Designation">
+          <input [(ngModel)]="form.phone" name="phone" placeholder="Phone">
+          <input [(ngModel)]="form.email" name="email" placeholder="Email">
+
+          <select [(ngModel)]="form.lab_id" name="lab">
+            <option value="">Select Lab</option>
+            <option *ngFor="let lab of labs" [value]="lab.id">{{ lab.name }}</option>
+          </select>
+
+          <input type="date" [(ngModel)]="form.from_date" name="from">
+          <input type="date" [(ngModel)]="form.to_date" name="to">
+
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="save-btn">{{ editingId ? 'Update' : 'Save' }}</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>

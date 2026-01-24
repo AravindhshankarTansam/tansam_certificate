@@ -206,5 +206,54 @@ deleteSDP(id: number) {
   );
 }
 
+// ================= FDP (SUB ADMIN) ================= //
+
+getFDP() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/subadmin/fdp/get`,
+    { withCredentials: true }
+  );
+}
+
+addFDP(data: any) {
+  return this.http.post(
+    `${this.BASE_URL}/subadmin/fdp/post`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+updateFDP(id: number, data: any) {
+  return this.http.put(
+    `${this.BASE_URL}/subadmin/fdp/update/${id}`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+/* ================= INDUSTRY ================= */
+
+getIndustry() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/subadmin/industry/get`,
+    { withCredentials: true }
+  );
+}
+
+addIndustry(data: any) {
+  return this.http.post(
+    `${this.BASE_URL}/subadmin/industry/post`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+updateIndustry(id: number, data: any) {
+  return this.http.put(
+    `${this.BASE_URL}/subadmin/industry/update/${id}`,
+    data,
+    { withCredentials: true }
+  );
+}
 
 }

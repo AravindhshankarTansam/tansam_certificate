@@ -122,6 +122,63 @@ const db = require('../db');
       )
     `);
 
+    /* =========================
+      FDP STAFF
+    ========================= */
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS fdp_staff (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+
+        staff_name VARCHAR(150),
+        staff_id_no VARCHAR(100),
+
+        college_name VARCHAR(255),
+        department VARCHAR(255),
+
+        phone VARCHAR(20),
+        email VARCHAR(150),
+
+        lab_id INT,
+
+        from_date DATE,
+        to_date DATE,
+
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+        FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL
+      )
+    `);
+
+
+    /* =========================
+      INDUSTRY STAFF
+    ========================= */
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS industry_staff (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+
+        industry_staff_name VARCHAR(150),
+        industry_staff_id VARCHAR(100),
+
+        industry_name VARCHAR(255),
+        designation_name VARCHAR(255),
+
+        phone VARCHAR(20),
+        email VARCHAR(150),
+
+        lab_id INT,
+
+        from_date DATE,
+        to_date DATE,
+
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+        FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL
+      )
+    `);
+
+
+
 
 
 
