@@ -1,5 +1,21 @@
+/* =====================================================
+   ROLE BASED AUTH MIDDLEWARE
+   ===================================================== */
+
+/* ================= CHECK LOGIN ================= */
+const isLoggedIn = (req, res, next) => {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ message: 'Unauthorized. Please login.' });
+  }
+  next();
+};
+
+
 /* ================= ADMIN ONLY ================= */
-exports.isAdmin = (req, res, next) => {
+const isAdmin = (req, res, next) => {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
 
   if (req.session.user.role !== 'Admin') {
     return res.status(403).json({ message: 'Admin only access' });
@@ -8,30 +24,77 @@ exports.isAdmin = (req, res, next) => {
   next();
 };
 
+
 /* ================= SUB-ADMIN ONLY ================= */
-
-exports.isSubAdmin = (req, res, next) => {
-
-  if (!req.session.user)
+const isSubAdmin = (req, res, next) => {
+  if (!req.session || !req.session.user) {
     return res.status(401).json({ message: 'Unauthorized' });
+  }
 
-  if (req.session.user.role !== 'Sub Admin')
-    return res.status(403).json({ message: 'Access denied (Sub Admin only)' });
+  if (req.session.user.role !== 'Sub Admin') {
+    return res.status(403).json({ message: 'Sub Admin only access' });
+  }
 
   next();
 };
 
+
 /* ================= ADMIN OR SUB-ADMIN ================= */
-
-exports.isAdminOrSubAdmin = (req, res, next) => {
-
-  if (!req.session.user)
+const isAdminOrSubAdmin = (req, res, next) => {
+  if (!req.session || !req.session.user) {
     return res.status(401).json({ message: 'Unauthorized' });
+  }
 
   const role = req.session.user.role;
 
-  if (role !== 'Admin' && role !== 'Sub Admin')
+  if (role !== 'Admin' && role !== 'Sub Admin') {
     return res.status(403).json({ message: 'Access denied' });
+  }
 
   next();
+};
+
+
+/* ================= GENERIC ROLE CHECKER (BEST WAY) =================
+   Use this if you want flexible roles like:
+   allowRoles('Admin')
+   allowRoles('Admin','Sub Admin')
+   allowRoles('Staff','Trainer')
+*/
+const allowRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!req.session || !req.session.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    if (!roles.includes(req.session.user.role)) {
+      return res.status(403).json({
+        message: `Access denied. Allowed roles: ${roles.join(', ')}`
+      });
+    }
+
+    next();
+  };
+};
+/* ================= FINANCE ONLY ================= */
+const isFinance = (req, res, next) => {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  if (req.session.user.role !== 'Finance') {
+    return res.status(403).json({ message: 'Finance only access' });
+  }
+
+  next();
+};
+
+
+/* ================= EXPORTS ================= */
+module.exports = {
+  isLoggedIn,
+  isAdmin,
+  isSubAdmin,
+  isAdminOrSubAdmin,
+  allowRoles,isFinance
 };

@@ -256,4 +256,36 @@ updateIndustry(id: number, data: any) {
   );
 }
 
+/* ================= FINANCE PAYMENT UPDATE ================= */
+
+getFinanceSDP() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/finance/sdp`,
+    { withCredentials: true }
+  );
+}
+
+getFinanceFDP() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/finance/fdp`,
+    { withCredentials: true }
+  );
+}
+
+getFinanceIndustry() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/finance/industry`,
+    { withCredentials: true }
+  );
+}
+
+
+updatePayment(type: 'sdp' | 'fdp' | 'industry', id: number, body: any) {
+  return this.http.put(
+    `${this.BASE_URL}/finance/payment/${type}/${id}`,
+    body,
+    { withCredentials: true }
+  );
+}
+
 }

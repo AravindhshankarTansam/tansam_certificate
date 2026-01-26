@@ -24,26 +24,26 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
   ],
 
   // ================= SUB ADMIN =================
-SUB_ADMIN: [
-  { label: 'Dashboard Home', route: '/dashboard/sub-admin/dashboard' },
+  SUB_ADMIN: [
+    { label: 'Dashboard Home', route: '/dashboard/sub-admin/dashboard' },
 
-  {
-    label: 'Program Intern',
-    children: [
-      {
-        label: 'Academic',
-        children: [
-          { label: 'SDP', route: '/dashboard/sub-admin/sdp' },
-          { label: 'FDP', route: '/dashboard/sub-admin/fdp' }
-        ]
-      },
-      { label: 'Industry', route: '/dashboard/sub-admin/industry' }
-    ]
-  },
+    {
+      label: 'Program Intern',
+      children: [
+        {
+          label: 'Academic',
+          children: [
+            { label: 'SDP', route: '/dashboard/sub-admin/sdp' },
+            { label: 'FDP', route: '/dashboard/sub-admin/fdp' }
+          ]
+        },
+        { label: 'Industry', route: '/dashboard/sub-admin/industry' }
+      ]
+    },
 
-  { label: 'Bulk Upload', route: '/dashboard/sub-admin/bulk-upload' },
-  { label: 'Reports', route: '/dashboard/sub-admin/reports' }
-],
+    { label: 'Bulk Upload', route: '/dashboard/sub-admin/bulk-upload' },
+    { label: 'Reports', route: '/dashboard/sub-admin/reports' }
+  ],
 
   // ================= TEAM LEAD =================
   TL: [
@@ -52,9 +52,28 @@ SUB_ADMIN: [
     { label: 'Not Eligible List', route: '/not-eligible' }
   ],
 
-  // ================= FINANCE =================
-  FINANCE: [
-    { label: 'Dashboard', route: '/dashboard' },
-    { label: 'Transaction', route: '/transactions' }
-  ]
+// ================= FINANCE =================
+FINANCE: [
+  { label: 'Dashboard Home', route: '/dashboard/finance/dashboard' },
+
+  {
+    label: 'Accounts',
+    children: [
+
+      {
+        label: 'Transactions',   // 👈 parent dropdown
+        children: [
+          { label: 'SDP', route: '/dashboard/finance/transactions/sdp' },
+          { label: 'FDP', route: '/dashboard/finance/transactions/fdp' },
+          { label: 'Industry', route: '/dashboard/finance/transactions/industry' }
+        ]
+      },
+
+      { label: 'Reports', route: '/dashboard/finance/reports' }
+    ]
+  }
+]
+
+
+
 };
