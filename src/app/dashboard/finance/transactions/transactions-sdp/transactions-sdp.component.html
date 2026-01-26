@@ -1,0 +1,51 @@
+<h2>SDP Transactions</h2>
+
+<table class="table">
+
+  <tr>
+    <th>Name</th>
+    <th>College</th>
+    <th>Mode</th>
+    <th>Amount</th>
+    <th>Txn ID</th>
+    <th>Date</th>
+    <th *ngIf="isFinance">Action</th>
+  </tr>
+
+  <tr *ngFor="let r of rows">
+
+    <td>{{ r.student_name }}</td>
+    <td>{{ r.college_name }}</td>
+
+    <td>
+      <span *ngIf="!r.isEdit">{{ r.payment_mode }}</span>
+      <select *ngIf="r.isEdit" [(ngModel)]="r.payment_mode">
+        <option value="ONLINE">Online</option>
+        <option value="CASH">Cash</option>
+      </select>
+    </td>
+
+    <td>
+      <span *ngIf="!r.isEdit">{{ r.amount }}</span>
+      <input *ngIf="r.isEdit" type="number" [(ngModel)]="r.amount">
+    </td>
+
+    <td>
+      <span *ngIf="!r.isEdit">{{ r.transaction_id }}</span>
+      <input *ngIf="r.isEdit && r.payment_mode==='ONLINE'" [(ngModel)]="r.transaction_id">
+    </td>
+
+    <td>
+      <span *ngIf="!r.isEdit">{{ r.payment_date }}</span>
+      <input *ngIf="r.isEdit" type="date" [(ngModel)]="r.payment_date">
+    </td>
+
+    <td *ngIf="isFinance">
+      <button *ngIf="!r.isEdit" (click)="edit(r)">✏️</button>
+      <button *ngIf="r.isEdit" (click)="save(r)">💾</button>
+      <button *ngIf="r.isEdit" (click)="cancel(r)">❌</button>
+    </td>
+
+  </tr>
+
+</table>

@@ -13,6 +13,13 @@ import { FdpComponent } from './dashboard/sub-admin/program-intern/fdp/fdp.compo
 import { IndustryComponent } from './dashboard/sub-admin/program-intern/industry/industry.component';
 import { BulkUploadComponent } from './dashboard/sub-admin/bulk-upload/bulk-upload.component';
 import { ReportsComponent } from './dashboard/sub-admin/reports/reports.component';
+import { FinanceDashboardComponent } from './dashboard/finance/finance-dashboard/finance-dashboard.component';
+import { TransactionsComponent } from './dashboard/finance/transactions/transactions.component';
+import { FinancereportsComponent } from './dashboard/finance/financereports/financereports.component';
+import { TransactionsSdpComponent } from './dashboard/finance/transactions/transactions-sdp/transactions-sdp.component';
+import { TransactionsFdpComponent } from './dashboard/finance/transactions/transactions-fdp/transactions-fdp.component';
+import { TransactionsIndustryComponent } from './dashboard/finance/transactions/transactions-industry/transactions-industry.component';
+
 
 
 
@@ -31,15 +38,27 @@ export const routes: Routes = [
       { path: 'admin/leads', component: AddLeadsComponent },
       { path: 'admin/signature', component: CertificateSignatureComponent },
       { path: 'admin/roles', component: RolesComponent },
-
       // Sub Admin Routes
       { path: 'sub-admin/dashboard', component: SubAdminComponent },
       { path: 'sub-admin/sdp', component: SdpComponent },
       { path: 'sub-admin/fdp', component: FdpComponent },
       { path: 'sub-admin/industry', component: IndustryComponent },
       { path: 'sub-admin/bulk-upload', component: BulkUploadComponent },
-      { path: 'sub-admin/reports', component: ReportsComponent}
-      // ... more routes can be added here ...
+      { path: 'sub-admin/reports', component: ReportsComponent },
+
+      // Finance Routes
+      { path: 'finance/dashboard', component: FinanceDashboardComponent },
+      {
+        path: 'finance/transactions',
+        component: TransactionsComponent,
+        children: [
+          { path: 'sdp', component: TransactionsSdpComponent },
+          { path: 'fdp', component: TransactionsFdpComponent },
+          { path: 'industry', component: TransactionsIndustryComponent },
+          { path: '', redirectTo: 'sdp', pathMatch: 'full' }
+        ]
+      },
+      { path: 'finance/reports', component: FinancereportsComponent },
 
     ]
   },
