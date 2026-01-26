@@ -26,6 +26,7 @@ export class SidebarComponent implements OnInit {
     this.menuItems = ROLE_MENUS[role] || [];
   }
   
+  
   // 🔹 toggle dropdown open/close
   toggle(item: any) {
     item.open = !item.open;

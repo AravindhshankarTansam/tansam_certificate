@@ -1,126 +1,156 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
-/* Sidebar Container */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+
+/* ================= SIDEBAR CONTAINER ================= */
 .sidebar-wrapper {
   height: 100vh;
   width: 280px;
-  /* Keeping your color but adding a modern depth gradient */
-  background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(240,249,249,1) 100%);
-  border-right: 1px solid rgba(0, 153, 153, 0.1);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.97) 0%,
+    rgba(240, 249, 249, 1) 100%
+  );
+  border-right: 1px solid rgba(0, 153, 153, 0.12);
   display: flex;
   flex-direction: column;
-  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.03);
   font-family: 'Ubuntu', sans-serif;
+  box-shadow: 8px 0 25px rgba(0, 0, 0, 0.04);
 }
 
-/* Logo Section */
+/* ================= LOGO SECTION ================= */
 .logo {
-  padding: 40px 20px;
+  padding: 30px 20px 25px;
   text-align: center;
 }
 
 .top-logo {
-  width: 90px;
-  height: 90px;
+  width: 85px;
+  height: 85px;
+  margin-bottom: 12px;
   object-fit: contain;
-  margin-bottom: 15px;
-  /* Adds a subtle glow using your brand color */
-  filter: drop-shadow(0 4px 6px rgba(0, 153, 153, 0.2));
+  filter: drop-shadow(0 3px 6px rgba(0, 153, 153, 0.25));
 }
 
 .logo .simple-text {
-  font-size: 14px;
-  letter-spacing: 1px;
+  font-size: 13px;
   font-weight: 700;
-  color: #009999; /* Original Color */
+  letter-spacing: 0.8px;
+  color: #009999;
   text-transform: uppercase;
-  line-height: 1.3;
+  line-height: 1.4;
 }
 
-/* Navigation List */
+/* Divider */
+.sidebar-divider {
+  height: 1px;
+  margin: 0 20px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(0, 153, 153, 0.25),
+    transparent
+  );
+}
+
+/* ================= NAVIGATION ================= */
 .nav {
-  margin-top: 10px;
-  padding: 0 15px;
   list-style: none;
+  padding: 15px 12px;
+  margin: 0;
   flex-grow: 1;
 }
 
 .nav-item {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
-.nav-link, .dropdown-title {
-  cursor: pointer;
+/* Main links & dropdown titles */
+.nav-link,
+.dropdown-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 18px;
-  color: #009999; /* Original Color */
-  text-decoration: none;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 14px;
   font-weight: 500;
+  color: #009999;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-/* Hover State - Soft Glass Effect */
-.nav-link:hover, .dropdown-title:hover {
+/* Hover */
+.nav-link:hover,
+.dropdown-title:hover {
   background: rgba(0, 153, 153, 0.08);
-  transform: translateX(5px);
+  transform: translateX(4px);
 }
 
-/* Active Class - High Contrast */
+/* Active state */
 .active {
-  background-color: #009999 !important; /* Original Color */
+  background: #009999 !important;
   color: #ffffff !important;
-  box-shadow: 0 8px 15px rgba(0, 153, 153, 0.3);
+  box-shadow: 0 6px 14px rgba(0, 153, 153, 0.35);
 }
 
-.active a {
-  color: #ffffff !important;
-}
-
-/* Submenu Styling */
+/* ================= SUBMENUS ================= */
 .submenu {
   list-style: none;
-  padding-left: 20px;
-  margin: 5px 10px;
-  border-left: 2px solid rgba(0, 153, 153, 0.1);
+  padding-left: 18px;
+  margin: 6px 8px;
+  border-left: 2px solid rgba(0, 153, 153, 0.18);
+}
+
+.submenu li {
+  margin: 4px 0;
 }
 
 .submenu li a {
-  padding: 10px 15px;
-  font-size: 13px;
   display: block;
-  color: rgba(0, 153, 153, 0.8);
-  text-decoration: none;
+  padding: 9px 14px;
+  font-size: 13px;
   border-radius: 8px;
+  color: rgba(0, 153, 153, 0.85);
+  text-decoration: none;
+  transition: all 0.25s ease;
 }
 
 .submenu li a:hover {
-  background: rgba(0, 153, 153, 0.05);
+  background: rgba(0, 153, 153, 0.06);
   color: #009999;
 }
 
-/* Icons/Arrows */
+/* Nested submenu */
+.submenu.nested {
+  margin-left: 6px;
+}
+
+/* ================= ARROW ================= */
 .arrow {
-  font-size: 9px;
+  font-size: 10px;
   opacity: 0.6;
 }
 
+/* ================= LOGOUT ================= */
 .logout-section {
-  padding: 12px;
-  border-top: 1px solid #eee;
+  padding: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .logout-btn {
   width: 100%;
-  padding: 10px;
+  padding: 11px;
   background: #e74c3c;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 .logout-btn:hover {
   background: #c0392b;
+  box-shadow: 0 5px 12px rgba(231, 76, 60, 0.35);
 }
