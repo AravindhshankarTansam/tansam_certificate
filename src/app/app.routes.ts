@@ -19,6 +19,12 @@ import { FinancereportsComponent } from './dashboard/finance/financereports/fina
 import { TransactionsSdpComponent } from './dashboard/finance/transactions/transactions-sdp/transactions-sdp.component';
 import { TransactionsFdpComponent } from './dashboard/finance/transactions/transactions-fdp/transactions-fdp.component';
 import { TransactionsIndustryComponent } from './dashboard/finance/transactions/transactions-industry/transactions-industry.component';
+import { TeamleadComponent } from './dashboard/teamlead/teamlead.component';
+import { TeamleadHomeComponent } from './dashboard/teamlead/teamlead-home/teamlead-home.component';
+import { TlsdpComponent } from './dashboard/teamlead/tlsdp/tlsdp.component';
+import { TlfdpComponent } from './dashboard/teamlead/tlfdp/tlfdp.component';
+import { TlindustryComponent } from './dashboard/teamlead/tlindustry/tlindustry.component';
+import { NotEligibleComponent } from './dashboard/teamlead/not-eligible/not-eligible.component';
 
 
 
@@ -59,6 +65,20 @@ export const routes: Routes = [
         ]
       },
       { path: 'finance/reports', component: FinancereportsComponent },
+      // ================= TEAM LEAD =================
+{
+  path: 'teamlead',
+  component: TeamleadComponent,
+  children: [
+    { path: '', component: TeamleadHomeComponent }, 
+    { path: 'sdp', component: TlsdpComponent },
+    { path: 'fdp', component: TlfdpComponent },
+    { path: 'industry', component: TlindustryComponent },
+    { path: 'not-eligible', component: NotEligibleComponent }
+  ]
+},
+
+
 
     ]
   },

@@ -46,33 +46,48 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
   ],
 
   // ================= TEAM LEAD =================
-  TL: [
-    { label: 'Dashboard Home', route: '/dashboard' },
-    { label: 'Attendance', route: '/attendance' },
-    { label: 'Not Eligible List', route: '/not-eligible' }
-  ],
-
-// ================= FINANCE =================
-FINANCE: [
-  { label: 'Dashboard Home', route: '/dashboard/finance/dashboard' },
+TEAM_LEAD: [
+  { label: 'Dashboard Home', route: 'teamlead' },
 
   {
-    label: 'Accounts',
+    label: 'Attendance',
     children: [
+      
+      { label: 'SDP', route: 'teamlead/sdp' },
+      { label: 'FDP', route: 'teamlead/fdp' },
+      { label: 'Industry', route: 'teamlead/industry' }
+    ]
+  },
 
-      {
-        label: 'Transactions',   // 👈 parent dropdown
-        children: [
-          { label: 'SDP', route: '/dashboard/finance/transactions/sdp' },
-          { label: 'FDP', route: '/dashboard/finance/transactions/fdp' },
-          { label: 'Industry', route: '/dashboard/finance/transactions/industry' }
-        ]
-      },
-
-      { label: 'Reports', route: '/dashboard/finance/reports' }
+  {
+    label: 'Reports',
+    children: [
+      { label: 'Not Eligible List', route: 'teamlead/not-eligible' }
     ]
   }
-]
+],
+
+  // ================= FINANCE =================
+  FINANCE: [
+    { label: 'Dashboard Home', route: '/dashboard/finance/dashboard' },
+
+    {
+      label: 'Accounts',
+      children: [
+
+        {
+          label: 'Transactions',   // 👈 parent dropdown
+          children: [
+            { label: 'SDP', route: '/dashboard/finance/transactions/sdp' },
+            { label: 'FDP', route: '/dashboard/finance/transactions/fdp' },
+            { label: 'Industry', route: '/dashboard/finance/transactions/industry' }
+          ]
+        },
+
+        { label: 'Reports', route: '/dashboard/finance/reports' }
+      ]
+    }
+  ]
 
 
 
