@@ -1,81 +1,187 @@
-/* Layout Containers */
+/* ================= DASHBOARD LAYOUT ================= */
 .dashboard-container {
-  padding: 20px;
+  padding: 24px;
 }
 
-.stats-row, .visual-row, .bottom-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  margin-bottom: 40px;
+/* Rows */
+.stats-row,
+.visual-row,
+.bottom-row {
+  display: grid;
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
-.stats-row > div, .visual-row > div {
-  flex: 1;
-  min-width: 240px;
+.stats-row {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.bottom-row > div {
-  flex: 1;
-  min-width: 450px;
+.visual-row {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
-/* Common Card Base */
-.card-mini, .card-main, .card-table {
-  background: white;
-  border-radius: 6px;
+.bottom-row {
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+}
+
+/* ================= CARD BASE ================= */
+.card-mini,
+.card-main,
+.card-table {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
   position: relative;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
-/* Floating Header Logic */
-.mini-header, .visual-header, .table-header {
-  position: absolute;
-  top: -20px;
-  left: 15px;
-  border-radius: 3px;
-  padding: 15px;
-  box-shadow: 0 4px 20px 0 rgba(0,0,0,0.14), 0 7px 10px -5px rgba(0,0,0,0.4);
+/* ================= MINI STAT CARDS ================= */
+.card-mini {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-/* Mini Stats Specifics */
-.card-mini { height: 110px; padding: 15px; margin-top: 20px;}
-.mini-header { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; color: white; }
-.mini-content { text-align: right; }
-.mini-content .label { color: #999; font-size: 14px; }
-.mini-content .value { margin: 5px 0 0; font-weight: 300; }
-.mini-footer { border-top: 1px solid #eee; margin-top: 25px; padding-top: 10px; font-size: 12px; color: #999; }
-
-/* Visual/Chart Card Specifics */
-.card-main { margin-top: 30px; }
-.visual-header {
-  right: 15px;
-  height: 130px;
+.mini-header {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #fff;
+  font-size: 26px;
+  flex-shrink: 0;
 }
-.card-body { padding: 160px 20px 10px 20px; } /* Space for absolute header */
-.card-body h4 { margin: 0; font-weight: 300; }
-.card-body p { color: #999; font-size: 14px; }
 
-/* Table Header Specifics */
-.table-header { right: 15px; color: white; }
-.card-table .card-body { padding: 60px 20px 20px 20px; }
+.mini-content {
+  flex-grow: 1;
+}
 
-/* Color Palette */
+.mini-content .label {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.mini-content .value {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+.mini-footer {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #999;
+}
+
+/* ================= VISUAL / CHART CARDS ================= */
+.card-main {
+  padding: 0;
+}
+
+.visual-header {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.chart-box {
+  opacity: 0.9;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-body h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.card-body p {
+  margin: 0;
+  font-size: 13px;
+  color: #777;
+}
+
+.card-footer {
+  padding: 14px 20px;
+  border-top: 1px solid #eee;
+  font-size: 12px;
+  color: #999;
+}
+
+/* ================= TABLE SECTIONS ================= */
+.card-table {
+  padding: 0;
+}
+
+.table-header {
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.card-table .card-body {
+  padding: 20px;
+  font-size: 13px;
+  color: #666;
+}
+
+/* ================= COLOR SYSTEM (REFINED) ================= */
+/* Primary theme */
 .orange { background: #ffa726; }
 .green { background: #66bb6a; }
 .red { background: #ef5350; }
 .blue { background: #26c6da; }
 
-.green-grad { background: linear-gradient(60deg, #66bb6a, #43a047); }
-.orange-grad { background: linear-gradient(60deg, #ffa726, #fb8c00); }
-.red-grad { background: linear-gradient(60deg, #ef5350, #e53935); }
-.purple { background: linear-gradient(60deg, #ab47bc, #8e24aa); }
-.yellow { background: linear-gradient(60deg, #ffa726, #fb8c00); }
+/* Softer gradients */
+.green-grad {
+  background: linear-gradient(135deg, #66bb6a, #43a047);
+}
 
-/* Text Helpers */
-.warning-text { color: #f44336; }
-.success-text { color: #4caf50; }
+.orange-grad {
+  background: linear-gradient(135deg, #ffa726, #fb8c00);
+}
+
+.red-grad {
+  background: linear-gradient(135deg, #ef5350, #e53935);
+}
+
+.purple {
+  background: linear-gradient(135deg, #ab47bc, #8e24aa);
+}
+
+.yellow {
+  background: linear-gradient(135deg, #ffa726, #fb8c00);
+}
+
+/* ================= TEXT HELPERS ================= */
+.warning-text {
+  color: #e53935;
+  font-weight: 500;
+}
+
+.success-text {
+  color: #43a047;
+  font-weight: 600;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+}
