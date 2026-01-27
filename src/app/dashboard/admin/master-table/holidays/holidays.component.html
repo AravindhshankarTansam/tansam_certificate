@@ -1,0 +1,42 @@
+<div class="page-container" [class.flip]="isFlipping">
+
+  <!-- SPIRAL BINDING -->
+  <div class="spiral-container">
+    <div class="spiral-ring" *ngFor="let s of [].constructor(40)"></div>
+  </div>
+
+  <!-- NOTEBOOK PAGE -->
+  <div class="calendar-paper">
+
+    <!-- FOLDED CORNER -->
+    <div class="page-fold"></div>
+
+    <!-- HEADER -->
+    <div class="calendar-header">
+      <button (click)="flipPrev()">&#10094;</button>
+      <h2>{{ currentYear }} - {{ months[currentMonth] }}</h2>
+      <button (click)="flipNext()">&#10095;</button>
+    </div>
+
+    <div class="calendar-layout">
+
+      <!-- CALENDAR GRID -->
+      <div class="calendar-grid">
+        <div class="day-header" *ngFor="let d of days">{{ d }}</div>
+
+        <div class="day-cell"
+             *ngFor="let day of calendarDays"
+             [class.empty]="!day"
+             [class.holiday]="day && isHoliday(day)"
+             [class.govt]="isHoliday(day)?.type === 'G'">
+
+          {{ day }}
+        </div>
+      </div>
+
+      <!-- RIGHT HOLIDAY PANEL -->
+      <div class="holiday-panel">
+        <h3>Holidays of the Month</h3>
+
+        <div *ngFor="let h of monthHolidays" class="holiday-item">
+          <span class="holiday-date">{{ h.date.split

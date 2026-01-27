@@ -1,7 +1,7 @@
 export interface MenuItem {
   label: string;
-  route?: string;       // clickable
-  children?: MenuItem[]; // dropdown
+  route?: string;
+  children?: MenuItem[];
   open?: boolean;
 }
 
@@ -9,19 +9,21 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
 
   // ================= ADMIN =================
   ADMIN: [
-    { label: 'Dashboard Home', route: 'admin/dashboard' },
-    { label: 'Add User', route: 'admin/add-user' },
+    { label: 'Dashboard Home', route: '/dashboard/admin/dashboard' },
+    { label: 'Add User', route: '/dashboard/admin/add-user' },
+
     {
       label: 'Master Table',
       children: [
-        { label: 'Labs', route: '/dashboard/admin/labs' },
-        { label: 'Add Leads', route: '/dashboard/admin/leads' },
-        { label: 'Certificate Signature', route: '/dashboard/admin/signature' },
-        { label: 'Roles', route: '/dashboard/admin/roles' }
+        { label: 'Labs', route: '/dashboard/admin/master-table/labs' },
+        { label: 'Add Leads', route: '/dashboard/admin/master-table/add-leads' },
+        { label: 'Certificate Signature', route: '/dashboard/admin/master-table/certificate-signature' },
+        { label: 'Roles', route: '/dashboard/admin/master-table/roles' },
+        { label: 'Holidays', route: '/dashboard/admin/master-table/holidays' } // ✅ NEW
       ]
     }
-
   ],
+
 
   // ================= SUB ADMIN =================
   SUB_ADMIN: [
@@ -45,35 +47,32 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
     { label: 'Reports', route: '/dashboard/sub-admin/reports' }
   ],
 
+
   // ================= TEAM LEAD =================
   TL: [
-    { label: 'Dashboard Home', route: '/dashboard' },
-    { label: 'Attendance', route: '/attendance' },
-    { label: 'Not Eligible List', route: '/not-eligible' }
+    { label: 'Dashboard Home', route: '/dashboard/tl/dashboard' },
+    { label: 'Attendance', route: '/dashboard/tl/attendance' },
+    { label: 'Not Eligible List', route: '/dashboard/tl/not-eligible' }
   ],
 
-// ================= FINANCE =================
-FINANCE: [
-  { label: 'Dashboard Home', route: '/dashboard/finance/dashboard' },
 
-  {
-    label: 'Accounts',
-    children: [
+  // ================= FINANCE =================
+  FINANCE: [
+    { label: 'Dashboard Home', route: '/dashboard/finance/dashboard' },
 
-      {
-        label: 'Transactions',   // 👈 parent dropdown
-        children: [
-          { label: 'SDP', route: '/dashboard/finance/transactions/sdp' },
-          { label: 'FDP', route: '/dashboard/finance/transactions/fdp' },
-          { label: 'Industry', route: '/dashboard/finance/transactions/industry' }
-        ]
-      },
-
-      { label: 'Reports', route: '/dashboard/finance/reports' }
-    ]
-  }
-]
-
-
-
+    {
+      label: 'Accounts',
+      children: [
+        {
+          label: 'Transactions',
+          children: [
+            { label: 'SDP', route: '/dashboard/finance/transactions/sdp' },
+            { label: 'FDP', route: '/dashboard/finance/transactions/fdp' },
+            { label: 'Industry', route: '/dashboard/finance/transactions/industry' }
+          ]
+        },
+        { label: 'Reports', route: '/dashboard/finance/reports' }
+      ]
+    }
+  ]
 };
