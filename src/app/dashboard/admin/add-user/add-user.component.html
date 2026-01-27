@@ -73,22 +73,34 @@
     </div>
 
     <!-- ROLE -->
-    <select [(ngModel)]="form.role_id">
-      <option value="">Select Role</option>
-      <option *ngFor="let r of roles" [value]="r.id">{{r.name}}</option>
-    </select>
+<select [(ngModel)]="form.role_id">
+  <option value="">Select Role</option>
+  <option value="2">Sub Admin</option>
+ <option value="2">Team Lead</option>
+  <option value="2">Finance</option>
+  <option *ngFor="let r of roles" [value]="r.id">
+    {{ r.name }}
+  </option>
+</select>
+
 
     <!-- TOGGLE -->
-    <label class="switch">
-      <input type="checkbox" [(ngModel)]="form.is_active">
-      <span class="slider">
-        <span class="toggle-text">{{form.is_active?'Active':'Inactive'}}</span>
-      </span>
-    </label>
+<div class="toggle-row">
+  <label class="switch">
+    <input type="checkbox" [(ngModel)]="form.is_active">
+    <span class="slider"></span>
+  </label>
+
+  <span class="status-text">
+    {{ form.is_active ? 'Active' : 'Inactive' }}
+  </span>
+</div>
+
 
     <div class="actions-btn">
       <button class="cancel" (click)="close()">Cancel</button>
       <button class="save" (click)="save()">Save</button>
+
     </div>
 
   </div>

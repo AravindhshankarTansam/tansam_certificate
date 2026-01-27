@@ -6,7 +6,7 @@ const db = require('../db');
   try {
 
     const name = 'Admin lead';
-    const email = 'monika@tansam.org';
+    const email = 'aravindhshankar@tansam.org';
     const phone = '+91-9876543210';
     const password = 'Tansam@321';
     const role = 'Admin';

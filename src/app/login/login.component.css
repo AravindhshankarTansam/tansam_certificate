@@ -1,15 +1,24 @@
 .container {
+  position: relative;
   height: 100dvh;
   display: flex;
   justify-content: center;
+border: 3px solid #099ca499;
+
   align-items: center;
-  background: url('/images/background.png') center center no-repeat;
-  background-size: cover;
   overflow: hidden;
   font-family: 'Nunito Sans', sans-serif;
 }
 
-
+.container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('/images/watermark.png') center center no-repeat;
+  background-size: contain;
+  opacity: 0.3; /* adjust transparency here */
+  z-index: 0;
+}
 
 /* CENTER COLUMN */
 .center-box {
