@@ -15,6 +15,10 @@ const userRoutes = require('./routes/admin/master-table/users.routes');
 const sdpRoutes = require('./routes/subadmin/sdp.routes');
 const fdpRoutes = require('./routes/subadmin/fdp.routes');
 const industryRoutes = require('./routes/subadmin/industry.routes');
+// Finance
+const financePaymentRoutes = require('./routes/finance/payment.routes');
+const financeListRoutes = require('./routes/finance/list.routes');
+
 
 
 
@@ -60,6 +64,9 @@ app.use('/api/admin/master-table/users', userRoutes);
 app.use('/api/subadmin/sdp', sdpRoutes);
 app.use('/api/subadmin/fdp', fdpRoutes);
 app.use('/api/subadmin/industry', industryRoutes);
+// Finance
+app.use('/api/finance/payment', financePaymentRoutes);
+app.use('/api/finance', financeListRoutes);
 
 
 const PORT = process.env.PORT || 5055;

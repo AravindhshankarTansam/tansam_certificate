@@ -105,82 +105,106 @@ const db = require('../db');
       SDP STUDENTS
     ========================= */
     await db.query(`
-      CREATE TABLE IF NOT EXISTS sdp_students (
-        id INT PRIMARY KEY AUTO_INCREMENT,
-        student_name VARCHAR(150),
-        register_no VARCHAR(100),
-        college_name VARCHAR(255),
-        department VARCHAR(255),
-        phone VARCHAR(20),
-        email VARCHAR(150),
-        lab_id INT,
-        from_date DATE,
-        to_date DATE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CREATE TABLE IF NOT EXISTS sdp_students (
+    id INT PRIMARY KEY AUTO_INCREMENT,
 
-        FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL
-      )
-    `);
+    student_name VARCHAR(150),
+    register_no VARCHAR(100),
+    college_name VARCHAR(255),
+    department VARCHAR(255),
+    phone VARCHAR(20),
+    email VARCHAR(150),
+
+    lab_id INT,
+
+    from_date DATE,
+    to_date DATE,
+
+    /* ================= PAYMENT (FINANCE ONLY) ================= */
+    payment_mode ENUM('ONLINE','CASH') NULL,
+    amount DECIMAL(10,2) NULL,
+    transaction_id VARCHAR(150) NULL,
+    payment_date DATE NULL,
+    paid_status BOOLEAN DEFAULT FALSE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL
+  )
+`);
+
 
     /* =========================
       FDP STAFF
     ========================= */
     await db.query(`
-      CREATE TABLE IF NOT EXISTS fdp_staff (
-        id INT PRIMARY KEY AUTO_INCREMENT,
+  CREATE TABLE IF NOT EXISTS fdp_staff (
+    id INT PRIMARY KEY AUTO_INCREMENT,
 
-        staff_name VARCHAR(150),
-        staff_id_no VARCHAR(100),
+    staff_name VARCHAR(150),
+    staff_id_no VARCHAR(100),
 
-        college_name VARCHAR(255),
-        department VARCHAR(255),
+    college_name VARCHAR(255),
+    department VARCHAR(255),
 
-        phone VARCHAR(20),
-        email VARCHAR(150),
+    phone VARCHAR(20),
+    email VARCHAR(150),
 
-        lab_id INT,
+    lab_id INT,
 
-        from_date DATE,
-        to_date DATE,
+    from_date DATE,
+    to_date DATE,
 
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    /* ================= PAYMENT (FINANCE ONLY) ================= */
+    payment_mode ENUM('ONLINE','CASH') NULL,
+    amount DECIMAL(10,2) NULL,
+    transaction_id VARCHAR(150) NULL,
+    payment_date DATE NULL,
+    paid_status BOOLEAN DEFAULT FALSE,
 
-        FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL
-      )
-    `);
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL
+  )
+`);
 
 
     /* =========================
       INDUSTRY STAFF
     ========================= */
     await db.query(`
-      CREATE TABLE IF NOT EXISTS industry_staff (
-        id INT PRIMARY KEY AUTO_INCREMENT,
+  CREATE TABLE IF NOT EXISTS industry_staff (
+    id INT PRIMARY KEY AUTO_INCREMENT,
 
-        industry_staff_name VARCHAR(150),
-        industry_staff_id VARCHAR(100),
+    industry_staff_name VARCHAR(150),
+    industry_staff_id VARCHAR(100),
 
-        industry_name VARCHAR(255),
-        designation_name VARCHAR(255),
+    industry_name VARCHAR(255),
+    designation_name VARCHAR(255),
 
-        phone VARCHAR(20),
-        email VARCHAR(150),
+    phone VARCHAR(20),
+    email VARCHAR(150),
 
-        lab_id INT,
+    lab_id INT,
 
-        from_date DATE,
-        to_date DATE,
+    from_date DATE,
+    to_date DATE,
 
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    /* ================= PAYMENT (FINANCE ONLY) ================= */
+    payment_mode ENUM('ONLINE','CASH') NULL,
+    amount DECIMAL(10,2) NULL,
+    transaction_id VARCHAR(150) NULL,
+    payment_date DATE NULL,
+    paid_status BOOLEAN DEFAULT FALSE,
 
-        FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL
-      )
-    `);
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-
-
-
-
+    FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL
+  )
+`);
 
     console.log('✅ All tables created successfully');
     process.exit();

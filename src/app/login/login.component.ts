@@ -71,37 +71,40 @@ export class LoginComponent {
         password: this.password,
       })
       .subscribe({
-next: (res: any) => {
-  this.loading = false;
+        next: (res: any) => {
+          this.loading = false;
 
-  this.toast.show('Login successful', 'success');
+          this.toast.show('Login successful', 'success');
 
-  // save role
-const roleKey = res.role.replace(/\s+/g, '_').toUpperCase();
-localStorage.setItem('role', roleKey);
-
-
-  /* =========================
-     🔥 CONSOLE LOGS (ADD THIS)
-  ========================= */
-console.log('========= LOGIN SUCCESS =========');
-console.log('Email:', this.email);
-console.log('Role:', res.role);
-console.log('Full Response:', res);
-console.log('================================');
+          // save role
+          const roleKey = res.role.replace(/\s+/g, '_').toUpperCase();
+          localStorage.setItem('role', roleKey);
 
 
-  // role based routing
-if (roleKey === 'ADMIN') {
-  this.router.navigate(['/dashboard/admin/dashboard']);
-}
-else if (roleKey === 'SUB_ADMIN') {
-  this.router.navigate(['/dashboard/sub-admin/dashboard']);
-}
-else if (roleKey === 'TEAM_LEAD') {
-  this.router.navigate(['/dashboard/team-lead']);
-}
-},
+          /* =========================
+             🔥 CONSOLE LOGS (ADD THIS)
+          ========================= */
+          console.log('========= LOGIN SUCCESS =========');
+          console.log('Email:', this.email);
+          console.log('Role:', res.role);
+          console.log('Full Response:', res);
+          console.log('================================');
+
+
+          // role based routing
+          if (roleKey === 'ADMIN') {
+            this.router.navigate(['/dashboard/admin/dashboard']);
+          }
+          else if (roleKey === 'SUB_ADMIN') {
+            this.router.navigate(['/dashboard/sub-admin/dashboard']);
+          }
+          else if (roleKey === 'TEAM_LEAD') {
+            this.router.navigate(['/dashboard/team-lead']);
+          }
+          else if (roleKey === 'FINANCE') {   // ⭐ ADD THIS
+            this.router.navigate(['/dashboard/finance/dashboard']);
+          }
+        },
 
         error: () => {
           this.loading = false;
