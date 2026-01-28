@@ -1,27 +1,65 @@
 <div class="bulk-container">
-
   <h2>Bulk Upload</h2>
 
-  <div class="upload-card">
+  <!-- College Name + Enter -->
+  <div class="college-input">
+    <input type="text" placeholder="Enter College Name" [(ngModel)]="collegeName" />
+    <button class="primary" (click)="openPopup()">Enter</button>
+  </div>
+</div>
+
+<!-- ================= UPLOAD POPUP ================= -->
+<div class="modal-backdrop" *ngIf="showUploadPopup">
+  <div class="modal small">
+    <h3>Upload CSV / Excel</h3>
 
     <input
       type="file"
       accept=".csv,.xlsx,.xls"
-      (change)="onFileChange($event)"
+      (change)="onFileSelected($event)"
     />
 
-    <p class="filename" *ngIf="fileName">
-      Selected: {{ fileName }}
-    </p>
+    <p *ngIf="fileName">{{ fileName }}</p>
 
-    <p class="error" *ngIf="errorMsg">
-      {{ errorMsg }}
-    </p>
+    <div class="actions">
+      <button (click)="closePopup()">Cancel</button>
+      <button [disabled]="!selectedFile" (click)="uploadFile()">
+        Upload
+      </button>
+    </div>
+  </div>
+</div>
 
-    <button (click)="upload()" class="upload-btn">
-      Upload
-    </button>
+<!-- ================= PREVIEW MODAL ================= -->
+<div class="modal-backdrop" *ngIf="showPreviewModal">
+  <div class="modal fullscreen">
+
+    <div class="header">
+      <h2>{{ category }} – Uploaded Preview</h2>
+      <button class="close-btn" (click)="closePreview()">✕</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th *ngFor="let h of tableHeaders">{{ h }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of uploadedData">
+            <td *ngFor="let h of tableHeaders">
+              {{ row[h] }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <button (click)="closePreview()">Close</button>
+      <button class="primary">Confirm Upload</button>
+    </div>
 
   </div>
-
 </div>

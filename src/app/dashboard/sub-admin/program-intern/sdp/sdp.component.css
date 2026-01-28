@@ -1,205 +1,212 @@
 /* ================= CONTAINER ================= */
+
 .sdp-container {
-  padding: 30px;
-  font-family: "Nunito", sans-serif;
+  padding: 20px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f4f7f8;
   min-height: 100vh;
+  color: #2f3a40;
 }
 
 /* ================= HEADER ================= */
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .header h2 {
   margin: 0;
-  font-size: 1.8rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #00d4ff, #00ff88);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #006666;
+  font-weight: 600;
 }
 
-/* ================= ADD BUTTON ================= */
 .add-btn {
-  background: linear-gradient(135deg, #00d4ff, #00ff88);
+  background: #009999;
   color: #fff;
   border: none;
-  padding: 10px 18px;
-  border-radius: 12px;
+  padding: 10px 14px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 600;
+  font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: 0.25s;
+  gap: 6px;
 }
 
 .add-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-}
-
-/* ================= TABLE CARD ================= */
-.table-wrapper {
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(20px);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.12);
-  overflow: hidden;
+  background: #007777;
 }
 
 /* ================= TABLE ================= */
+
+.table-wrapper {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
 }
 
 thead {
-  background: rgba(255,255,255,0.08);
+  background: #e6f4f4;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  text-align: left;
+  font-size: 14px;
 }
 
 th {
-  text-align: left;
-  padding: 14px;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: #00d4ff;
+  color: #2f3a40;
+  font-weight: 600;
 }
 
-td {
-  padding: 12px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  color: #d1d5db;
-  font-size: 14px;
+tbody tr {
+  border-top: 1px solid #d9e1e2;
 }
 
 tbody tr:hover {
-  background: rgba(255,255,255,0.05);
+  background: #f0fafa;
 }
 
-/* ================= EMPTY ================= */
-.empty {
-  padding: 40px;
-  text-align: center;
-  color: #aaa;
-}
+/* ================= ACTION BUTTON ================= */
 
-/* ================= EDIT BUTTON ================= */
 .edit-btn {
+  background: #00b3b3;
   border: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: rgba(59,130,246,0.25);
-  color: #60a5fa;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 13px;
 }
 
 .edit-btn:hover {
-  transform: scale(1.1);
-  background: rgba(59,130,246,0.4);
+  background: #009999;
 }
 
-/* =====================================================
-   MODAL
-===================================================== */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.75);
-  backdrop-filter: blur(6px);
+/* ================= EMPTY STATE ================= */
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.modal {
-  background: rgba(20,20,30,0.95);
-  border-radius: 18px;
-  padding: 28px;
-  width: 100%;
-  max-width: 520px;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-
-  border: 1px solid rgba(255,255,255,0.12);
-}
-
-/* title full width */
-.modal h3 {
-  grid-column: 1 / -1;
-  margin: 0 0 10px 0;
+.empty {
+  padding: 30px;
   text-align: center;
-  color: #00ff88;
-}
-
-/* ================= INPUTS ================= */
-.modal input,
-.modal select {
-  padding: 11px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.08);
-  color: white;
+  color: #7a8a8f;
   font-size: 14px;
 }
 
-.modal input::placeholder {
-  color: rgba(255,255,255,0.5);
+/* ================= MODAL ================= */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 47, 47, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #ffffff;
+  width: 420px;
+  max-width: 95%;
+  border-radius: 10px;
+  padding: 20px;
+  animation: scaleIn 0.2s ease-in-out;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #006666;
+  font-weight: 600;
+}
+
+/* ================= FORM INPUTS ================= */
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #d9e1e2;
+  font-size: 14px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  box-sizing: border-box;
 }
 
 .modal input:focus,
 .modal select:focus {
   outline: none;
-  border-color: #00d4ff;
-  box-shadow: 0 0 0 2px rgba(0,212,255,0.2);
+  border-color: #009999;
+  box-shadow: 0 0 0 1px rgba(0, 153, 153, 0.3);
 }
 
 /* ================= DATE ROW ================= */
+
 .date-row {
-  grid-column: 1 / -1;
   display: flex;
   gap: 10px;
+}
+
+.date-row input {
+  flex: 1;
 }
 
 /* ================= ACTION BUTTONS ================= */
+
 .actions-btn {
-  grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
-.save {
-  background: linear-gradient(135deg, #00d4ff, #00ff88);
-  border: none;
-  padding: 8px 18px;
-  border-radius: 10px;
-  color: white;
+.actions-btn button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
   cursor: pointer;
-}
-
-.cancel {
-  background: #555;
   border: none;
-  padding: 8px 18px;
-  border-radius: 10px;
-  color: white;
-  cursor: pointer;
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 600px) {
-  .modal {
-    grid-template-columns: 1fr;
-  }
+.actions-btn .cancel {
+  background: #e4ecee;
+  color: #2f3a40;
+}
+
+.actions-btn .cancel:hover {
+  background: #d3dde0;
+}
+
+.actions-btn .save {
+  background: #009999;
+  color: #ffffff;
+}
+
+.actions-btn .save:hover {
+  background: #007777;
 }

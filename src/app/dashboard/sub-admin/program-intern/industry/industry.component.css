@@ -1,124 +1,221 @@
+/* ================= CONTAINER ================= */
+
 .industry-container {
   padding: 20px;
+  min-height: 100vh;
+  background: #f4f7f8;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #2f3a40;
 }
+
+/* ================= HEADER ================= */
 
 .header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #006666;
 }
 
 .add-btn {
-  background: #1976d2;
-  color: white;
-  padding: 8px 14px;
+  background: #009999;
+  color: #ffffff;
   border: none;
+  padding: 10px 16px;
   border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-btn:hover {
+  background: #007777;
+}
+
+/* ================= TABLE ================= */
+
+.table-wrapper {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
 }
 
-th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
+thead {
+  background: #e6f4f4;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  text-align: left;
+  white-space: nowrap;
 }
 
 th {
-  background: #f2f2f2;
+  font-weight: 600;
+  color: #2f3a40;
 }
+
+tbody tr {
+  border-top: 1px solid #d9e1e2;
+}
+
+tbody tr:hover {
+  background: #f0fafa;
+}
+
+/* ================= ACTION BUTTON ================= */
 
 .edit-btn {
-  background: orange;
-  padding: 5px 10px;
+  background: #00b3b3;
   border: none;
+  color: #ffffff;
+  padding: 6px 12px;
   border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
 }
 
-.empty {
-  text-align: center;
-  padding: 30px;
-  color: gray;
+.edit-btn:hover {
+  background: #009999;
 }
+
+/* ================= EMPTY STATE ================= */
+
+.empty {
+  padding: 40px;
+  text-align: center;
+  color: #7a8a8f;
+  font-size: 14px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* ================= MODAL BACKDROP ================= */
 
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 47, 47, 0.6);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
+/* ================= MODAL ================= */
+
 .modal {
-  background: white;
-  padding: 20px;
+  background: #ffffff;
+  width: 650px;
+  max-width: 95%;
   border-radius: 10px;
-  width: 600px;
+  padding: 22px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: scaleIn 0.2s ease-in-out;
 }
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #006666;
+}
+
+/* ================= FORM GRID ================= */
 
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 14px;
 }
+
+.grid input,
+.grid select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d9e1e2;
+  font-size: 14px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.grid input:focus,
+.grid select:focus {
+  outline: none;
+  border-color: #009999;
+  box-shadow: 0 0 0 1px rgba(0, 153, 153, 0.3);
+}
+
+/* ================= MODAL ACTIONS ================= */
 
 .modal-actions {
-  text-align: right;
-  margin-top: 10px;
-}
-
-.save-btn {
-  background: green;
-  color: white;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
 }
 
 .cancel-btn {
-  background: gray;
-  color: white;
-  margin-right: 8px;
+  background: #e4ecee;
+  border: none;
+  color: #2f3a40;
+  padding: 9px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
 }
-.save-btn:hover {
-  background: darkgreen;
-}
+
 .cancel-btn:hover {
-  background: darkgray;
+  background: #d3dde0;
 }
-input, select {
-  width: 100%;
-  padding: 7px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+
+.save-btn {
+  background: #009999;
+  border: none;
+  color: #ffffff;
+  padding: 9px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
 }
-label {
-  font-size: 13px;
-  color: #555;
+
+.save-btn:hover {
+  background: #007777;
 }
-.edit-btn:hover {
-  background: #e67e22;
-}
-.add-btn:hover {
-  background: #1565c0;
-}
-table th, table td {
-  text-align: left;
-}
-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-table tr:hover {
-  background-color: #f1f1f1;
-}
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-display: flex;
-justify-content: center;
-align-items: center;
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }

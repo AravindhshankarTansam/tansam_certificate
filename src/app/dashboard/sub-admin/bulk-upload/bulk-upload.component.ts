@@ -1,67 +1,139 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ApiService } from '../../../services/api.service';
+import { FormsModule } from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-bulk-upload',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './bulk-upload.component.html',
   styleUrls: ['./bulk-upload.component.css']
 })
 export class BulkUploadComponent {
 
+  collegeName = '';
+ /* ===== Upload popup ===== */
+  showUploadPopup = false;
+
+  /* ===== Preview modal ===== */
+  showPreviewModal = false;
+
   selectedFile: File | null = null;
-  errorMsg = '';
   fileName = '';
+  category = '';
 
-  constructor(private api: ApiService) {}
+  uploadedData: any[] = [];
+  tableHeaders: string[] = [];
 
-  /* ================= FILE SELECT ================= */
-  onFileChange(event: any) {
+  /* ================= POPUP ================= */
+
+  openPopup() {
+    this.showUploadPopup = true;
+  }
+
+  closePopup() {
+    this.showUploadPopup = false;
+    this.selectedFile = null;
+    this.fileName = '';
+  }
+
+  /* ================= FILE ================= */
+
+  onFileSelected(event: any) {
     const file = event.target.files[0];
-
     if (!file) return;
 
-    const allowed = ['csv', 'xlsx', 'xls'];
     const ext = file.name.split('.').pop()?.toLowerCase();
-
-    if (!ext || !allowed.includes(ext)) {
-      this.errorMsg = 'Only Excel or CSV files are allowed';
-      this.selectedFile = null;
+    if (!['csv', 'xlsx', 'xls'].includes(ext || '')) {
+      alert('Upload CSV or Excel only');
       return;
     }
 
-    this.errorMsg = '';
     this.selectedFile = file;
     this.fileName = file.name;
   }
 
+  uploadFile() {
+    if (!this.selectedFile) return;
 
-  /* ================= UPLOAD ================= */
-  upload() {
-    if (!this.selectedFile) {
-      this.errorMsg = 'Please select a file';
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
-
-    // 🔹 call your API
-    // this.api.uploadBulkIndustry(formData).subscribe({
-    //   next: () => {
-    //     alert('Upload successful ✅');
-    //     this.reset();
-    //   },
-    //   error: () => {
-    //     alert('Upload failed ❌');
-    //   }
-    // });
+    const ext = this.selectedFile.name.split('.').pop()?.toLowerCase();
+    ext === 'csv'
+      ? this.readCSV(this.selectedFile)
+      : this.readExcel(this.selectedFile);
   }
 
-  reset() {
-    this.selectedFile = null;
-    this.fileName = '';
+  /* ================= CSV ================= */
+
+  private readCSV(file: File) {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const rows = (reader.result as string)
+        .split('\n')
+        .map(r => r.trim())
+        .filter(Boolean);
+
+      const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+      this.detectCategory(headers);
+      if (!this.category) return;
+
+      const data = rows.slice(1).map(row => {
+        const values = row.split(',');
+        const obj: any = {};
+        headers.forEach((h, i) => obj[h] = values[i]?.trim());
+        return obj;
+      });
+
+      this.success(data);
+    };
+
+    reader.readAsText(file);
+  }
+
+  /* ================= EXCEL ================= */
+
+  private readExcel(file: File) {
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      const workbook = XLSX.read(e.target.result, { type: 'binary' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const data = XLSX.utils.sheet_to_json<Record<string, any>>(sheet, { defval: '' });
+
+      const headers = Object.keys(data[0]).map(h => h.toLowerCase());
+      this.detectCategory(headers);
+      if (!this.category) return;
+
+      this.success(data);
+    };
+
+    reader.readAsBinaryString(file);
+  }
+
+  /* ================= CATEGORY ================= */
+
+  private detectCategory(headers: string[]) {
+    if (headers.includes('regno')) this.category = 'Academic SDP';
+    else if (headers.includes('faculty no')) this.category = 'Academic FDP';
+    else if (headers.includes('employee id')) this.category = 'Industry';
+    else {
+      alert('Unable to detect category');
+      this.category = '';
+    }
+  }
+
+  /* ================= SUCCESS ================= */
+
+  private success(data: any[]) {
+    this.uploadedData = data;
+    this.tableHeaders = Object.keys(data[0]);
+
+    this.showUploadPopup = false;
+    this.showPreviewModal = true; // 👈 KEY LINE
+  }
+
+  closePreview() {
+    this.showPreviewModal = false;
   }
 }
