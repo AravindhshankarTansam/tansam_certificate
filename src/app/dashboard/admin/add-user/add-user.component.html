@@ -1,17 +1,16 @@
 <div class="leads-container">
 
+  <!-- HEADER -->
   <div class="header">
     <h2>Users</h2>
-
     <button class="add-btn" (click)="openModal()">
       <i class="fa-solid fa-plus"></i> Add User
     </button>
   </div>
 
-
+  <!-- USERS TABLE -->
   <div class="table-wrapper">
     <table class="lead-table">
-
       <thead>
         <tr>
           <th>#</th>
@@ -19,26 +18,24 @@
           <th>Email</th>
           <th>Mobile</th>
           <th>Role</th>
+          <th>Lab</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
       </thead>
-
-
       <tbody>
         <tr *ngFor="let u of users; let i = index">
           <td>{{ i + 1 }}</td>
-          <td>{{u.name}}</td>
-          <td>{{u.email}}</td>
-          <td>{{u.mobile}}</td>
-          <td>{{u.role_name}}</td>
-
+          <td>{{ u.name }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.mobile }}</td>
+          <td>{{ u.role_name }}</td>
+          <td>{{ u.lab_name || '-' }}</td>
           <td>
             <span [class.active]="u.is_active" [class.inactive]="!u.is_active">
-              {{u.is_active?'Active':'Inactive'}}
+              {{ u.is_active ? 'Active' : 'Inactive' }}
             </span>
           </td>
-
           <td>
             <button class="edit-btn" (click)="openModal(u)">
               <i class="fa-solid fa-pen"></i>
@@ -46,58 +43,61 @@
           </td>
         </tr>
       </tbody>
-
     </table>
   </div>
 </div>
 
-
 <!-- MODAL -->
 <div class="modal-backdrop" *ngIf="showModal">
   <div class="modal">
+    <h3>{{ editing ? 'Edit User' : 'Add User' }}</h3>
 
-    <input [(ngModel)]="form.name" placeholder="Name">
-    <input [(ngModel)]="form.email" placeholder="Email">
-    <input [(ngModel)]="form.mobile" placeholder="Mobile">
+    <!-- USER INPUTS -->
+    <input [(ngModel)]="form.name" placeholder="Name" required>
+    <input [(ngModel)]="form.email" placeholder="Email" type="email" required>
+    <input [(ngModel)]="form.mobile" placeholder="Mobile" type="tel" required>
 
     <!-- PASSWORD -->
     <div class="password-wrapper">
-      <input [type]="showPassword?'text':'password'"
-             [(ngModel)]="form.password"
-             placeholder="Password">
-
+      <input
+        [type]="showPassword ? 'text' : 'password'"
+        [(ngModel)]="form.password"
+        placeholder="Password"
+        [required]="!editing">
       <i class="fa-solid"
          [class.fa-eye]="!showPassword"
          [class.fa-eye-slash]="showPassword"
-         (click)="showPassword=!showPassword"></i>
+         (click)="showPassword = !showPassword"></i>
     </div>
 
-    <!-- ROLE -->
-<select [(ngModel)]="form.role_id">
-  <option value="">Select Role</option>
-  <option *ngFor="let r of roles" [value]="r.id">
-    {{ r.name }}
-  </option>
-</select>
+    <!-- ROLE SELECT -->
+    <select [(ngModel)]="form.role_id" (change)="onRoleChange()" required>
+      <option value="" disabled selected>Select Role</option>
+      <option *ngFor="let r of roles" [value]="r.id">{{ r.name }}</option>
+    </select>
 
+    <!-- LAB SELECT (ONLY FOR TEAM LEAD) -->
+    <div *ngIf="isTeamLead" class="teamlead-labs">
+      <label for="labSelect">Select Lab:</label>
+      <select id="labSelect" [(ngModel)]="form.lab_id" required>
+        <option value="" disabled selected>Select Lab</option>
+        <option *ngFor="let l of labs" [value]="l.id">{{ l.name }}</option>
+      </select>
+    </div>
 
-    <!-- TOGGLE -->
-<div class="toggle-row">
-  <label class="switch">
-    <input type="checkbox" [(ngModel)]="form.is_active">
-    <span class="slider"></span>
-  </label>
+    <!-- STATUS TOGGLE -->
+    <div class="toggle-row">
+      <label class="switch">
+        <input type="checkbox" [(ngModel)]="form.is_active">
+        <span class="slider"></span>
+      </label>
+      <span class="status-text">{{ form.is_active ? 'Active' : 'Inactive' }}</span>
+    </div>
 
-  <span class="status-text">
-    {{ form.is_active ? 'Active' : 'Inactive' }}
-  </span>
-</div>
-
-
+    <!-- ACTION BUTTONS -->
     <div class="actions-btn">
       <button class="cancel" (click)="close()">Cancel</button>
       <button class="save" (click)="save()">Save</button>
-
     </div>
 
   </div>

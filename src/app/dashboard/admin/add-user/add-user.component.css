@@ -321,3 +321,19 @@ color: #1f2937;
     width: 92%;
   }
 }
+/* LABS FIELD FOR TEAM LEAD ONLY */
+.teamlead-labs select.teamlead_labs {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.teamlead-labs select.teamlead_labs:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
