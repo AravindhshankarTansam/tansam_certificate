@@ -1,82 +1,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
 
-/* ================= ROOT VARIABLES ================= */
-:root {
-  --glass-bg: rgba(255,255,255,0.1);
-  --glass-border: rgba(255,255,255,0.2);
-  --glass-blur: blur(20px);
-
-  --lab-blue: #00d4ff;
-  --lab-green: #00ff88;
-
-  --shadow-glow: 0 8px 32px rgba(0,212,255,0.3);
-}
-
-
 /* ================= CONTAINER ================= */
 .leads-container {
   padding: 30px;
   font-family: 'Nunito', sans-serif;
   min-height: 100vh;
-  position: relative;
+  background: #ffffff; /* clean white background */
 }
-
 
 /* ================= HEADER ================= */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .header h2 {
   margin: 0;
   font-size: 2rem;
   font-weight: 700;
-
-  background: linear-gradient(135deg, var(--lab-blue), var(--lab-green));
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #0f766e; /* Siemens teal */
 }
-
 
 /* ================= ADD BUTTON ================= */
 .add-btn {
-  background: #009999;
-  color: white;
+  background: linear-gradient(135deg, #0f766e, #0a5f59);
+  color: #ffffff;
   border: none;
-
-  padding: 12px 22px;
-  border-radius: 14px;
-
+  padding: 10px 18px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
-
   display: flex;
   align-items: center;
-  gap: 8px;
-
-  box-shadow: var(--shadow-glow);
-  transition: 0.3s;
+  gap: 6px;
+  box-shadow: 0 2px 6px rgba(15,118,110,0.35);
+  transition: all 0.2s ease;
 }
 
 .add-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(0,212,255,0.45);
+  background: linear-gradient(135deg, #118a82, #0f766e);
+  box-shadow: 0 4px 12px rgba(15,118,110,0.45);
 }
-
 
 /* ================= TABLE WRAPPER ================= */
 .table-wrapper {
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #dfe7ec;
+  border-radius: 14px;
   overflow: hidden;
-  box-shadow: var(--shadow-glow);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
-
 
 /* ================= TABLE ================= */
 .lead-table {
@@ -85,32 +60,34 @@
 }
 
 .lead-table thead {
-  background: linear-gradient(
-    135deg,
-    rgba(0,212,255,0.2),
-    rgba(0,255,136,0.2)
-  );
+  background: #eef6f6; /* soft teal header */
 }
 
 .lead-table th {
-  padding: 16px;
+  padding: 14px 18px;
   text-align: left;
   font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
-  color: var(--lab-blue);
+  color: #0f766e;
 }
 
 .lead-table td {
-  padding: 14px 16px;
-  color: #009999;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 12px 18px;
+  color: #1f2937; /* dark text */
+  border-bottom: 1px solid #dfe7ec;
 }
 
 .lead-table tbody tr:hover {
-  background: rgba(255,255,255,0.05);
+  background: #f1fbfa; /* light teal on hover */
 }
 
+/* First column width */
+.lead-table th:first-child,
+.lead-table td:first-child {
+  width: 50px;
+  text-align: center;
+}
 
 /* ================= ACTION BUTTONS ================= */
 .actions {
@@ -122,113 +99,95 @@
 .delete-btn {
   width: 36px;
   height: 36px;
-
-  border-radius: 10px;
+  border-radius: 8px;
   border: none;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
-  transition: 0.25s;
+  transition: 0.2s;
 }
 
-/* edit */
 .edit-btn {
-  background: rgba(59,130,246,0.25);
-  color: #60a5fa;
+  background: #d1f5f3;
+  color: #0f766e;
 }
 
 .edit-btn:hover {
   transform: scale(1.1);
-  background: rgba(59,130,246,0.4);
+  background: #aee7e4;
 }
 
-/* delete */
 .delete-btn {
-  background: rgba(239,68,68,0.25);
-  color: #f87171;
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
 .delete-btn:hover {
   transform: scale(1.1);
-  background: rgba(239,68,68,0.4);
+  background: #fca5a5;
 }
 
-
-/* ================= EMPTY ================= */
+/* ================= EMPTY STATE ================= */
 .empty {
   text-align: center;
   padding: 30px;
-  color: rgba(255,255,255,0.6);
+  color: #6b7280;
 }
-
 
 /* ================= MODAL BACKDROP ================= */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(10px);
-
+  background: rgba(15,23,42,0.45);
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 999;
 }
 
-
 /* ================= MODAL ================= */
 .modal {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-
-  border: 1px solid var(--glass-border);
-  border-radius: 20px;
-
+  background: #ffffff; /* white modal */
+  border-radius: 16px;
   padding: 28px;
-  width: 350px;
-
+  width: 360px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-
-  box-shadow: var(--shadow-glow);
+  gap: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.12);
 }
 
 .modal h3 {
   margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f766e; /* Siemens teal */
   text-align: center;
-  color: white;
 }
 
-
-/* ================= INPUT ================= */
+/* ================= MODAL INPUT ================= */
 .modal input {
   padding: 12px 14px;
-  border-radius: 12px;
-
-  border: 1px solid var(--glass-border);
-  background: rgba(255,255,255,0.1);
-
-  color: white;
+  border-radius: 10px;
+  border: 1px solid #dfe7ec;
+  background: #f9fbfc;
+  font-size: 14px;
+  color: #1f2937;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
 .modal input::placeholder {
-  color: rgba(255,255,255,0.5);
+  color: #9ca3af;
 }
 
 .modal input:focus {
   outline: none;
-  border-color: var(--lab-blue);
-  box-shadow: 0 0 0 2px rgba(0,212,255,0.25);
+  border-color: #0f766e;
+  box-shadow: 0 0 0 2px rgba(15,118,110,0.15);
 }
 
-
-/* ================= BUTTONS ================= */
+/* ================= MODAL BUTTONS ================= */
 .actions-btn {
   display: flex;
   justify-content: flex-end;
@@ -236,32 +195,35 @@
 }
 
 .save {
-  background: linear-gradient(135deg, var(--lab-blue), var(--lab-green));
+  background: linear-gradient(135deg, #0f766e, #0a5f59);
   border: none;
-  padding: 8px 16px;
+  padding: 10px 22px;
   border-radius: 10px;
-  color: white;
+  color: #ffffff;
   cursor: pointer;
+  font-weight: 500;
+}
+
+.save:hover {
+  background: linear-gradient(135deg, #118a82, #0f766e);
 }
 
 .cancel {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid var(--glass-border);
-  padding: 8px 16px;
+  background: #f3f6f8;
+  border: 1px solid #dfe7ec;
+  padding: 10px 22px;
   border-radius: 10px;
-  color: white;
   cursor: pointer;
+  color: #1f2937;
 }
 
+.cancel:hover {
+  background: #eef2f5;
+}
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .modal {
     width: 90%;
   }
-}
-.lead-table th:first-child,
-.lead-table td:first-child {
-  width: 50px;
-  text-align: center;
 }

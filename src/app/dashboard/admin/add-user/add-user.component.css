@@ -1,40 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 
-/* ================= ROOT ================= */
-:root {
-  --primary: #009999;
-  --primary-dark: #007777;
-  --primary-darker: #006666;
-
-  --success: #15803d;
-  --danger: #b91c1c;
-
-  --text-main: #1f2937;
-  --text-muted: #6b7280;
-
-  --border-soft: rgba(0,0,0,0.08);
-  --shadow-soft: 0 10px 30px rgba(0,0,0,0.06);
+/* ======================================================
+   BASE
+====================================================== */
+body {
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+  background:  #f4f6f8;
+  color:  #1f2937;
 }
 
-/* ================= PAGE ================= */
+/* ======================================================
+   PAGE LAYOUT
+====================================================== */
 .leads-container {
-  padding: 36px;
-  font-family: 'Nunito', sans-serif;
+  padding: 32px;
   min-height: 100vh;
 }
 
-/* ================= HEADER ================= */
+/* ======================================================
+   HEADER
+====================================================== */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .header h2 {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--primary);
+  font-size: 20px;
+  font-weight: 600;
   padding-left: 12px;
   position: relative;
 }
@@ -43,198 +39,223 @@
   content: '';
   position: absolute;
   left: 0;
-  top: 4px;
+  top: 3px;
   width: 4px;
-  height: 70%;
-  background: var(--primary);
-  border-radius: 2px;
+  height: 65%;
+  background:  #009999;
 }
 
-/* ================= ADD USER BUTTON ================= */
-/* ================= ADD USER BUTTON (FINAL) ================= */
-.add-btn {
-  background-color: #006666;        /* darker teal */
-  color: #ffffff;
-
+/* ======================================================
+   PRIMARY BUTTON
+====================================================== */
+.add-btn,
+.save {
+  background:#009999;
+  color: #fff;
   border: none;
-  padding: 12px 22px;
-  border-radius: 10px;
-
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
+}
 
-  font-weight: 600;
-  letter-spacing: 0.4px;
+.add-btn:hover,
+.save:hover {
+  background: #007c7c;
+}
+
+/* ======================================================
+   SECONDARY BUTTON
+====================================================== */
+.cancel {
+  background: #ffffff;
+  border: 1px solid  #d1d5db;
+  padding: 10px 18px;
+  border-radius: 6px;
   cursor: pointer;
-
-  box-shadow:
-    0 6px 14px rgba(0, 102, 102, 0.45);
-
-  transition: background-color 0.2s ease,
-              box-shadow 0.2s ease,
-              transform 0.15s ease;
+  color: #1f2937;
 }
 
-.add-btn:hover {
-  background-color: #005555;        /* even darker on hover */
-  box-shadow:
-    0 10px 22px rgba(0, 102, 102, 0.6);
-  transform: translateY(-1px);
+.cancel:hover {
+  background: #f9fafb;
 }
 
-.add-btn:active {
-  transform: translateY(0);
-}
-/* ================= TABLE ================= */
+/* ======================================================
+   TABLE
+====================================================== */
 .table-wrapper {
-  background: white;
-  border-radius: 18px;
-  box-shadow: var(--shadow-soft);
-  padding: 8px;
+background:#50c5c5;
+border: 1px solid #c7dede;
+color: #1f2937;
+
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .lead-table {
   width: 100%;
+
   border-collapse: collapse;
 }
 
 .lead-table thead {
-  background: rgba(0,153,153,0.12);
+  background: white;
+border: 1px solid rgba(0, 212, 255, 0.35);
+color: #1f2937;
+;
 }
 
 .lead-table th {
-  padding: 18px 20px;
-  font-size: 12px;
+  padding: 14px 16px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--primary);
+  letter-spacing: 0.5px;
+  color:  #000000;
   text-align: left;
 }
 
 .lead-table td {
-  padding: 16px 20px;
+  padding: 14px 16px;
   font-size: 14px;
-  color: var(--text-main);
-  border-bottom: 1px solid var(--border-soft);
+  border-bottom: 1px solid  #d1d5db;
 }
 
 .lead-table tbody tr:hover {
-  background: rgba(0,0,0,0.02);
+  background: #f8fafc;
 }
 
-/* ================= STATUS ================= */
-/* ================= SAVE BUTTON (FINAL) ================= */
-.save {
-  background-color: #006666;     /* strong dark teal */
-  color: #ffffff;
-
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-
+/* ======================================================
+   STATUS
+====================================================== */
+.active {
+  color: #0f766e;;
   font-weight: 600;
-  letter-spacing: 0.4px;
-  cursor: pointer;
-
-  box-shadow:
-    0 6px 14px rgba(0, 102, 102, 0.45);
-
-  transition: background-color 0.2s ease,
-              box-shadow 0.2s ease,
-              transform 0.15s ease;
 }
 
-.save:hover {
-  background-color: #005555;     /* darker on hover */
-  box-shadow:
-    0 10px 22px rgba(0, 102, 102, 0.6);
-  transform: translateY(-1px);
+.inactive {
+  color: #9f1239;
+  font-weight: 600;
 }
 
-.save:active {
-  transform: translateY(0);
-}
-/* ================= ACTION ================= */
+/* ======================================================
+   ICON BUTTON
+====================================================== */
 .edit-btn {
   width: 34px;
   height: 34px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(0,153,153,0.15);
-  color: var(--primary);
+  border-radius: 6px;
+  border: 1px solid  #d1d5db;
+  background: transparent;
   cursor: pointer;
-  transition: 0.25s;
+  color: #1f2937;
 }
 
 .edit-btn:hover {
-  background: rgba(0,153,153,0.25);
-  transform: scale(1.08);
+  background: #eef2f4;
 }
 
-/* ================= MODAL ================= */
+/* ======================================================
+   MODAL BACKDROP
+====================================================== */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 1000;
 }
 
+/* ======================================================
+   MODAL
+====================================================== */
 .modal {
-  background: white;
-  border-radius: 20px;
-  padding: 32px 30px;
+  background:  #ffffff;
   width: 380px;
+  padding: 28px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+  gap: 14px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
 }
 
+/* ======================================================
+   INPUTS
+====================================================== */
 .modal input,
 .modal select {
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid var(--border-soft);
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid  #d1d5db;
   font-size: 14px;
-  color: var(--text-main);
 }
 
 .modal input::placeholder {
-  color: var(--text-muted);
+  color:  #6b7280;
 }
 
 .modal input:focus,
 .modal select:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(0,153,153,0.15);
+  border-color:  #009999;
 }
 
+/* ======================================================
+   PASSWORD
+====================================================== */
 /* ================= PASSWORD ================= */
 .password-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
+
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+}
+
+.password-wrapper input {
+  border: none;
+  outline: none;
+  padding: 0;
+  width: 100%;
+  font-size: 14px;
+  background: transparent;
 }
 
 .password-wrapper i {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-left: 10px;
   cursor: pointer;
-  color: var(--text-muted);
+  color: #6b7280;
 }
 
-/* ================= TOGGLE ================= */
+/* Focus state – matches other inputs */
+.password-wrapper:focus-within {
+  border-color: #009999;
+}
+
+
+/* ======================================================
+   TOGGLE SWITCH
+====================================================== */
+/* ================= TOGGLE ROW ================= */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ================= SWITCH ================= */
 .switch {
   position: relative;
-  width: 120px;
-  height: 34px;
+  width: 46px;
+  height: 24px;
 }
 
 .switch input {
@@ -244,91 +265,53 @@
 .slider {
   position: absolute;
   inset: 0;
-  border-radius: 20px;
-  background: rgba(185,28,28,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #e5e7eb;
+  border-radius: 12px;
   cursor: pointer;
+  transition: background 0.25s;
 }
 
 .slider::before {
   content: '';
   position: absolute;
-  width: 22px;
-  height: 22px;
-  left: 6px;
-  top: 6px;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: #ffffff;
   border-radius: 50%;
-  background: white;
-  transition: 0.3s;
+  transition: transform 0.25s;
 }
 
-.toggle-text {
-  font-size: 12px;
+/* Checked */
+.switch input:checked + .slider {
+  background: rgba(0,153,153,0.5);
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+/* ================= STATUS TEXT ================= */
+.status-text {
+  font-size: 13px;
   font-weight: 600;
-  color: var(--text-main);
+  color: #1f2937;
 }
 
-input:checked + .slider {
-  background: rgba(21,128,61,0.25);
-}
 
-input:checked + .slider::before {
-  transform: translateX(76px);
-}
-
-/* ================= MODAL ACTIONS ================= */
+/* ======================================================
+   MODAL ACTIONS
+====================================================== */
 .actions-btn {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  padding-top: 8px;
-}
+  margin-top: 6px; }
 
-/* ================= SAVE BUTTON (FINAL) ================= */
-.save {
-  background-color: #006666;     /* strong dark teal */
-  color: #ffffff;
-
-  border: none;
-  padding: 10px 20px;
-  border-radius: 10px;
-
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  cursor: pointer;
-
-  box-shadow:
-    0 6px 14px rgba(0, 102, 102, 0.45);
-
-  transition: background-color 0.2s ease,
-              box-shadow 0.2s ease,
-              transform 0.15s ease;
-}
-
-.save:hover {
-  background-color: #005555;     /* darker on hover */
-  box-shadow:
-    0 10px 22px rgba(0, 102, 102, 0.6);
-  transform: translateY(-1px);
-}
-
-.save:active {
-  transform: translateY(0);
-}
-
-
-.cancel {
-  background: #f3f4f6;
-  border: 1px solid var(--border-soft);
-  padding: 10px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: #374151;
-}
-
-/* ================= RESPONSIVE ================= */
+/* ======================================================
+   RESPONSIVE
+====================================================== */
 @media (max-width: 768px) {
   .leads-container {
     padding: 20px;

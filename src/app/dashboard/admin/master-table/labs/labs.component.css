@@ -1,27 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-/* ================= ROOT ================= */
-:root {
-  --teal: #0f766e;
-  --teal-soft: #eef6f6;
-  --teal-hover: #f1fbfa;
-
-  --bg-page: #f2f6f9;
-  --bg-card: #f9fbfc;
-
-  --border: #dfe7ec;
-
-  --text-main: #1f2937;
-  --text-muted: #6b7280;
-}
-
 /* ================= PAGE ================= */
 .labs-container {
   padding: 28px;
-  background: var(--bg-page);
+  background: #f2f6f9; /* page background */
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
-  color: var(--text-main);
+  color: #1f2937; /* main text */
 }
 
 /* ================= HEADER ================= */
@@ -59,7 +44,7 @@
 
 /* ================= TABLE CARD ================= */
 .table-wrapper {
-  background: var(--bg-card);
+  background: #f9fbfc; /* card background */
   border-radius: 16px;
   padding: 0;
   box-shadow: 0 8px 22px rgba(0,0,0,0.08);
@@ -75,14 +60,14 @@
 
 /* HEADER */
 .lab-table thead {
-  background: var(--teal-soft);
+  background: #eef6f6; /* soft teal background */
 }
 
 .lab-table th {
   padding: 16px 20px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--teal);
+  color: #0f766e; /* teal text */
   text-transform: uppercase;
   text-align: left;
 }
@@ -91,8 +76,8 @@
 .lab-table td {
   padding: 16px 20px;
   font-size: 14px;
-  color: var(--text-main);
-  border-bottom: 1px solid var(--border);
+  color: #1f2937; /* main text */
+  border-bottom: 1px solid #dfe7ec;
   vertical-align: middle;
 }
 
@@ -114,7 +99,7 @@
 
 /* ROW HOVER */
 .lab-table tbody tr:hover {
-  background: var(--teal-hover);
+  background: #f1fbfa; /* teal hover */
 }
 
 /* ================= EDIT BUTTON ================= */
@@ -128,7 +113,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--teal);
+  color: #0f766e;
 }
 
 .edit-btn:hover {
@@ -139,7 +124,7 @@
 .empty {
   padding: 32px;
   text-align: center;
-  color: var(--text-muted);
+  color: #6b7280; /* muted text */
   font-size: 14px;
 }
 
@@ -157,8 +142,7 @@
 /* ================= MODAL ================= */
 .modal {
   background: #ffffff;
-  width: 100%;
-  max-width: 420px;
+  width: 420px;
   border-radius: 18px;
   padding: 24px 26px;
   box-shadow: 0 30px 60px rgba(0,0,0,0.18);
@@ -169,7 +153,7 @@
   margin-bottom: 20px;
   font-size: 18px;
   font-weight: 600;
-  color: var(--teal);
+  color: #0f766e; /* teal */
   text-align: left;
 }
 
@@ -178,9 +162,11 @@
   width: 100%;
   padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid var(--border);
+  border: 1px solid #dfe7ec;
   background: #f9fbfc;
   font-size: 14px;
+  box-sizing: border-box; /* ensures padding doesn't touch modal edge */
+  margin-bottom: 12px; /* space between inputs or other elements */
 }
 
 .modal input::placeholder {
@@ -189,7 +175,7 @@
 
 .modal input:focus {
   outline: none;
-  border-color: var(--teal);
+  border-color: #0f766e;
   box-shadow: 0 0 0 2px rgba(15,118,110,0.15);
 }
 
@@ -214,7 +200,7 @@
 
 .cancel {
   background: #f3f6f8;
-  border: 1px solid var(--border);
+  border: 1px solid #dfe7ec;
   padding: 10px 22px;
   border-radius: 10px;
   cursor: pointer;
