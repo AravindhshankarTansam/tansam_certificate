@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap');
 
 /* ======================================================
    BASE
@@ -6,8 +6,8 @@
 body {
   margin: 0;
   font-family: 'Nunito', sans-serif;
-  background:  #f4f6f8;
-  color:  #1f2937;
+  background: #f4f6f8;
+  color: #1f2937;
 }
 
 /* ======================================================
@@ -18,48 +18,47 @@ body {
   min-height: 100vh;
 }
 
-/* ======================================================
-   HEADER
-====================================================== */
+/* HEADER */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .header h2 {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
   padding-left: 12px;
   position: relative;
+  color: #111827;
 }
 
 .header h2::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 3px;
-  width: 4px;
-  height: 65%;
-  background:  #009999;
+  top: 4px;
+  width: 5px;
+  height: 70%;
+  background: #009999;
+  border-radius: 3px;
 }
 
-/* ======================================================
-   PRIMARY BUTTON
-====================================================== */
+/* BUTTONS */
 .add-btn,
 .save {
-  background:#009999;
+  background: #009999;
   color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 11px 22px;
   border-radius: 6px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 14px;
 }
 
 .add-btn:hover,
@@ -67,99 +66,99 @@ body {
   background: #007c7c;
 }
 
-/* ======================================================
-   SECONDARY BUTTON
-====================================================== */
 .cancel {
   background: #ffffff;
-  border: 1px solid  #d1d5db;
-  padding: 10px 18px;
+  border: 1px solid #d1d5db;
+  padding: 11px 20px;
   border-radius: 6px;
   cursor: pointer;
   color: #1f2937;
+  font-weight: 600;
 }
 
 .cancel:hover {
   background: #f9fafb;
 }
 
-/* ======================================================
-   TABLE
-====================================================== */
+/* TABLE */
 .table-wrapper {
-background:#50c5c5;
-border: 1px solid #c7dede;
-color: #1f2937;
-
-  border-radius: 8px;
+  background: white;
+  border: 1px solid #c7dede;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .lead-table {
   width: 100%;
-
   border-collapse: collapse;
+  background: white;
 }
 
 .lead-table thead {
-  background: white;
-border: 1px solid rgba(0, 212, 255, 0.35);
-color: #1f2937;
-;
+  background: #e6f5f5;              /* ← light teal header – matches add user theme */
+  border-bottom: 2px solid #009999;  /* stronger accent line */
 }
 
 .lead-table th {
-  padding: 14px 16px;
-  font-size: 11px;
+  padding: 16px 18px;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color:  #000000;
+  letter-spacing: 0.6px;
+  color: #006666;                   /* darker teal for text contrast */
   text-align: left;
 }
 
 .lead-table td {
-  padding: 14px 16px;
+  padding: 16px 18px;
   font-size: 14px;
-  border-bottom: 1px solid  #d1d5db;
+  font-weight: 500;
+  border-bottom: 1px solid #e5e7eb;
+  color: #111827;
+  background: white;
 }
 
 .lead-table tbody tr:hover {
-  background: #f8fafc;
+  background: white;
 }
 
-/* ======================================================
-   STATUS
-====================================================== */
 .active {
-  color: #0f766e;;
-  font-weight: 600;
+  color: #0f766e;
+  font-weight: 700;
+  background: rgba(15, 118, 110, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
 }
 
 .inactive {
   color: #9f1239;
-  font-weight: 600;
+  font-weight: 700;
+  background: rgba(159, 18, 57, 0.1);
+  padding: 4px 10px;
+  border-radius: 6px;
 }
 
-/* ======================================================
-   ICON BUTTON
-====================================================== */
 .edit-btn {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 6px;
-  border: 1px solid  #d1d5db;
+  border: 1px solid #d1d5db;
   background: transparent;
   cursor: pointer;
   color: #1f2937;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .edit-btn:hover {
-  background: #eef2f4;
+  background: #e6f0f0;
+  border-color: #009999;
 }
 
-/* ======================================================
-   MODAL BACKDROP
-====================================================== */
+/* MODAL */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -170,91 +169,86 @@ color: #1f2937;
   z-index: 1000;
 }
 
-/* ======================================================
-   MODAL
-====================================================== */
 .modal {
-  background:  #ffffff;
-  width: 380px;
-  padding: 28px;
-  border-radius: 8px;
+  background: #ffffff;
+  width: 420px;
+  max-width: 92%;
+  padding: 32px 28px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  gap: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
 }
 
-/* ======================================================
-   INPUTS
-====================================================== */
 .modal input,
 .modal select {
-  padding: 12px 14px;
-  border-radius: 6px;
-  border: 1px solid  #d1d5db;
-  font-size: 14px;
+  padding: 13px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #111827;
+  background: #fdfefe;
+  transition: all 0.2s ease;
 }
 
 .modal input::placeholder {
-  color:  #6b7280;
+  color: #9ca3af;
+  font-weight: 400;
 }
 
 .modal input:focus,
 .modal select:focus {
   outline: none;
-  border-color:  #009999;
+  border-color: #009999;
+  background: #f5fdfc;
+  box-shadow: 0 0 0 4px rgba(0, 153, 153, 0.12);
 }
 
-/* ======================================================
-   PASSWORD
-====================================================== */
-/* ================= PASSWORD ================= */
 .password-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-
-  padding: 12px 14px;
-  border-radius: 6px;
   border: 1px solid #d1d5db;
-  background: #ffffff;
+  border-radius: 8px;
+  background: #fdfefe;
+  transition: all 0.2s ease;
 }
 
 .password-wrapper input {
   border: none;
   outline: none;
-  padding: 0;
+  padding: 13px 16px;
   width: 100%;
-  font-size: 14px;
+  font-size: 15px;
   background: transparent;
+  font-weight: 500;
+  color: #111827;
 }
 
 .password-wrapper i {
-  margin-left: 10px;
+  margin-right: 16px;
   cursor: pointer;
   color: #6b7280;
+  font-size: 18px;
 }
 
-/* Focus state – matches other inputs */
 .password-wrapper:focus-within {
   border-color: #009999;
+  background: #f5fdfc;
+  box-shadow: 0 0 0 4px rgba(0, 153, 153, 0.12);
 }
 
-
-/* ======================================================
-   TOGGLE SWITCH
-====================================================== */
-/* ================= TOGGLE ROW ================= */
 .toggle-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
-/* ================= SWITCH ================= */
 .switch {
   position: relative;
-  width: 46px;
+  width: 48px;
   height: 24px;
 }
 
@@ -265,7 +259,7 @@ color: #1f2937;
 .slider {
   position: absolute;
   inset: 0;
-  background: #e5e7eb;
+  background: #cbd5e1;
   border-radius: 12px;
   cursor: pointer;
   transition: background 0.25s;
@@ -281,43 +275,37 @@ color: #1f2937;
   background: #ffffff;
   border-radius: 50%;
   transition: transform 0.25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-/* Checked */
 .switch input:checked + .slider {
-  background: rgba(0,153,153,0.5);
+  background: #009999;
 }
 
 .switch input:checked + .slider::before {
-  transform: translateX(22px);
+  transform: translateX(24px);
 }
 
-/* ================= STATUS TEXT ================= */
 .status-text {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  color: #1f2937;
+  color: #374151;
 }
 
-
-/* ======================================================
-   MODAL ACTIONS
-====================================================== */
 .actions-btn {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 6px; }
+  gap: 14px;
+  margin-top: 12px;
+}
 
-/* ======================================================
-   RESPONSIVE
-====================================================== */
+/* RESPONSIVE */
 @media (max-width: 768px) {
   .leads-container {
     padding: 20px;
   }
-
   .modal {
     width: 92%;
+    padding: 24px 20px;
   }
 }
