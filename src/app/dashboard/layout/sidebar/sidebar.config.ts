@@ -47,22 +47,21 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
 
   // ================= TEAM LEAD =================
 TEAM_LEAD: [
-  { label: 'Dashboard Home', route: 'teamlead' },
+  { label: 'Dashboard Home', route: '/dashboard/teamlead/dashboard' },
 
   {
     label: 'Attendance',
     children: [
-      
-      { label: 'SDP', route: 'teamlead/sdp' },
-      { label: 'FDP', route: 'teamlead/fdp' },
-      { label: 'Industry', route: 'teamlead/industry' }
+      { label: 'SDP', route: '/dashboard/teamlead/sdp' },
+      { label: 'FDP', route: '/dashboard/teamlead/fdp' },
+      { label: 'Industry', route: '/dashboard/teamlead/industry' }
     ]
   },
 
   {
     label: 'Reports',
     children: [
-      { label: 'Not Eligible List', route: 'teamlead/not-eligible' }
+      { label: 'Not Eligible List', route: '/dashboard/teamlead/not-eligible' }
     ]
   }
 ],
@@ -89,6 +88,7 @@ TEAM_LEAD: [
     }
   ]
 
+  
 
 
 };

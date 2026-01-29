@@ -99,7 +99,7 @@ export class LoginComponent {
             this.router.navigate(['/dashboard/sub-admin/dashboard']);
           }
           else if (roleKey === 'TEAM_LEAD') {
-            this.router.navigate(['/dashboard/team-lead']);
+            this.router.navigate(['/dashboard/teamlead/dashboard']);
           }
           else if (roleKey === 'FINANCE') {   // ⭐ ADD THIS
             this.router.navigate(['/dashboard/finance/dashboard']);

@@ -19,7 +19,7 @@ import { FinancereportsComponent } from './dashboard/finance/financereports/fina
 import { TransactionsSdpComponent } from './dashboard/finance/transactions/transactions-sdp/transactions-sdp.component';
 import { TransactionsFdpComponent } from './dashboard/finance/transactions/transactions-fdp/transactions-fdp.component';
 import { TransactionsIndustryComponent } from './dashboard/finance/transactions/transactions-industry/transactions-industry.component';
-
+import { TeamLeadDashboardComponent } from './dashboard/team-lead/team-lead-dashboard/team-lead-dashboard.component';
 
 
 
@@ -45,6 +45,12 @@ export const routes: Routes = [
       { path: 'sub-admin/industry', component: IndustryComponent },
       { path: 'sub-admin/bulk-upload', component: BulkUploadComponent },
       { path: 'sub-admin/reports', component: ReportsComponent },
+      // Team Lead Routes
+      { path: 'teamlead/dashboard', component: TeamLeadDashboardComponent },
+      { path: 'teamlead/sdp', component: SdpComponent },
+      { path: 'teamlead/fdp', component: FdpComponent },
+      { path: 'teamlead/industry', component: IndustryComponent },
+      { path: 'teamlead/not-eligible', component: ReportsComponent },
 
       // Finance Routes
       { path: 'finance/dashboard', component: FinanceDashboardComponent },
