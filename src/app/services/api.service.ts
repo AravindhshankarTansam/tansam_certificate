@@ -142,6 +142,51 @@ export class ApiService {
     );
   }
 
+  /* ========================
+   HOLIDAYS (ADMIN)
+======================== */
+
+getHolidays(year?: number, month?: number) {
+  let url = `${this.BASE_URL}/admin/master-table/holidays/get`;
+
+  if (year && month) {
+    const m = String(month).padStart(2, '0');
+    url += `?year=${year}&month=${m}`;
+  }
+
+  return this.http.get<any[]>(url, {
+    withCredentials: true
+  });
+}
+
+addHoliday(data: {
+  holiday_date: string;
+  holiday_name: string;
+  type: 'G' | 'R';
+}) {
+  return this.http.post(
+    `${this.BASE_URL}/admin/master-table/holidays/post`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+updateHoliday(id: number, data: any) {
+  return this.http.put(
+    `${this.BASE_URL}/admin/master-table/holidays/update/${id}`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+deleteHoliday(id: number) {
+  return this.http.delete(
+    `${this.BASE_URL}/admin/master-table/holidays/delete/${id}`,
+    { withCredentials: true }
+  );
+}
+
+
   /* ================= USERS ================= */
 
   getUsers() {

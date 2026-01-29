@@ -20,6 +20,7 @@ import { TransactionsSdpComponent } from './dashboard/finance/transactions/trans
 import { TransactionsFdpComponent } from './dashboard/finance/transactions/transactions-fdp/transactions-fdp.component';
 import { TransactionsIndustryComponent } from './dashboard/finance/transactions/transactions-industry/transactions-industry.component';
 import { TeamLeadDashboardComponent } from './dashboard/team-lead/team-lead-dashboard/team-lead-dashboard.component';
+import { HolidayComponent } from './dashboard/admin/master-table/holiday/holidays.component';
 
 
 
@@ -38,6 +39,7 @@ export const routes: Routes = [
       { path: 'admin/leads', component: AddLeadsComponent },
       { path: 'admin/signature', component: CertificateSignatureComponent },
       { path: 'admin/roles', component: RolesComponent },
+      { path: 'admin/holidays', component: HolidayComponent },
       // Sub Admin Routes
       { path: 'sub-admin/dashboard', component: SubAdminComponent },
       { path: 'sub-admin/sdp', component: SdpComponent },

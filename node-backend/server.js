@@ -11,6 +11,8 @@ const teamLeadsRoutes = require('./routes/admin/master-table/teamLeads.routes');
 const certificateRoutes = require('./routes/admin/master-table/certificate-signature.routes');
 const roleRoutes = require('./routes/admin/master-table/roles.routes');
 const userRoutes = require('./routes/admin/master-table/users.routes');
+const holidayRoutes = require('./routes/admin/master-table/holidays.routes');
+
 // Sub admin
 const sdpRoutes = require('./routes/subadmin/sdp.routes');
 const fdpRoutes = require('./routes/subadmin/fdp.routes');
@@ -60,6 +62,8 @@ app.use('/api/admin/master-table/certificate-signature', certificateRoutes);
 app.use('/uploads', express.static('uploads'));
 app.use('/api/admin/master-table/roles', roleRoutes);
 app.use('/api/admin/master-table/users', userRoutes);
+app.use('/api/admin/master-table/holidays', holidayRoutes);
+
 // Sub admin
 app.use('/api/subadmin/sdp', sdpRoutes);
 app.use('/api/subadmin/fdp', fdpRoutes);

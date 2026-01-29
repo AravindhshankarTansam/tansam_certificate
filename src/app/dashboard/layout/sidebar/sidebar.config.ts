@@ -17,7 +17,8 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
         { label: 'Labs', route: '/dashboard/admin/labs' },
         { label: 'Add Leads', route: '/dashboard/admin/leads' },
         { label: 'Certificate Signature', route: '/dashboard/admin/signature' },
-        { label: 'Roles', route: '/dashboard/admin/roles' }
+        { label: 'Roles', route: '/dashboard/admin/roles' },
+        { label: 'holidays', route: '/dashboard/admin/holidays' }
       ]
     }
 
@@ -88,7 +89,7 @@ TEAM_LEAD: [
     }
   ]
 
-  
+
 
 
 };

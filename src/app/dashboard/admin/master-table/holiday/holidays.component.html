@@ -1,0 +1,43 @@
+<!-- Spiral -->
+<div class="spiral-bar">
+  <div class="spiral" *ngFor="let s of [].constructor(30)"></div>
+</div>
+
+<div class="holiday-page" [class.flip]="isFlipping">
+
+  <div class="page-corner"></div>
+
+  <!-- Header -->
+  <div class="calendar-header">
+    <button (click)="flipPrev()">&#10094;</button>
+    <h2>{{ monthNames[currentMonth] }} {{ currentYear }}</h2>
+    <button (click)="flipNext()">&#10095;</button>
+  </div>
+  <div class="calendar-layout">
+
+    <!-- Calendar Grid -->
+    <div class="calendar-grid">
+      <div class="day-header" *ngFor="let d of days">{{ d }}</div>
+      <div *ngFor="let day of calendarDays"
+          class="day-box"
+          [class.empty]="!day"
+          [class.restricted]="isHoliday(day)?.type === 'R'"
+          [class.govt]="isHoliday(day)?.type === 'G'"
+          [class.sunday]="isSunday(day)"
+          [class.today]="isToday(day)"
+          (click)="addHoliday(day)">   <!-- ⭐ THIS LINE ADDED -->
+        {{ day }}
+      </div>
+    </div>
+
+    <!-- Holiday Panel -->
+    <div class="holiday-list">
+      <h3>Holidays of the Month</h3>
+      <div *ngFor="let h of monthHolidays" class="holiday-item">
+        <span class="holiday-date">{{ getDay(h.holiday_date) }}</span>
+        <span class="holiday-name">{{ h.holiday_name }}</span>
+        <span class="holiday-type" [class.govt]="h.type==='G'">({{ h.type }})</span>
+      </div>
+    </div>
+  </div>
+</div>

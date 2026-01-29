@@ -1,11 +1,14 @@
 /* =====================================================
    ROLE BASED AUTH MIDDLEWARE
-   ===================================================== */
+===================================================== */
+
 
 /* ================= CHECK LOGIN ================= */
 const isLoggedIn = (req, res, next) => {
   if (!req.session || !req.session.user) {
-    return res.status(401).json({ message: 'Unauthorized. Please login.' });
+    return res.status(401).json({
+      message: 'Unauthorized. Please login.'
+    });
   }
   next();
 };
@@ -55,19 +58,21 @@ const isAdminOrSubAdmin = (req, res, next) => {
 };
 
 
-/* ================= GENERIC ROLE CHECKER (BEST WAY) =================
-   Use this if you want flexible roles like:
+/* ================= GENERIC ROLE CHECKER =================
+   Flexible usage:
    allowRoles('Admin')
    allowRoles('Admin','Sub Admin')
    allowRoles('Staff','Trainer')
-*/
+===================================================== */
 const allowRoles = (...roles) => {
   return (req, res, next) => {
     if (!req.session || !req.session.user) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    if (!roles.includes(req.session.user.role)) {
+    const role = req.session.user.role;
+
+    if (!roles.includes(role)) {
       return res.status(403).json({
         message: `Access denied. Allowed roles: ${roles.join(', ')}`
       });
@@ -76,6 +81,8 @@ const allowRoles = (...roles) => {
     next();
   };
 };
+
+
 /* ================= FINANCE ONLY ================= */
 const isFinance = (req, res, next) => {
   if (!req.session || !req.session.user) {
@@ -96,5 +103,6 @@ module.exports = {
   isAdmin,
   isSubAdmin,
   isAdminOrSubAdmin,
-  allowRoles,isFinance
+  allowRoles,
+  isFinance
 };

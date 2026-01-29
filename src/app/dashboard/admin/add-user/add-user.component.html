@@ -2,7 +2,7 @@
 
   <!-- HEADER -->
   <div class="header">
-    <h2>Users</h2>
+    <h2>Users List</h2>
     <button class="add-btn" (click)="openModal()">
       <i class="fa-solid fa-plus"></i> Add User
     </button>
@@ -70,20 +70,28 @@
          (click)="showPassword = !showPassword"></i>
     </div>
 
-    <!-- ROLE SELECT -->
-    <select [(ngModel)]="form.role_id" (change)="onRoleChange()" required>
-      <option value="" disabled selected>Select Role</option>
-      <option *ngFor="let r of roles" [value]="r.id">{{ r.name }}</option>
-    </select>
+<!-- ROLE -->
+<div class="field">
+  <label>Role</label>
+  <select [(ngModel)]="form.role_id" (change)="onRoleChange()" required>
+    <option [ngValue]="null" disabled>Select Role</option>
+    <option *ngFor="let r of roles" [ngValue]="r.id">
+      {{ r.name }}
+    </option>
+  </select>
+</div>
 
-    <!-- LAB SELECT (ONLY FOR TEAM LEAD) -->
-    <div *ngIf="isTeamLead" class="teamlead-labs">
-      <label for="labSelect">Select Lab:</label>
-      <select id="labSelect" [(ngModel)]="form.lab_id" required>
-        <option value="" disabled selected>Select Lab</option>
-        <option *ngFor="let l of labs" [value]="l.id">{{ l.name }}</option>
-      </select>
-    </div>
+<!-- LAB (ONLY FOR TEAM LEAD) -->
+<div *ngIf="isTeamLead" class="field">
+  <label>Select Lab</label>
+  <select [(ngModel)]="form.lab_id" required>
+    <option [ngValue]="null" disabled>Select Lab</option>
+    <option *ngFor="let l of labs" [ngValue]="l.id">
+      {{ l.name }}
+    </option>
+  </select>
+</div>
+
 
     <!-- STATUS TOGGLE -->
     <div class="toggle-row">
@@ -91,7 +99,7 @@
         <input type="checkbox" [(ngModel)]="form.is_active">
         <span class="slider"></span>
       </label>
-      <span class="status-text">{{ form.is_active ? 'Active' : 'Inactive' }}</span>
+      <span class="status-text">{{ form.is_active ? 'Active' : 'In-active' }}</span>
     </div>
 
     <!-- ACTION BUTTONS -->

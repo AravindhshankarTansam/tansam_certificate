@@ -19,6 +19,28 @@ const db = require('../db');
     `);
 
     /* =========================
+      HOLIDAYS TABLE
+    ========================= */
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS holidays (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+
+        holiday_date DATE NOT NULL UNIQUE,
+        holiday_name VARCHAR(255) NOT NULL,
+
+        type ENUM('G','R') DEFAULT 'G',  -- G = Govt, R = Restricted
+
+        created_by INT,
+        is_locked BOOLEAN DEFAULT TRUE,
+
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+        FOREIGN KEY (created_by) REFERENCES admin_user(id) ON DELETE SET NULL
+      )
+    `);
+
+
+    /* =========================
        LEADS TABLE
     ========================= */
     await db.query(`
