@@ -21,9 +21,13 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     // 🔹 get role (change this later to AuthService if needed)
-    const role = localStorage.getItem('role') || 'ADMIN';
+const role = (localStorage.getItem('role') || 'ADMIN').trim();
 
-    this.menuItems = ROLE_MENUS[role] || [];
+console.log('ROLE:', role);
+console.log('MENU:', ROLE_MENUS[role]);
+
+this.menuItems = ROLE_MENUS[role] ?? [];
+
   }
   
   
