@@ -1,0 +1,23 @@
+<div class="verify-box"
+     [class.valid]="status === 'valid'"
+     [class.fake]="status === 'fake'">
+
+  <h2 *ngIf="status === 'valid'">✅ Certificate Verified</h2>
+  <h2 *ngIf="status === 'fake'">❌ Fake Certificate</h2>
+  <h2 *ngIf="status === 'invalid'">⚠️ Invalid Verification Link</h2>
+
+  <p><b>Issued by TANSAM</b></p>
+
+  <p *ngIf="certificateNo">
+    Certificate No: {{ certificateNo }}
+  </p>
+
+  <p *ngIf="status === 'fake'" style="margin-top: 12px;">
+    This certificate number does not exist in our records.
+  </p>
+
+  <p *ngIf="status === 'invalid'" style="margin-top: 12px;">
+    The verification link is incorrect or incomplete.
+  </p>
+
+</div>

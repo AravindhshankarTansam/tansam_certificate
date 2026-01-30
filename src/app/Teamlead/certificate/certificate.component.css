@@ -319,3 +319,45 @@ h1 {
   right: 80px;
   font-size: 14px;
 }
+.certificate {
+  position: relative;
+}
+
+/* QR Code in left-bottom corner */
+.qr-code {
+    position: absolute;
+    bottom: 94px;
+    left: 86px;
+    z-index: 9999;
+    background: white;
+    padding: 1px;
+    border: none;
+}
+.qr-code qrcode {
+  width: 80px;
+  height: 80px;
+}
+.qr-code1 {
+    position: absolute;
+    bottom: 45px;
+    left: 41px;
+    z-index: 10;
+    background: white;
+    padding: 4px;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    display: inline-block;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.qr-code1:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.qr-code1 qrcode {
+  width: 80px;
+  height: 80px;
+  display: block;
+}

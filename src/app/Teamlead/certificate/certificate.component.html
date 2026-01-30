@@ -76,7 +76,38 @@
       [(ngModel)]="certificateData.certificateNo"
       class="editable-text small">
   </div>
+ <!-- ✅ Left Bottom QR Code -->
+<div class="qr-code">
+  <a
+    [routerLink]="['/verify', certificateData.certificateNo]"
+    style="cursor: pointer; display: inline-block;"
+  >
+    <qrcode
+      [qrdata]="qrValue"
+      [width]="80"
+      [errorCorrectionLevel]="'M'"
+      [elementType]="'img'"
+      [colorDark]="'#000000'"
+      [colorLight]="'#ffffff'">
+    </qrcode>
+  </a>
+</div>
 
-</div> <!-- ✅ ONLY ONE closing .certificate -->
+<!-- <div class="qr-code1">
+  <!-- <a [routerLink]="fakeCertUrl" style="cursor: pointer; display: inline-block;">
+    <qrcode
+      [qrdata]="fakeCertUrl"
+      [width]="80"
+      [errorCorrectionLevel]="'M'"
+      [elementType]="'img'"
+      [colorDark]="'#000000'"
+      [colorLight]="'#ffffff'">
+    </qrcode1>
+  </a>
+</div> --> -->
+
+
+
+<!-- </div> ✅ ONLY ONE closing .certificate -->
 
 
