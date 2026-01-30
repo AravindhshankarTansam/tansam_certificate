@@ -1,0 +1,69 @@
+<div class="attendance-wrapper">
+
+  <h2>SDP Attendance</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Register No</th>
+        <th>Attendance</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let s of students; let i=index">
+
+        <td>{{i+1}}</td>
+        <td>{{s.student_name}}</td>
+        <td>{{s.register_no}}</td>
+
+        <td>
+          <button (click)="openCalendar(s)">
+            📅 Open Calendar
+          </button>
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+<!-- ================= CALENDAR POPUP ================= -->
+
+<div class="popup" *ngIf="showCalendar">
+
+  <div class="modal">
+
+    <h3>{{selectedStudent.student_name}} Attendance</h3>
+
+    <div class="calendar">
+
+      <div
+        *ngFor="let d of calendarDays"
+        class="day"
+        [class.present]="isPresent(d)"
+        [class.holiday]="isHoliday(d)"
+        (click)="toggleDate(d)">
+
+        {{ d.split('-')[2] }}
+
+      </div>
+
+    </div>
+
+
+    <div class="summary">
+      Present: {{getPresentCount()}} |
+      Total: {{getTotalDays()}} |
+      %: {{getPercentage()}}%
+    </div>
+
+    <button (click)="closeCalendar()">Close</button>
+
+  </div>
+
+</div>

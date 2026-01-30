@@ -333,4 +333,65 @@ updatePayment(type: 'sdp' | 'fdp' | 'industry', id: number, body: any) {
   );
 }
 
+/* ================= TEAM LEAD ATTENDANCE (DATE WISE) ================= */
+
+/* ---------- SDP ---------- */
+
+getTlSDP() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/teamlead/sdp/get`,
+    { withCredentials: true }
+  );
+}
+
+markTlSDPDate(id: number, date: string) {
+  return this.http.post(
+    `${this.BASE_URL}/teamlead/sdp/mark-date`,
+    { id, date },
+    { withCredentials: true }
+  );
+}
+
+
+
+/* ---------- FDP ---------- */
+
+getTlFDP() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/teamlead/fdp/get`,
+    { withCredentials: true }
+  );
+}
+
+markTlFDPDate(id: number, date: string) {
+  return this.http.post(
+    `${this.BASE_URL}/teamlead/fdp/mark-date`,
+    { id, date },
+    { withCredentials: true }
+  );
+}
+
+
+
+/* ---------- INDUSTRY ---------- */
+
+getTlIndustry() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/teamlead/industry/get`,
+    { withCredentials: true }
+  );
+}
+
+markTlIndustryDate(id: number, date: string) {
+  return this.http.post(
+    `${this.BASE_URL}/teamlead/industry/mark-date`,
+    { id, date },
+    { withCredentials: true }
+  );
+}
+/* ================= TEAM LEAD HOLIDAYS ================= */
+
+
+
+
 }

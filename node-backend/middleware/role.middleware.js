@@ -1,78 +1,36 @@
 /* =====================================================
-   ROLE BASED AUTH MIDDLEWARE
+   ROLE BASED AUTH MIDDLEWARE (CLEAN VERSION)
 ===================================================== */
 
 
 /* ================= CHECK LOGIN ================= */
 const isLoggedIn = (req, res, next) => {
-  if (!req.session || !req.session.user) {
-    return res.status(401).json({
-      message: 'Unauthorized. Please login.'
-    });
+  if (!req.session?.user) {
+    return res.status(401).json({ message: 'Unauthorized. Please login.' });
   }
   next();
 };
 
 
-/* ================= ADMIN ONLY ================= */
-const isAdmin = (req, res, next) => {
-  if (!req.session || !req.session.user) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  if (req.session.user.role !== 'Admin') {
-    return res.status(403).json({ message: 'Admin only access' });
-  }
-
-  next();
-};
-
-
-/* ================= SUB-ADMIN ONLY ================= */
-const isSubAdmin = (req, res, next) => {
-  if (!req.session || !req.session.user) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  if (req.session.user.role !== 'Sub Admin') {
-    return res.status(403).json({ message: 'Sub Admin only access' });
-  }
-
-  next();
-};
-
-
-/* ================= ADMIN OR SUB-ADMIN ================= */
-const isAdminOrSubAdmin = (req, res, next) => {
-  if (!req.session || !req.session.user) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  const role = req.session.user.role;
-
-  if (role !== 'Admin' && role !== 'Sub Admin') {
-    return res.status(403).json({ message: 'Access denied' });
-  }
-
-  next();
-};
-
-
-/* ================= GENERIC ROLE CHECKER =================
-   Flexible usage:
-   allowRoles('Admin')
-   allowRoles('Admin','Sub Admin')
-   allowRoles('Staff','Trainer')
+/* =====================================================
+   GENERIC ROLE CHECKER (MAIN ONE YOU NEED)
+   Usage:
+   allowRoles('admin')
+   allowRoles('admin','sub admin')
+   allowRoles('team lead')
 ===================================================== */
 const allowRoles = (...roles) => {
   return (req, res, next) => {
-    if (!req.session || !req.session.user) {
+    if (!req.session?.user) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const role = req.session.user.role;
+    // 🔥 normalize once
+    const role = req.session.user.role.toLowerCase().trim();
 
-    if (!roles.includes(role)) {
+    const allowed = roles.map(r => r.toLowerCase());
+
+    if (!allowed.includes(role)) {
       return res.status(403).json({
         message: `Access denied. Allowed roles: ${roles.join(', ')}`
       });
@@ -83,26 +41,23 @@ const allowRoles = (...roles) => {
 };
 
 
-/* ================= FINANCE ONLY ================= */
-const isFinance = (req, res, next) => {
-  if (!req.session || !req.session.user) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  if (req.session.user.role !== 'Finance') {
-    return res.status(403).json({ message: 'Finance only access' });
-  }
-
-  next();
-};
+/* =====================================================
+   SIMPLE SHORTCUTS (optional helpers)
+===================================================== */
+const isAdmin = allowRoles('admin');
+const isSubAdmin = allowRoles('sub admin');
+const isAdminOrSubAdmin = allowRoles('admin', 'sub admin');
+const isFinance = allowRoles('finance');
+const isTeamLead = allowRoles('team lead');
 
 
 /* ================= EXPORTS ================= */
 module.exports = {
   isLoggedIn,
+  allowRoles,
   isAdmin,
   isSubAdmin,
   isAdminOrSubAdmin,
-  allowRoles,
-  isFinance
+  isFinance,
+  isTeamLead
 };

@@ -19,8 +19,13 @@ import { FinancereportsComponent } from './dashboard/finance/financereports/fina
 import { TransactionsSdpComponent } from './dashboard/finance/transactions/transactions-sdp/transactions-sdp.component';
 import { TransactionsFdpComponent } from './dashboard/finance/transactions/transactions-fdp/transactions-fdp.component';
 import { TransactionsIndustryComponent } from './dashboard/finance/transactions/transactions-industry/transactions-industry.component';
-import { TeamLeadDashboardComponent } from './dashboard/team-lead/team-lead-dashboard/team-lead-dashboard.component';
 import { HolidayComponent } from './dashboard/admin/master-table/holiday/holidays.component';
+// Team Lead
+import { TeamLeadDashboardComponent } from './dashboard/team-lead/team-lead-dashboard/team-lead-dashboard.component';
+import { TlSdpComponent } from './dashboard/team-lead/attendance/tl-sdp/tl-sdp.component';
+import { TlFdpComponent } from './dashboard/team-lead/attendance/tl-fdp/tl-fdp.component';
+import { TlIndustryComponent } from './dashboard/team-lead/attendance/tl-industry/tl-industry.component';
+import { TlNotEligibleComponent } from './dashboard/team-lead/reports/tl-not-eligible/tl-not-eligible.component';
 
 
 
@@ -49,10 +54,10 @@ export const routes: Routes = [
       { path: 'sub-admin/reports', component: ReportsComponent },
       // Team Lead Routes
       { path: 'teamlead/dashboard', component: TeamLeadDashboardComponent },
-      { path: 'teamlead/sdp', component: SdpComponent },
-      { path: 'teamlead/fdp', component: FdpComponent },
-      { path: 'teamlead/industry', component: IndustryComponent },
-      { path: 'teamlead/not-eligible', component: ReportsComponent },
+      { path: 'teamlead/sdp', component: TlSdpComponent },
+      { path: 'teamlead/fdp', component: TlFdpComponent },
+      { path: 'teamlead/industry', component: TlIndustryComponent },
+      { path: 'teamlead/not-eligible', component: TlNotEligibleComponent },
 
       // Finance Routes
       { path: 'finance/dashboard', component: FinanceDashboardComponent },
