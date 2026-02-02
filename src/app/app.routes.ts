@@ -26,6 +26,7 @@ import { TlSdpComponent } from './dashboard/team-lead/attendance/tl-sdp/tl-sdp.c
 import { TlFdpComponent } from './dashboard/team-lead/attendance/tl-fdp/tl-fdp.component';
 import { TlIndustryComponent } from './dashboard/team-lead/attendance/tl-industry/tl-industry.component';
 import { TlNotEligibleComponent } from './dashboard/team-lead/reports/tl-not-eligible/tl-not-eligible.component';
+import { VerifyComponent } from './dashboard/verify/verify.component';
 
 
 
@@ -33,6 +34,7 @@ export const routes: Routes = [
 
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
+  { path: 'verify/:certNo', component: VerifyComponent },
 
   {
     path: 'dashboard',

@@ -29,7 +29,10 @@ const pool = mysql.createPool({
   host: DB_HOST,
   user: DB_USER,
   password: DB_PASS,
-  database: DB_NAME
+  database: DB_NAME,
+
+  timezone: 'Z',        // 🔥 FIX 1
+  dateStrings: true
 });
 
 module.exports = pool.promise();
