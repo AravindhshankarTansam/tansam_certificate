@@ -61,19 +61,22 @@ exports.login = async (req, res) => {
     /* =========================
        3️⃣ SESSION
     ========================= */
-    req.session.user = {
-      id: user.id,
-      role: user.role_name
-    };
+req.session.user = {
+  id: user.id,
+  role: user.role_name,
+  lab_id: user.lab_id   // ⭐ ADD THIS (VERY IMPORTANT)
+};
 
 
     /* =========================
        4️⃣ RESPONSE
     ========================= */
-    res.json({
-      role: user.role_name,
-      name: user.name
-    });
+res.json({
+  role: user.role_name,
+  name: user.name,
+  lab_id: user.lab_id   // optional for debug
+});
+
 
   } catch (err) {
     res.status(500).json(err);

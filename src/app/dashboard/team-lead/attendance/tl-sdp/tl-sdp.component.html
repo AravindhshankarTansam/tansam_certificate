@@ -1,0 +1,94 @@
+<div class="attendance-wrapper">
+
+  <h2>SDP Attendance</h2>
+
+  <!-- ================= STUDENTS TABLE ================= -->
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Register No</th>
+        <th>Attendance</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let s of students; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ s.student_name }}</td>
+        <td>{{ s.register_no }}</td>
+
+        <td>
+          <button (click)="openCalendar(s)">
+            📅 Open Calendar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+
+
+<!-- ================= CALENDAR POPUP ================= -->
+
+<div class="popup" *ngIf="showCalendar">
+
+  <div class="modal">
+
+    <!-- HEADER -->
+    <h3>
+      {{ selectedStudent?.student_name }} Attendance
+    </h3>
+
+
+    <!-- ================= LEGEND (nice UX) ================= -->
+    <div class="legend">
+      <span class="box present"></span> Present
+      <span class="box holiday"></span> Holiday
+      <span class="box normal"></span> Working Day
+    </div>
+
+
+    <!-- ================= CALENDAR GRID ================= -->
+    <div class="calendar">
+
+      <div
+        *ngFor="let d of calendarDays"
+        class="day"
+
+        [class.present]="isPresent(d)"
+        [class.holiday]="isHoliday(d)"
+
+        [title]="isHoliday(d) ? 'Holiday (read only)' : 'Click to mark present'"
+
+        (click)="!isHoliday(d) && toggleDate(d)">
+
+        {{ d.split('-')[2] }}
+
+        <!-- Optional holiday icon -->
+        <span *ngIf="isHoliday(d)">🎉</span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= SUMMARY ================= -->
+    <div class="summary">
+      Present: {{ getPresentCount() }} |
+      Total: {{ getTotalDays() }} |
+      %: {{ getPercentage() }}%
+    </div>
+
+
+    <!-- ================= ACTIONS ================= -->
+    <div class="actions">
+      <button (click)="closeCalendar()">Close</button>
+    </div>
+
+  </div>
+
+</div>

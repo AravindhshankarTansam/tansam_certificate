@@ -20,6 +20,9 @@ const industryRoutes = require('./routes/subadmin/industry.routes');
 // Finance
 const financePaymentRoutes = require('./routes/finance/payment.routes');
 const financeListRoutes = require('./routes/finance/list.routes');
+//Team Lead
+const teamLeadRoutes = require('./routes/teamlead/teamlead.routes');
+
 
 
 
@@ -71,6 +74,11 @@ app.use('/api/subadmin/industry', industryRoutes);
 // Finance
 app.use('/api/finance/payment', financePaymentRoutes);
 app.use('/api/finance', financeListRoutes);
+// Team Lead
+app.use('/api/teamlead', teamLeadRoutes);
+app.use('/api/teamlead/holidays', holidayRoutes);
+
+
 
 
 const PORT = process.env.PORT || 5055;
