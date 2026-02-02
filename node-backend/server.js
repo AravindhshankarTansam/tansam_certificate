@@ -26,6 +26,7 @@ const teamLeadRoutes = require('./routes/teamlead/teamlead.routes');
 
 
 
+
 const app = express();
 
 app.use(cors({
@@ -75,6 +76,8 @@ app.use('/api/finance/payment', financePaymentRoutes);
 app.use('/api/finance', financeListRoutes);
 // Team Lead
 app.use('/api/teamlead', teamLeadRoutes);
+app.use('/api/teamlead/holidays', holidayRoutes);
+
 
 
 

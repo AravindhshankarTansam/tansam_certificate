@@ -2,14 +2,18 @@ const db = require('../../../db');
 
 
 /* =====================================================
-   GET ALL HOLIDAYS (month wise)
-   GET /api/admin/holidays?year=2026&month=01
+   GET HOLIDAYS
+   Supports:
+   ?year=2026&month=01  -> month wise
+   ?year=2026           -> full year
+   no query             -> all
 ===================================================== */
 exports.getHolidays = async (req, res) => {
   try {
+
     const { year, month } = req.query;
 
-    const [rows] = await db.query(`
+    let query = `
       SELECT
         id,
         DATE_FORMAT(holiday_date, '%Y-%m-%d') AS holiday_date,
@@ -19,9 +23,26 @@ exports.getHolidays = async (req, res) => {
         is_locked,
         created_at
       FROM holidays
-      WHERE DATE_FORMAT(holiday_date, '%Y-%m') = ?
-      ORDER BY holiday_date ASC
-    `, [`${year}-${month}`]);
+    `;
+
+    const params = [];
+
+    /* ================= FILTER LOGIC ================= */
+
+    if (year && month) {
+      // month wise
+      query += ` WHERE DATE_FORMAT(holiday_date, '%Y-%m') = ?`;
+      params.push(`${year}-${month}`);
+    }
+    else if (year) {
+      // full year
+      query += ` WHERE YEAR(holiday_date) = ?`;
+      params.push(year);
+    }
+
+    query += ` ORDER BY holiday_date ASC`;
+
+    const [rows] = await db.query(query, params);
 
     res.json(rows);
 
@@ -30,6 +51,7 @@ exports.getHolidays = async (req, res) => {
     res.status(500).json({ message: 'Error fetching holidays' });
   }
 };
+
 
 
 /* =====================================================

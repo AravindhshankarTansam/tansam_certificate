@@ -389,8 +389,24 @@ markTlIndustryDate(id: number, date: string) {
     { withCredentials: true }
   );
 }
+
 /* ================= TEAM LEAD HOLIDAYS ================= */
 
+getTlHolidays(year?: number, month?: number) {
+
+  let url = `${this.BASE_URL}/teamlead/holidays/get`;
+
+  if (year && month) {
+    const m = String(month).padStart(2, '0');
+    url += `?year=${year}&month=${m}`;
+  }
+
+  console.log('📡 TL Holidays API →', url);
+
+  return this.http.get<any[]>(url, {
+    withCredentials: true
+  });
+}
 
 
 

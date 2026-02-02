@@ -68,21 +68,36 @@ export class TlSdpComponent implements OnInit {
   }
 
 
-  /* ================= LOAD HOLIDAYS ================= */
-  loadHolidays() {
-    const today = new Date();
+/* ================= LOAD HOLIDAYS (TEAM LEAD) ================= */
+loadHolidays() {
 
-    this.api.getHolidays(today.getFullYear(), today.getMonth() + 1)
-      .subscribe(res => {
-        this.holidays = res.map(h => h.holiday_date);
-      });
-  }
+  if (!this.selectedStudent) return;
+
+  const start = new Date(this.selectedStudent.from_date);
+  const year = start.getFullYear();
+
+  console.log('📅 Fetching FULL YEAR holidays:', year);
+
+  this.api.getTlHolidays(year).subscribe({
+
+    next: (res: any[]) => {
+      this.holidays = res.map(h => h.holiday_date);
+      console.log('🟥 Year Holidays:', this.holidays);
+    },
+
+    error: (err: any) => {
+      console.error(err);
+    }
+  });
+}
+
+
 
 
   /* ================= TOGGLE DATE ================= */
   toggleDate(date: string) {
 
-    if (this.holidays.includes(date)) return;
+    if (this.holidays.includes(date) || !this.isEditable(date)) return;
 
     const list = this.selectedStudent.present_dates || [];
 
@@ -122,4 +137,33 @@ export class TlSdpComponent implements OnInit {
 
     return Math.round((this.getPresentCount() / total) * 100);
   }
+
+  /* ================= EDIT RULE =================
+   Only allow:
+   - today
+   - last 2 days
+   Block:
+   - older past
+   - future
+============================================== */
+isEditable(date: string): boolean {
+
+  const today = new Date();
+
+  const d = new Date(date);
+
+  // remove time
+  today.setHours(0,0,0,0);
+  d.setHours(0,0,0,0);
+
+  const diffDays =
+    (today.getTime() - d.getTime()) / (1000 * 60 * 60 * 24);
+
+  // future
+  if (diffDays < 0) return false;
+
+  // allow only last 2 days + today
+  return diffDays <= 2;
+}
+
 }

@@ -99,10 +99,10 @@ const db = require('../db');
       )
     `);
 
-/* =========================
-  USERS TABLE
-========================= */
-await db.query(`
+    /* =========================
+      USERS TABLE
+    ========================= */
+    await db.query(`
   CREATE TABLE IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
 
@@ -126,10 +126,10 @@ await db.query(`
 `);
 
 
-/* =========================
-  SDP STUDENTS
-========================= */
-await db.query(`
+    /* =========================
+      SDP STUDENTS
+    ========================= */
+    await db.query(`
 CREATE TABLE IF NOT EXISTS sdp_students (
   id INT PRIMARY KEY AUTO_INCREMENT,
 
@@ -152,8 +152,10 @@ CREATE TABLE IF NOT EXISTS sdp_students (
   payment_date DATE NULL,
   paid_status BOOLEAN DEFAULT FALSE,
 
-  /* ================= ATTENDANCE (NEW SIMPLE WAY) ================= */
-  present_dates JSON NULL,
+/* ================= ATTENDANCE (NEW SIMPLE WAY) ================= */
+present_dates JSON NULL,
+attendance_marked_by INT NULL,
+
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -165,10 +167,10 @@ CREATE TABLE IF NOT EXISTS sdp_students (
 
 
 
-/* =========================
-  FDP STAFF
-========================= */
-await db.query(`
+    /* =========================
+      FDP STAFF
+    ========================= */
+    await db.query(`
 CREATE TABLE IF NOT EXISTS fdp_staff (
   id INT PRIMARY KEY AUTO_INCREMENT,
 
@@ -193,8 +195,10 @@ CREATE TABLE IF NOT EXISTS fdp_staff (
   payment_date DATE NULL,
   paid_status BOOLEAN DEFAULT FALSE,
 
-  /* ================= ATTENDANCE (NEW SIMPLE WAY) ================= */
-  present_dates JSON NULL,
+/* ================= ATTENDANCE (NEW SIMPLE WAY) ================= */
+present_dates JSON NULL,
+attendance_marked_by INT NULL,
+
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -205,10 +209,10 @@ CREATE TABLE IF NOT EXISTS fdp_staff (
 `);
 
 
-/* =========================
-  INDUSTRY STAFF
-========================= */
-await db.query(`
+    /* =========================
+      INDUSTRY STAFF
+    ========================= */
+    await db.query(`
 CREATE TABLE IF NOT EXISTS industry_staff (
   id INT PRIMARY KEY AUTO_INCREMENT,
 
@@ -233,8 +237,10 @@ CREATE TABLE IF NOT EXISTS industry_staff (
   payment_date DATE NULL,
   paid_status BOOLEAN DEFAULT FALSE,
 
-  /* ================= ATTENDANCE (NEW SIMPLE WAY) ================= */
-  present_dates JSON NULL,
+/* ================= ATTENDANCE (NEW SIMPLE WAY) ================= */
+present_dates JSON NULL,
+attendance_marked_by INT NULL,
+
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
