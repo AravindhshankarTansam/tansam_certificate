@@ -1,1 +1,75 @@
 <p>tl-industry works!</p>
+<div class="attendance-container">
+
+  <h2 class="title">🏭 Industry Trainee Attendance</h2>
+
+  <div class="card">
+
+    <table class="faculty-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>ID</th>
+          <th>Attendance Action</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let t of trainees; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td class="name">{{ t.industry_staff_name }}</td>
+          <td>{{ t.industry_staff_id }}</td>
+
+          <td>
+            <button class="btn-primary" (click)="openCalendar(t)">
+              Open Calendar
+            </button>
+          </td>
+          <td>
+            <button class="btn-download" (click)="downloadCert('industry',t.id)">
+              📄 Download Certificate
+            </button>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+
+<div class="overlay" *ngIf="showCalendar">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <h3>{{ selectedTrainee?.industry_staff_name }}</h3>
+      <button class="close-btn" (click)="closeCalendar()">✕</button>
+    </div>
+
+    <div class="calendar">
+
+      <div
+        *ngFor="let d of calendarDays"
+        class="day"
+        [class.present]="isPresent(d)"
+        [class.holiday]="isHoliday(d)"
+        (click)="!isHoliday(d) && toggleDate(d)">
+
+        {{ d.split('-')[2] }}
+
+      </div>
+
+    </div>
+
+    <div class="summary">
+      Present: {{ getPresentCount() }} |
+      Total: {{ getTotalDays() }} |
+      %: {{ getPercentage() }}%
+    </div>
+
+  </div>
+
+</div>

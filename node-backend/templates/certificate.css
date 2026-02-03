@@ -1,0 +1,332 @@
+/* =========================
+   CERTIFICATE BASE
+========================= */
+.certificate {
+  position: relative;
+  width: 1000px;
+  height: 700px;
+  margin: auto;
+  padding: 90px 80px 120px;
+  background: #ffffff;
+  font-family: "Times New Roman", serif;
+  overflow: hidden;
+  border: 10px solid #0b8f94;
+}
+
+/* =========================
+   WATERMARK
+========================= */
+.certificate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/images/watermark.png") no-repeat center;
+  background-size: 600px;
+  opacity: 0.18;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* =========================
+   LEFT BIG DIAGONAL STRIP
+========================= */
+
+
+/* =========================
+   TOP LEFT CORNER
+========================= */
+.corner.left-top1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 360px;
+  height: 500px;
+  background: #60edf2;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  z-index: 1;
+}
+
+.corner.left-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 800px;
+  background: linear-gradient(135deg, #0b8f94, #2fbcc0);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  z-index: 1;
+}
+/* =========================
+   middle shape
+========================= */
+
+.middle-shape {
+    position: absolute;
+    top: 520px;        /* fine-tune vertically */
+    left: 0;           /* anchor to left edge */
+
+    width: 190px;
+    height: 240px;
+
+    background: #4FD0D0;
+
+    clip-path: polygon(0 0, 80% 0, 50% 100%, 0 100%);
+
+  transform: rotate(25deg) scale(1.5);
+   transform-origin: left center;
+
+    z-index: 1;
+}
+
+
+/* =========================
+   TOP RIGHT FOLD
+========================= */
+
+.corner.right-top::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  right: 50px;     /* moved slightly left */
+  width: 300px;    /* increased width */
+  height: 220px;   /* increased height */
+  background:linear-gradient(135deg, #2fbcc0, #0b8f94);
+  clip-path: polygon(
+    100% 100%,  /* bottom-right */
+    88% 100%,   /* bottom-right inner */
+    88% 16%,    /* vertical leg */
+    22% 16%,    /* horizontal leg */
+    22% 0,      /* top-left inner */
+    100% 0      /* top-right corner */
+  );
+  z-index: 1;
+}
+.corner.right-top::after {
+  content: "";
+  position: absolute;
+  top: 70px;       /* inside the big L */
+  right: 100px;     /* adjust to fit */
+  width: 120px;    /* smaller width */
+  height: 80px;    /* smaller height */
+  background: linear-gradient(135deg, #67e1e5, #04878b); /* slightly different shade */
+  clip-path: polygon(
+    100% 100%,
+    88% 100%,
+    88% 16%,
+    22% 16%,
+    22% 0,
+    100% 0
+  );
+  z-index: 2;
+}
+/* =========================
+   BOTTOM LEFT SHAPE
+========================= */
+.corner.left-bottom {
+  position: absolute;
+  bottom: -40px;
+  left: -60px;
+  width: 600px;
+  height: 500px;
+  background: linear-gradient(135deg, #0b8f94, #2fbcc0);
+  clip-path: polygon(0 100%, 0 0, 70% 100%);
+  z-index: 1;
+  overflow: hidden;
+}
+
+.corner.left-bottom::before {
+  content: "";
+  position: absolute;
+  bottom: 70px;
+  left: 80px;
+  width: 260px;
+  height: 180px;
+  background: #aaf1f4;
+  clip-path: polygon(
+    0 0,
+    12% 0,
+    12% 84%,
+    78% 84%,
+    78% 100%,
+    0 100%
+  );
+  z-index: 1;
+}
+
+.corner.left-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 110px;   /* increased spacing from bottom */
+  left: 120px;    /* increased spacing from left */
+  width: 160px;   /* slightly smaller than before */
+  height: 116px;  /* 180 - 2*(22+10) */
+  background: #6fdde1;
+  clip-path: polygon(
+    0 0,
+    12% 0,
+    12% 84%,
+    78% 84%,
+    78% 100%,
+    0 100%
+  );
+  z-index: 2;
+}
+
+
+
+/* =========================
+   CONTENT LAYER
+========================= */
+.top-left-logo,
+.top-center-logos,
+h1,
+.presented,
+.name,
+.content,
+.signature-section,
+.certificate-number {
+  position: relative;
+  z-index: 3;
+}
+
+/* =========================
+   LOGOS
+========================= */
+.top-left-logo {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+}
+
+.top-left-logo img {
+  height: 95px;
+}
+
+.top-center-logos {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 40px;
+}
+
+.top-center-logos img {
+  height: 95px;
+}
+
+/* =========================
+   TITLE
+========================= */
+h1 {
+  text-align: center;
+  font-size: 50px;          /* increased */
+  margin-top: 110px;        /* pushed down from top band */
+}
+
+.presented {
+  text-align: center;
+  font-style: italic;
+  margin-top: 30px;
+  font-size: 18px;
+}
+
+/* =========================
+   NAME
+========================= */
+.name {
+  text-align: center;
+  margin: 22px 0;
+  margin-top: 30px;          /* tightened */
+}
+
+.name-input {
+  font-size: 32px;          /* increased */
+  font-weight: bold;
+}
+
+/* =========================
+   CONTENT
+========================= */
+.content {
+  margin-top: 50px;
+  padding-bottom: 0px;
+  font-size: 20px;          /* increased */
+  line-height: 1.6;         /* tighter */
+  text-align: justify;
+  padding-left: 120px;      /* prevents left band overlap */
+  padding-right: 60px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+.editable-text {
+  border: none;
+  border-bottom: 1px solid #000;
+  background: transparent;
+  font-family: inherit;
+  text-align: center;
+  font-size: 18px;          /* increased */
+}
+
+.editable-text.inline {
+  width: 200px;             /* increased */
+}
+
+.programme-input {
+  width: 360px;             /* increased */
+}
+
+.editable-text.small {
+  width: 190px;
+  font-size: 14px;
+}
+
+.editable-date {
+  border: none;
+  border-bottom: 1px solid #000;
+  background: transparent;
+  width: 150px;
+  text-align: center;
+  font-size: 15px;
+}
+
+/* =========================
+   SIGNATURE
+========================= */
+.signature-section {
+  position: absolute;
+  margin-top: 20px;
+  bottom: 140px;            /* moved closer to content */
+  right: 80px;
+  text-align: center;
+}
+
+.signature-line {
+  width: 240px;             /* increased */
+  height: 2px;
+  background: #2fbcc0;
+  margin-bottom: 8px;
+}
+
+/* =========================
+   CERTIFICATE NUMBER
+========================= */
+.certificate-number {
+  position: absolute;
+  bottom: 40px;
+  right: 80px;
+  font-size: 14px;
+}
+.qr-code {
+  position: absolute;
+  bottom: 60px;
+  left: 90px;
+  z-index: 5;
+}
+
+.qr-img {
+  width: 180px;      /* 🔥 bigger */
+  height: 180px;     /* square */
+}

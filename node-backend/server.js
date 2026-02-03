@@ -77,6 +77,10 @@ app.use('/api/finance', financeListRoutes);
 // Team Lead
 app.use('/api/teamlead', teamLeadRoutes);
 app.use('/api/teamlead/holidays', holidayRoutes);
+// Certificate
+app.use('/api/certificate', require('./routes/certificate.routes'));
+app.use('/images', express.static('public/images'));
+
 
 
 

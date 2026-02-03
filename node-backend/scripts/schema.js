@@ -145,24 +145,36 @@ CREATE TABLE IF NOT EXISTS sdp_students (
   from_date DATE,
   to_date DATE,
 
-  /* ================= PAYMENT (FINANCE ONLY) ================= */
+  /* PAYMENT */
   payment_mode ENUM('ONLINE','CASH') NULL,
   amount DECIMAL(10,2) NULL,
   transaction_id VARCHAR(150) NULL,
   payment_date DATE NULL,
   paid_status BOOLEAN DEFAULT FALSE,
 
-/* ================= ATTENDANCE (NEW SIMPLE WAY) ================= */
-present_dates JSON NULL,
-attendance_marked_by INT NULL,
+  /* ATTENDANCE */
+  present_dates JSON NULL,
+  attendance_marked_by INT NULL,
 
+  present_count INT DEFAULT 0,
+  absent_count INT DEFAULT 0,
+  total_days INT DEFAULT 0,
+  attendance_percentage DECIMAL(5,2) DEFAULT 0,
+
+  /* 🎓 CERTIFICATE (NEW) */
+  certificate_no VARCHAR(120) UNIQUE,
+  certificate_generated BOOLEAN DEFAULT FALSE,
+  certificate_path VARCHAR(255) NULL,
+  certificate_generated_at TIMESTAMP NULL,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL,
   FOREIGN KEY (attendance_marked_by) REFERENCES users(id) ON DELETE SET NULL
-)
+);
+
+
 `);
 
 
@@ -188,24 +200,36 @@ CREATE TABLE IF NOT EXISTS fdp_staff (
   from_date DATE,
   to_date DATE,
 
-  /* ================= PAYMENT ================= */
+  /* PAYMENT */
   payment_mode ENUM('ONLINE','CASH') NULL,
   amount DECIMAL(10,2) NULL,
   transaction_id VARCHAR(150) NULL,
   payment_date DATE NULL,
   paid_status BOOLEAN DEFAULT FALSE,
 
-/* ================= ATTENDANCE (NEW SIMPLE WAY) ================= */
-present_dates JSON NULL,
-attendance_marked_by INT NULL,
+  /* ATTENDANCE */
+  present_dates JSON NULL,
+  attendance_marked_by INT NULL,
 
+  present_count INT DEFAULT 0,
+  absent_count INT DEFAULT 0,
+  total_days INT DEFAULT 0,
+  attendance_percentage DECIMAL(5,2) DEFAULT 0,
+
+  /* 🎓 CERTIFICATE (NEW) */
+  certificate_no VARCHAR(120) UNIQUE,
+  certificate_generated BOOLEAN DEFAULT FALSE,
+  certificate_path VARCHAR(255) NULL,
+  certificate_generated_at TIMESTAMP NULL,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL,
   FOREIGN KEY (attendance_marked_by) REFERENCES users(id) ON DELETE SET NULL
-)
+);
+
+
 `);
 
 
@@ -230,24 +254,36 @@ CREATE TABLE IF NOT EXISTS industry_staff (
   from_date DATE,
   to_date DATE,
 
-  /* ================= PAYMENT ================= */
+  /* PAYMENT */
   payment_mode ENUM('ONLINE','CASH') NULL,
   amount DECIMAL(10,2) NULL,
   transaction_id VARCHAR(150) NULL,
   payment_date DATE NULL,
   paid_status BOOLEAN DEFAULT FALSE,
 
-/* ================= ATTENDANCE (NEW SIMPLE WAY) ================= */
-present_dates JSON NULL,
-attendance_marked_by INT NULL,
+  /* ATTENDANCE */
+  present_dates JSON NULL,
+  attendance_marked_by INT NULL,
 
+  present_count INT DEFAULT 0,
+  absent_count INT DEFAULT 0,
+  total_days INT DEFAULT 0,
+  attendance_percentage DECIMAL(5,2) DEFAULT 0,
+
+  /* 🎓 CERTIFICATE (NEW) */
+  certificate_no VARCHAR(120) UNIQUE,
+  certificate_generated BOOLEAN DEFAULT FALSE,
+  certificate_path VARCHAR(255) NULL,
+  certificate_generated_at TIMESTAMP NULL,
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL,
   FOREIGN KEY (attendance_marked_by) REFERENCES users(id) ON DELETE SET NULL
-)
+);
+
+
 `);
 
 

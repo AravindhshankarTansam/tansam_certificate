@@ -166,4 +166,9 @@ isEditable(date: string): boolean {
   return diffDays <= 2;
 }
 
+  downloadCert(type:string,id:number){
+  window.open(`http://localhost:5055/api/certificate/generate/${type}/${id}`);
+}
+
+
 }

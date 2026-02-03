@@ -1,1 +1,90 @@
-<p>tl-fdp works!</p>
+<div class="attendance-container">
+
+  <h2 class="title">📘 FDP Faculty Attendance</h2>
+
+  <!-- ================= CARD ================= -->
+  <div class="card">
+
+    <table class="faculty-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Faculty Name</th>
+          <th>Faculty ID</th>
+          <th>Attendance Action</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let f of faculties; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td class="name">{{ f.staff_name }}</td>
+          <td>{{ f.staff_id_no }}</td>
+
+          <td>
+            <button class="btn-primary" (click)="openCalendar(f)">
+              Open Calendar
+            </button>
+          </td>
+          <td>
+            <button class="btn-download" (click)="downloadCert('fdp',f.id)">
+              📄 Download Certificate
+            </button>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+
+<!-- ================= MODAL ================= -->
+
+<div class="overlay" *ngIf="showCalendar">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <h3>{{ selectedFaculty?.staff_name }}</h3>
+      <button class="close-btn" (click)="closeCalendar()">✕</button>
+    </div>
+
+
+    <!-- LEGEND -->
+    <div class="legend">
+      <span><span class="box present"></span> Present</span>
+      <span><span class="box holiday"></span> Holiday</span>
+      <span><span class="box normal"></span> Working Day</span>
+    </div>
+
+
+    <!-- CALENDAR -->
+    <div class="calendar">
+
+      <div
+        *ngFor="let d of calendarDays"
+        class="day"
+        [class.present]="isPresent(d)"
+        [class.holiday]="isHoliday(d)"
+        (click)="!isHoliday(d) && toggleDate(d)">
+
+        {{ d.split('-')[2] }}
+
+      </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+    <div class="summary">
+      <span>Present: {{ selectedFaculty?.present_count }}</span>
+      <span>Absent: {{ selectedFaculty?.absent_count }}</span>
+      <span class="percent">Total: {{ selectedFaculty?.total_days }}</span>
+      <span>%: {{ selectedFaculty?.attendance_percentage }}%</span>
+    </div>
+
+  </div>
+
+</div>

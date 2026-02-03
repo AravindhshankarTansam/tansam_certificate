@@ -1,0 +1,51 @@
+.verify-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f7fa;
+  font-family: Arial, sans-serif;
+}
+
+.loading {
+  font-size: 20px;
+  color: #555;
+}
+
+.error {
+  color: red;
+  font-size: 20px;
+}
+
+.card {
+  background: white;
+  padding: 40px;
+  width: 380px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.card h2 {
+  text-align: center;
+  color: #0b8f94;
+  margin-bottom: 25px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+label {
+  font-weight: bold;
+}
+
+.success-badge {
+  margin-top: 20px;
+  padding: 10px;
+  background: #0b8f94;
+  color: white;
+  text-align: center;
+  border-radius: 8px;
+}

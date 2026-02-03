@@ -10,6 +10,7 @@
         <th>Name</th>
         <th>Register No</th>
         <th>Attendance</th>
+        <th>Download</th>
       </tr>
     </thead>
 
@@ -24,6 +25,10 @@
             📅 Open Calendar
           </button>
         </td>
+        <td>
+          <button class="btn-download" (click)="downloadCert('sdp',s.id)">
+            📄 Download Certificate
+          </button>
       </tr>
     </tbody>
   </table>
