@@ -1,5 +1,103 @@
 <div class="leads-container">
   <h2>Sub Admin Dashboard</h2>
 
-  <p>Welcome!!</p>
+  <!-- ================= DASHBOARD CARDS ================= -->
+  <div class="dashboard-cards">
+
+    <!-- SDP -->
+    <div class="card sdp" (click)="openPopup('SDP')">
+      <div class="card-header">
+        <i class="fa-solid fa-user-graduate"></i>
+        <h3>SDP</h3>
+      </div>
+      <p class="count">{{ sdpCount }}</p>
+    </div>
+
+    <!-- FDP -->
+    <div class="card fdp" (click)="openPopup('FDP')">
+      <div class="card-header">
+        <i class="fa-solid fa-chalkboard-user"></i>
+        <h3>FDP</h3>
+      </div>
+      <p class="count">{{ fdpCount }}</p>
+    </div>
+
+    <!-- Industry -->
+    <div class="card industry" (click)="openPopup('Industry')">
+      <div class="card-header">
+        <i class="fa-solid fa-helmet-safety"></i>
+        <h3>Industry</h3>
+      </div>
+      <p css="count">{{ industryCount }}</p>
+    </div>
+
+    <!-- Overall -->
+    <div class="card overall">
+      <div class="card-header">
+        <i class="fa-solid fa-chart-line"></i>
+        <h3>Total</h3>
+      </div>
+      <p class="count">{{ overallCount }}</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= POPUP / MODAL ================= -->
+<div class="not-eligible-wrapper" *ngIf="isPopupOpen">
+
+  <!-- Header -->
+  <div class="table-header">
+   <h3>{{ getSelectedCardFullName() }}</h3>
+
+    <span class="close-btn" (click)="closePopup()">×</span>
+  </div>
+
+  <!-- Table -->
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Register / ID</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of paginatedItems; let i = index">
+        <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+        <td>{{ item.student_name || item.faculty_name || item.employee_name }}</td>
+        <td>{{ item.register_no || item.faculty_id || item.employee_id }}</td>
+        <td>{{ item.from_date | date:'dd-MM-yyyy' }}</td>
+        <td>{{ item.to_date | date:'dd-MM-yyyy' }}</td>
+        <td [ngClass]="{'eligible': item.is_eligible, 'not-eligible': !item.is_eligible}">
+          {{ item.is_eligible ? 'Eligible' : 'Not Eligible' }}
+        </td>
+      </tr>
+
+<tr *ngIf="paginatedItems.length === 0">
+  <td colspan="6" style="color: red; text-align: center; font-weight: bold;">
+    No records found
+  </td>
+</tr>
+
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">
+      Prev
+    </button>
+
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Next
+    </button>
+  </div>
+
 </div>

@@ -1,1 +1,84 @@
-<p>finance-dashboard works!</p>
+<div class="finance-dashboard">
+  <h2>Finance Dashboard</h2>
+
+  <!-- TOP SUMMARY CARDS (CLICKABLE) -->
+  <div class="summary-cards">
+
+    <div class="card paid clickable" (click)="openPopup('PAID')">
+      <h3>Paid Amount</h3>
+      <span>₹ {{ paidAmount | number:'1.0-2' }}</span>
+      <p>{{ paidCount }} students</p>
+    </div>
+
+    <div class="card pending clickable" (click)="openPopup('PENDING')">
+      <h3>Pending Amount</h3>
+      <span>₹ {{ pendingAmount | number:'1.0-2' }}</span>
+      <p>{{ pendingCount }} students</p>
+    </div>
+
+    <div class="card total clickable" (click)="openPopup('TOTAL')">
+      <h3>Total Amount</h3>
+      <span>₹ {{ totalAmount | number:'1.0-2' }}</span>
+      <p>{{ totalCount }} students</p>
+    </div>
+
+  </div>
+
+  <!-- POPUP -->
+  <div class="popup-overlay" *ngIf="isPopupOpen">
+    <div class="popup">
+
+      <div class="popup-header">
+        <h3>{{ getSelectedCardTitle() }}</h3>
+        <button (click)="closePopup()">✕</button>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>College</th>
+            <th>Mode</th>
+            <th>Amount</th>
+            <th>Txn ID</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of paginatedItems">
+            <td>{{ row.name }}</td>
+            <td>{{ row.college }}</td>
+            <td>{{ row.mode }}</td>
+            <td>₹ {{ row.amount | number:'1.0-2' }}</td>
+            <td>{{ row.txnId }}</td>
+            <td>{{ row.date }}</td>
+            <td>
+              <span
+                [ngClass]="{
+                  'paid': row.status === 'PAID',
+                  'pending': row.status === 'PENDING'
+                }">
+                {{ row.status }}
+              </span>
+            </td>
+          </tr>
+
+          <tr *ngIf="paginatedItems.length === 0">
+            <td colspan="7" style="text-align:center">
+              No records found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+        <span>{{ currentPage }} / {{ totalPages }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+      </div>
+
+    </div>
+  </div>
+</div>

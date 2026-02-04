@@ -1,1 +1,85 @@
-<p>team-lead-dashboard works!</p>
+<div class="team-leads-container">
+  <h2>Team Lead Dashboard</h2>
+
+<div class="team-lead-dashboard-cards">
+
+  <div class="team-lead-card sdp" (click)="openPopup('SDP')">
+    <div class="team-lead-card-header">
+      <i class="fa-solid fa-user-graduate"></i>
+      <h3>SDP</h3>
+    </div>
+    <p class="team-lead-count">{{ sdpCount }}</p>
+  </div>
+
+  <div class="team-lead-card fdp" (click)="openPopup('FDP')">
+    <div class="team-lead-card-header">
+      <i class="fa-solid fa-chalkboard-user"></i>
+      <h3>FDP</h3>
+    </div>
+    <p class="team-lead-count">{{ fdpCount }}</p>
+  </div>
+
+  <div class="team-lead-card industry" (click)="openPopup('Industry')">
+    <div class="team-lead-card-header">
+      <i class="fa-solid fa-helmet-safety"></i>
+      <h3>Industry</h3>
+    </div>
+    <p class="team-lead-count">{{ industryCount }}</p>
+  </div>
+
+  <div class="team-lead-card overall">
+    <div class="team-lead-card-header">
+      <i class="fa-solid fa-chart-line"></i>
+      <h3>Total</h3>
+    </div>
+    <p class="team-lead-count">{{ overallCount }}</p>
+  </div>
+
+</div>
+
+<!-- ================= POPUP ================= -->
+<div class="team-lead-popup-wrapper" *ngIf="isPopupOpen">
+
+  <div class="team-lead-table-header">
+    <h3>{{ getSelectedCardFullName() }}</h3>
+    <span class="team-lead-close-btn" (click)="closePopup()">×</span>
+  </div>
+
+  <table class="team-lead-styled-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Register / ID</th>
+        <th>Attendance</th>
+        <th>Certificate</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of paginatedItems; let i = index">
+        <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.register }}</td>
+        <td>{{ item.attendance }}</td>
+        <td>{{ item.certificate }}</td>
+        <td [ngClass]="{'team-lead-eligible': item.is_eligible, 'team-lead-not-eligible': !item.is_eligible}">
+          {{ item.is_eligible ? 'Eligible' : 'Not Eligible' }}
+        </td>
+      </tr>
+
+      <tr *ngIf="paginatedItems.length === 0">
+        <td colspan="6" style="color:red; text-align:center; font-weight:bold;">
+          No records found
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="team-lead-pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Prev</button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+</div>
+</div>
