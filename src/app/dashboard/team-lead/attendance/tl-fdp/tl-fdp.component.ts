@@ -7,10 +7,9 @@ import { ApiService } from '../../../../services/api.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tl-fdp.component.html',
-  styleUrl: './tl-fdp.component.css'
+  styleUrl: './tl-fdp.component.css',
 })
 export class TlFdpComponent implements OnInit {
-
   /* ================= STATE ================= */
 
   faculties: any[] = [];
@@ -31,19 +30,16 @@ export class TlFdpComponent implements OnInit {
     this.loadFaculties();
   }
 
-
   /* =====================================================
      LOAD FDP FACULTY LIST
   ===================================================== */
 
   loadFaculties() {
-
     this.loading = true;
 
     console.log('📡 Fetching FDP Faculty list...');
 
     this.api.getTlFDP().subscribe({
-
       next: (res) => {
         console.log('🔥 FDP Faculty Response =>', res);
         console.table(res);
@@ -55,18 +51,15 @@ export class TlFdpComponent implements OnInit {
       error: (err) => {
         console.error('❌ FDP Faculty API Error =>', err);
         this.loading = false;
-      }
-
+      },
     });
   }
-
 
   /* =====================================================
      OPEN / CLOSE CALENDAR
   ===================================================== */
 
   openCalendar(faculty: any) {
-
     console.log('📅 Opening calendar for:', faculty);
 
     this.selectedFaculty = faculty;
@@ -81,40 +74,34 @@ export class TlFdpComponent implements OnInit {
     this.selectedFaculty = null;
   }
 
-
   /* =====================================================
      GENERATE DATE RANGE
   ===================================================== */
 
-generateDates(from: string, to: string) {
+  generateDates(from: string, to: string) {
+    const dates: string[] = [];
 
-  const dates: string[] = [];
+    const start = new Date(from);
+    const end = new Date(to);
 
-  const start = new Date(from);
-  const end = new Date(to);
+    while (start <= end) {
+      const yyyy = start.getFullYear();
+      const mm = String(start.getMonth() + 1).padStart(2, '0');
+      const dd = String(start.getDate()).padStart(2, '0');
 
-  while (start <= end) {
+      dates.push(`${yyyy}-${mm}-${dd}`); // ✅ LOCAL DATE (NO UTC)
 
-    const yyyy = start.getFullYear();
-    const mm = String(start.getMonth() + 1).padStart(2, '0');
-    const dd = String(start.getDate()).padStart(2, '0');
+      start.setDate(start.getDate() + 1);
+    }
 
-    dates.push(`${yyyy}-${mm}-${dd}`); // ✅ LOCAL DATE (NO UTC)
-
-    start.setDate(start.getDate() + 1);
+    this.calendarDays = dates;
   }
-
-  this.calendarDays = dates;
-}
-
-
 
   /* =====================================================
      LOAD HOLIDAYS
   ===================================================== */
 
   loadHolidays() {
-
     if (!this.selectedFaculty) return;
 
     const year = new Date(this.selectedFaculty.from_date).getFullYear();
@@ -122,51 +109,45 @@ generateDates(from: string, to: string) {
     console.log('📅 Fetching Holidays for year:', year);
 
     this.api.getTlHolidays(year).subscribe({
-
       next: (res: any[]) => {
-
         console.log('🟡 Holidays Raw =>', res);
         console.table(res);
 
-        this.holidays = res.map(h => h.holiday_date);
+        this.holidays = res.map((h) => h.holiday_date);
 
         console.log('🟥 Holiday Dates Only =>', this.holidays);
       },
 
-      error: (err) => console.error('❌ Holiday API Error =>', err)
+      error: (err) => console.error('❌ Holiday API Error =>', err),
     });
   }
-
 
   /* =====================================================
      TOGGLE ATTENDANCE
   ===================================================== */
 
   toggleDate(date: string) {
-
     if (this.holidays.includes(date) || !this.isEditable(date)) return;
 
     const list = this.selectedFaculty.present_dates || [];
 
     if (list.includes(date)) {
-
-      this.selectedFaculty.present_dates =
-        list.filter((d: string) => d !== date);
-
+      this.selectedFaculty.present_dates = list.filter(
+        (d: string) => d !== date,
+      );
     } else {
-
       list.push(date);
     }
 
     console.log('✅ Marking FDP attendance:', {
       id: this.selectedFaculty.id,
-      date
+      date,
     });
 
-    this.api.markTlFDPDate(this.selectedFaculty.id, date)
-      .subscribe(res => console.log('✔ Saved:', res));
+    this.api
+      .markTlFDPDate(this.selectedFaculty.id, date)
+      .subscribe((res) => console.log('✔ Saved:', res));
   }
-
 
   /* =====================================================
      UI HELPERS
@@ -180,32 +161,32 @@ generateDates(from: string, to: string) {
     return this.holidays.includes(date);
   }
 
-
-
   /* =====================================================
      EDIT RULE
      Allow only today + last 2 days
   ===================================================== */
 
   isEditable(date: string): boolean {
-
     const today = new Date();
     const d = new Date(date);
 
-    today.setHours(0,0,0,0);
-    d.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
+    d.setHours(0, 0, 0, 0);
 
-    const diffDays =
-      (today.getTime() - d.getTime()) / (1000 * 60 * 60 * 24);
+    const diffDays = (today.getTime() - d.getTime()) / (1000 * 60 * 60 * 24);
 
     if (diffDays < 0) return false;
 
     return diffDays <= 2;
   }
 
-    downloadCert(type:string,id:number){
-  window.open(`http://localhost:5055/api/certificate/generate/${type}/${id}`);
-}
-
-
+  downloadCert(type: string, id: number) {
+    window.open(`http://localhost:5055/api/certificate/generate/${type}/${id}`);
+  }
+  viewCert(type: string, id: number) {
+    window.open(
+      `http://localhost:5055/api/certificate/generate/${type}/${id}`,
+      '_blank',
+    );
+  }
 }

@@ -1,7 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Beau+Rivage&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
+
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+}
+
+
 /* =========================
    CERTIFICATE BASE
 ========================= */
-.certificate {
+/* .certificate {
   position: relative;
   width: 1000px;
   height: 700px;
@@ -11,7 +26,22 @@
   font-family: "Times New Roman", serif;
   overflow: hidden;
   border: 10px solid #0b8f94;
+} */
+
+.certificate {
+  position: relative;
+  width: 297mm;
+  height: 210mm;
+  margin: 0;
+  padding: 25mm 25mm 30mm;
+  background: #ffffff;
+  font-family: "Times New Roman", serif;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 10px solid #aaf2f400;
+  -webkit-font-smoothing: antialiased;
 }
+
 
 /* =========================
    WATERMARK
@@ -20,7 +50,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: url("/images/watermark.png") no-repeat center;
+  background: url("{{watermark}}") no-repeat center;
   background-size: 600px;
   opacity: 0.18;
   z-index: 2;
@@ -41,7 +71,7 @@
   left: 0;
   width: 360px;
   height: 500px;
-  background: #60edf2;
+  background: #00999971;
   clip-path: polygon(0 0, 100% 0, 0 100%);
   z-index: 1;
 }
@@ -64,20 +94,14 @@
     position: absolute;
     top: 520px;        /* fine-tune vertically */
     left: 0;           /* anchor to left edge */
-
     width: 190px;
     height: 240px;
-
     background: #4FD0D0;
-
     clip-path: polygon(0 0, 80% 0, 50% 100%, 0 100%);
-
-  transform: rotate(25deg) scale(1.5);
-   transform-origin: left center;
-
+    transform: rotate(25deg) scale(1.5);
+    transform-origin: left center;
     z-index: 1;
 }
-
 
 /* =========================
    TOP RIGHT FOLD
@@ -220,15 +244,21 @@ h1,
 ========================= */
 h1 {
   text-align: center;
-  font-size: 50px;          /* increased */
-  margin-top: 110px;        /* pushed down from top band */
+  font-size: 55px;
+  margin-top: 80px;
+  color: #1e7e7e;
+  font-weight: bolder;
+  /* text-transform: uppercase; */
+  font-family: "Great Vibes", cursive;
+  letter-spacing: 0.1cm;
 }
 
 .presented {
   text-align: center;
-  font-style: italic;
-  margin-top: 30px;
-  font-size: 18px;
+  margin-top: 25px;
+  font-size: 38px;
+  font-family: "Monsieur La Doulaise", cursive;
+  color: #1e7e7e;
 }
 
 /* =========================
@@ -251,11 +281,29 @@ h1 {
 .content {
   margin-top: 50px;
   padding-bottom: 0px;
-  font-size: 20px;          /* increased */
+  font-size: 25px;          /* increased */
   line-height: 1.6;         /* tighter */
   text-align: justify;
   padding-left: 120px;      /* prevents left band overlap */
   padding-right: 60px;
+  font-family: "Beau Rivage", cursive;
+}
+
+.content b{
+  font-weight: 600;
+  font-family: "Poiret One", sans-serif;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 25px;
+
+}
+.date {
+  font-family: "Poiret One", sans-serif; /* same as your bold fields */
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+  border-bottom: 2px solid #000; /* signature-style underline */
 }
 
 /* =========================

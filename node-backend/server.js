@@ -3,7 +3,89 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
+const compression = require('compression');
+
 const MySQLStore = require('express-mysql-session')(session);
+
+const app = express();
+
+/* ======================================================
+   BASIC HARDENING
+====================================================== */
+
+app.disable('x-powered-by'); // hide express fingerprint
+app.set('trust proxy', 1); // required for secure cookies behind proxy
+app.use(helmet()); // security headers
+app.use(compression()); // gzip
+app.use(express.json({ limit: '10kb' })); // prevent big payload attacks
+app.use(morgan('dev')); // logs
+
+/* ======================================================
+   RATE LIMITING
+====================================================== */
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Too many requests. Try again later.'
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10
+});
+
+app.use('/api/', apiLimiter);
+app.use('/api/auth', authLimiter);
+
+/* ======================================================
+  CORS (Whitelist from .env)
+====================================================== */
+
+const allowedOrigins = process.env.CORS_ORIGINS.split(',');
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Blocked by CORS'));
+    }
+  },
+  credentials: true
+}));
+
+/* ======================================================
+   SESSION STORE (MySQL)
+====================================================== */
+
+const sessionStore = new MySQLStore({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME
+});
+
+app.use(session({
+  key: 'tansam.sid',
+  secret: process.env.SESSION_SECRET,
+  store: sessionStore,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', //auto secure
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000
+  }
+}));
+
+/* ======================================================
+   ROUTES
+====================================================== */
 
 const authRoutes = require('./routes/auth.routes');
 const labRoutes = require('./routes/admin/master-table/labs.routes');
@@ -13,80 +95,60 @@ const roleRoutes = require('./routes/admin/master-table/roles.routes');
 const userRoutes = require('./routes/admin/master-table/users.routes');
 const holidayRoutes = require('./routes/admin/master-table/holidays.routes');
 
-// Sub admin
 const sdpRoutes = require('./routes/subadmin/sdp.routes');
 const fdpRoutes = require('./routes/subadmin/fdp.routes');
 const industryRoutes = require('./routes/subadmin/industry.routes');
-// Finance
+
 const financePaymentRoutes = require('./routes/finance/payment.routes');
 const financeListRoutes = require('./routes/finance/list.routes');
-//Team Lead
+
 const teamLeadRoutes = require('./routes/teamlead/teamlead.routes');
 
-
-
-
-
-const app = express();
-
-app.use(cors({
-  origin: 'http://localhost:4200',
-  credentials: true
-}));
-
-app.use(express.json());
-
-/* ✅ MySQL session store */
-const sessionStore = new MySQLStore({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME
-});
-
-/* ✅ session middleware */
-app.use(session({
-  key: 'tansam.sid',
-  secret: process.env.SESSION_SECRET,
-  store: sessionStore,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: false,
-    maxAge: 86400000
-  }
-}));
-
 app.use('/api/auth', authRoutes);
+
 app.use('/api/admin/master-table/labs', labRoutes);
 app.use('/api/admin/master-table/team-leads', teamLeadsRoutes);
 app.use('/api/admin/master-table/certificate-signature', certificateRoutes);
-app.use('/uploads', express.static('uploads'));
 app.use('/api/admin/master-table/roles', roleRoutes);
 app.use('/api/admin/master-table/users', userRoutes);
 app.use('/api/admin/master-table/holidays', holidayRoutes);
 
-// Sub admin
 app.use('/api/subadmin/sdp', sdpRoutes);
 app.use('/api/subadmin/fdp', fdpRoutes);
 app.use('/api/subadmin/industry', industryRoutes);
-// Finance
+
 app.use('/api/finance/payment', financePaymentRoutes);
 app.use('/api/finance', financeListRoutes);
-// Team Lead
+
 app.use('/api/teamlead', teamLeadRoutes);
 app.use('/api/teamlead/holidays', holidayRoutes);
-// Certificate
+
 app.use('/api/certificate', require('./routes/certificate.routes'));
-app.use('/images', express.static('public/images'));
 
+/* ======================================================
+ PROTECTED STATIC FILES
+====================================================== */
 
+const authMiddleware = require('./middleware/auth.middleware');
 
+// app.use('/uploads', authMiddleware, express.static('uploads'));
+// app.use('/images', express.static('public/images'));
 
+/* ======================================================
+   GLOBAL ERROR HANDLER
+====================================================== */
+
+app.use((err, req, res, next) => {
+  // console.error(err);
+  res.status(500).json({ message: 'Internal server error' });
+});
+
+/* ======================================================
+   START SERVER
+====================================================== */
 
 const PORT = process.env.PORT || 5055;
 
 app.listen(PORT, () =>
-  console.log(`.....>>>>> Server running on http://localhost:${PORT} <<<<<<.....`)
+  console.log(`***Server running on port ${PORT}`)
 );
