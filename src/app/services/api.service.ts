@@ -408,6 +408,51 @@ getTlHolidays(year?: number, month?: number) {
   });
 }
 
+/* ================= IV (INDUSTRIAL VISIT) ================= */
+
+/* ---------- BULK UPLOAD ---------- */
+
+bulkUploadIV(data: any) {
+  return this.http.post(
+    `${this.BASE_URL}/iv/bulk-generate`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+
+/* ---------- LIST VISITS (FINANCE) ---------- */
+
+getIVVisits() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/iv/visits`,
+    { withCredentials: true }
+  );
+}
+
+
+/* ---------- MARK PAID ---------- */
+
+markIVPaid(id: number) {
+  return this.http.put(
+    `${this.BASE_URL}/iv/pay/${id}`,
+    {},
+    { withCredentials: true }
+  );
+}
+
+
+/* ---------- DOWNLOAD CERTIFICATE ---------- */
+
+downloadIVCertificate(id: number) {
+  return this.http.get(
+    `${this.BASE_URL}/iv/generate/${id}`,
+    {
+      responseType: 'blob',
+      withCredentials: true
+    }
+  );
+}
 
 
 }

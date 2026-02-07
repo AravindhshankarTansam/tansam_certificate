@@ -282,9 +282,75 @@ CREATE TABLE IF NOT EXISTS industry_staff (
   FOREIGN KEY (lab_id) REFERENCES labs(id) ON DELETE SET NULL,
   FOREIGN KEY (attendance_marked_by) REFERENCES users(id) ON DELETE SET NULL
 );
-
-
 `);
+
+await db.query(`
+CREATE TABLE IF NOT EXISTS iv_visits (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+
+  /* BASIC INFO */
+  college_name VARCHAR(255) NOT NULL,
+  college_short_name VARCHAR(50) NOT NULL,
+  visit_date DATE NOT NULL,
+
+  /* FILE INFO */
+  excel_file VARCHAR(255) NULL,  -- stored filename
+
+  /* PAYMENT (Finance controlled) */
+  payment_mode ENUM('ONLINE','CASH') NULL,
+  amount DECIMAL(10,2) NULL,
+  transaction_id VARCHAR(150) NULL,
+  payment_date DATE NULL,
+  paid_status BOOLEAN DEFAULT FALSE,
+
+  /* COUNTS */
+  total_count INT DEFAULT 0,
+  generated_count INT DEFAULT 0,
+
+  /* CERTIFICATE STATUS */
+  certificate_generated BOOLEAN DEFAULT FALSE,
+
+  /* AUDIT */
+  created_by INT NULL,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+);
+`);
+
+
+await db.query(`
+CREATE TABLE IF NOT EXISTS iv_students (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+
+  visit_id INT NOT NULL,
+
+  /* STUDENT INFO */
+  student_name VARCHAR(150) NOT NULL,
+  register_number VARCHAR(100),
+  department VARCHAR(255),
+  phone VARCHAR(20),
+  email VARCHAR(150),
+
+  /* PAYMENT (optional individual) */
+  paid_status BOOLEAN DEFAULT FALSE,
+
+  /* 🎓 CERTIFICATE */
+  certificate_no VARCHAR(150) UNIQUE,
+  certificate_generated BOOLEAN DEFAULT FALSE,
+  certificate_path VARCHAR(255) NULL,
+  certificate_generated_at TIMESTAMP NULL,
+
+  /* AUDIT */
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (visit_id) REFERENCES iv_visits(id) ON DELETE CASCADE
+);
+`);
+
 
 
     console.log('✅ All tables created successfully');

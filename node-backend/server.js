@@ -86,6 +86,7 @@ app.use(session({
 /* ======================================================
    ROUTES
 ====================================================== */
+const { isAuth } = require('./middleware/auth.middleware');
 
 const authRoutes = require('./routes/auth.routes');
 const labRoutes = require('./routes/admin/master-table/labs.routes');
@@ -98,6 +99,7 @@ const holidayRoutes = require('./routes/admin/master-table/holidays.routes');
 const sdpRoutes = require('./routes/subadmin/sdp.routes');
 const fdpRoutes = require('./routes/subadmin/fdp.routes');
 const industryRoutes = require('./routes/subadmin/industry.routes');
+const ivRoutes = require('./routes/subadmin/iv.routes');
 
 const financePaymentRoutes = require('./routes/finance/payment.routes');
 const financeListRoutes = require('./routes/finance/list.routes');
@@ -125,13 +127,20 @@ app.use('/api/teamlead/holidays', holidayRoutes);
 
 app.use('/api/certificate', require('./routes/certificate.routes'));
 
+app.use('/api/iv', ivRoutes);
+console.log('ivRoutes:', typeof ivRoutes);
+console.log('holidayRoutes:', typeof holidayRoutes);
+console.log('sdpRoutes:', typeof sdpRoutes);
+console.log('fdpRoutes:', typeof fdpRoutes);
+console.log('industryRoutes:', typeof industryRoutes);
+
+
 /* ======================================================
  PROTECTED STATIC FILES
 ====================================================== */
+app.use('/uploads', isAuth, express.static('uploads'));
 
-const authMiddleware = require('./middleware/auth.middleware');
 
-// app.use('/uploads', authMiddleware, express.static('uploads'));
 // app.use('/images', express.static('public/images'));
 
 /* ======================================================
