@@ -1,258 +1,253 @@
-/* ===============================
-   PAGE LAYOUT
-=============================== */
+/* ===== PAGE ===== */
 
-.attendance-wrapper{
+.attendance-container {
   padding: 30px;
-  background:#f6f8fb;
-  min-height:100vh;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: #f6f8fb;
+  min-height: 100vh;
+  font-family: system-ui;
 }
 
-h2{
-  margin-bottom:20px;
-  font-weight:600;
-  color:#222;
-}
-
-
-
-/* ===============================
-   TABLE CARD
-=============================== */
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:#fff;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
-}
-
-th{
-  background:#f1f5f9;
-  font-weight:600;
-  color:#444;
-  padding:14px;
-}
-
-td{
-  padding:12px;
-  border-top:1px solid #eee;
-}
-
-tr:hover{
-  background:#fafafa;
-  transition:.2s;
+.title {
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #009999;
 }
 
 
+/* ===== CARD ===== */
 
-/* ===============================
-   BUTTON
-=============================== */
-
-button{
-  background:#2563eb;
-  color:white;
-  border:none;
-  padding:6px 14px;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:13px;
-  transition:.2s;
-}
-
-button:hover{
-  background:#1d4ed8;
-  transform:scale(1.04);
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
 }
 
 
+/* ===== TABLE ===== */
 
-/* ===============================
-   POPUP BACKDROP
-=============================== */
+.faculty-table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-.popup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  backdrop-filter: blur(3px);
-  z-index:999;
+.faculty-table th {
+  background: #f1f3f6;
+  text-align: left;
+  padding: 12px;
+  font-weight: 700;
+  color: #009999;
+}
+
+.faculty-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  color: rgb(83, 83, 83);
+  font-weight: 500;
+}
+
+.faculty-table tr:hover {
+  background: #fafafa;
+}
+
+.name {
+  font-weight: 600;
 }
 
 
+/* ===== BUTTON ===== */
 
-/* ===============================
-   MODAL CARD
-=============================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
-.modal{
-  background:white;
-  padding:25px;
-  border-radius:14px;
-  width:540px;
-  max-height:90vh;
-  overflow:auto;
-  box-shadow:0 12px 40px rgba(0,0,0,.2);
-  animation:fadeIn .25s ease;
+  background: linear-gradient(135deg, #009999, #3b82f6);
+  color: white;
+  border: none;
+
+  padding: 8px 16px;
+  border-radius: 10px;
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: all 0.25s ease;
 }
 
-@keyframes fadeIn{
-  from{
-    transform:scale(.9);
-    opacity:0;
-  }
-  to{
-    transform:scale(1);
-    opacity:1;
-  }
+/* arrow default */
+.btn-primary .arrow {
+  font-size: 14px;
+  transform: rotate(-45deg);   /* ↗ */
+  transition: transform 0.35s ease;
+}
+
+/* button hover */
+.btn-primary:hover {
+  background: linear-gradient(135deg, #1e40af, #009999);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(0,0,0,0.25);
+}
+
+/* arrow rotate more on hover */
+.btn-primary:hover .arrow {
+  transform: rotate(45deg); /* 45 + 180 */
 }
 
 
 
-/* ===============================
-   LEGEND
-=============================== */
+/* ===== MODAL ===== */
 
-.legend{
-  display:flex;
-  gap:18px;
-  font-size:13px;
-  margin:12px 0 15px;
-  color:#555;
-  align-items:center;
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.box{
-  width:14px;
-  height:14px;
-  border-radius:3px;
-  display:inline-block;
-  margin-right:5px;
+.modal {
+  background: white;
+  width: 750px;
+  max-width: 95%;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
 }
 
-.box.present{ background:#22c55e; }
-.box.holiday{ background:#ef4444; }
-.box.normal{ background:#e5e7eb; }
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
 
 
+/* ===== LEGEND ===== */
 
-/* ===============================
-   CALENDAR GRID
-=============================== */
+.legend {
+  display: flex;
+  gap: 20px;
+  margin: 15px 0;
+  font-size: 14px;
+}
 
-.calendar{
-  display:grid;
+.box {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+
+
+/* ===== CALENDAR ===== */
+
+.calendar {
+  display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap:8px;
-  margin:15px 0;
+  gap: 8px;
+}
+
+.day {
+  height: 40px;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.day:hover {
+  transform: scale(1.05);
 }
 
 
+/* COLORS */
 
-/* ===============================
-   DAY CELL
-=============================== */
-
-.day{
-  height:42px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  border-radius:8px;
-  font-size:13px;
-  font-weight:500;
-
-  background:#f8fafc;
-  cursor:pointer;
-
-  transition:.15s;
-  border:1px solid #e5e7eb;
+.present {
+  background: #22c55e;
+  color: white;
 }
 
-/* hover */
-.day:hover{
-  background:#e2e8f0;
-  transform:translateY(-2px);
+.holiday {
+  background: #ef4444;
+  color: white;
+  cursor: not-allowed;
+}
+
+.normal {
+  background: #e5e7eb;
 }
 
 
+/* ===== SUMMARY ===== */
 
-/* ===============================
-   PRESENT DAY
-=============================== */
-
-.day.present{
-  background:#22c55e;
-  color:white;
-  border:none;
+.summary {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
 }
 
+.percent {
+  color: #2563eb;
+}
+/* Download button */
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
+  padding: 10px 20px;
+  border-radius: 12px;
 
-/* ===============================
-   HOLIDAY (READ ONLY)
-=============================== */
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.3);
 
-.day.holiday{
-  background:#ef4444;
-  color:white;
-  cursor:not-allowed;
-  pointer-events:none;
-  opacity:.85;
+  color: #009999;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-
-
-/* ===============================
-   SUMMARY BOX
-=============================== */
-
-.summary{
-  margin-top:12px;
-  font-weight:600;
-  text-align:center;
-  padding:10px;
-  background:#f1f5f9;
-  border-radius:8px;
+.btn-download:hover {
+  background: #009999;
+  color: white;
 }
 
+/* View certificate */
+.btn-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
 
-/* ===============================
-   ACTIONS
-=============================== */
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  font-weight: 600;
 
-.actions{
-  text-align:right;
-  margin-top:15px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-
-
-/* ===============================
-   RESPONSIVE
-=============================== */
-
-@media(max-width:600px){
-
-  .modal{
-    width:95%;
-  }
-
-  .calendar{
-    gap:5px;
-  }
-
-  .day{
-    height:34px;
-    font-size:12px;
-  }
+.btn-view:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
+

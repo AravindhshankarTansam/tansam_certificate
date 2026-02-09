@@ -1,16 +1,46 @@
 <div class="bulk-container">
-  <h2>Bulk Upload</h2>
 
-  <!-- College Name + Enter -->
+  <h2>Bulk IV Certificate Upload</h2>
+
+  <!-- ================= FORM ================= -->
+
   <div class="college-input">
-    <input type="text" placeholder="Enter College Name" [(ngModel)]="collegeName" />
-    <button class="primary" (click)="openPopup()">Enter</button>
+
+    <input
+      type="text"
+      placeholder="Enter College Name"
+      [(ngModel)]="collegeName"
+    />
+
+    <input
+      type="text"
+      placeholder="College Short Name (ex: PSG)"
+      [(ngModel)]="collegeShortName"
+    />
+
+    <input
+      type="date"
+      [(ngModel)]="visitDate"
+    />
+
+    <button class="primary" (click)="openPopup()">
+      Upload Excel
+    </button>
+
+    <button (click)="downloadTemplate()">
+      Download Template
+    </button>
+
   </div>
 </div>
 
+
 <!-- ================= UPLOAD POPUP ================= -->
+
 <div class="modal-backdrop" *ngIf="showUploadPopup">
+
   <div class="modal small">
+
     <h3>Upload CSV / Excel</h3>
 
     <input
@@ -27,38 +57,55 @@
         Upload
       </button>
     </div>
+
   </div>
 </div>
 
+
 <!-- ================= PREVIEW MODAL ================= -->
+
 <div class="modal-backdrop" *ngIf="showPreviewModal">
+
   <div class="modal fullscreen">
 
     <div class="header">
-      <h2>{{ category }} – Uploaded Preview</h2>
+      <h2>{{ category }} – Preview</h2>
       <button class="close-btn" (click)="closePreview()">✕</button>
     </div>
 
+    <p>Total Records: {{ uploadedData.length }}</p>
+
     <div class="table-wrapper">
+
       <table>
+
         <thead>
           <tr>
-            <th *ngFor="let h of tableHeaders">{{ h }}</th>
+            <th *ngFor="let h of tableHeaders">
+              {{ h }}
+            </th>
           </tr>
         </thead>
+
         <tbody>
           <tr *ngFor="let row of uploadedData">
+
             <td *ngFor="let h of tableHeaders">
               {{ row[h] }}
             </td>
+
           </tr>
         </tbody>
+
       </table>
+
     </div>
 
     <div class="footer">
       <button (click)="closePreview()">Close</button>
-      <button class="primary">Confirm Upload</button>
+      <button class="primary" (click)="confirmUpload()">
+        Confirm Upload
+      </button>
     </div>
 
   </div>

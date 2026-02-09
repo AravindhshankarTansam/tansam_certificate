@@ -1,6 +1,6 @@
 <div class="attendance-container">
 
-  <h2 class="title">📘 FDP Faculty Attendance</h2>
+  <h2 class="title">FDP Faculty Attendance</h2>
 
   <!-- ================= CARD ================= -->
   <div class="card">
@@ -13,6 +13,7 @@
           <th>Faculty ID</th>
           <th>Attendance Action</th>
           <th>Download</th>
+          <th>View</th>
         </tr>
       </thead>
 
@@ -21,23 +22,30 @@
           <td>{{ i + 1 }}</td>
           <td class="name">{{ f.staff_name }}</td>
           <td>{{ f.staff_id_no }}</td>
-
           <td>
             <button class="btn-primary" (click)="openCalendar(f)">
-              Open Calendar
+              <span>Open Calendar</span>
+              <i class="fa-solid fa-arrow-right arrow"></i>
             </button>
           </td>
           <td>
             <button class="btn-download" (click)="downloadCert('fdp',f.id)">
-              📄 Download Certificate
+              <i class="fa fa-download"></i>
+              <span>Download Certificate</span>
             </button>
+          </td>
+          <td>
+            <button class="btn-view" (click)="viewCert('fdp',f.id)">
+              <i class="fa fa-eye"></i>
+              <span>View Certificate</span>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
 
   </div>
 </div>
-
 
 
 <!-- ================= MODAL ================= -->
