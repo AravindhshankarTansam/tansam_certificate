@@ -34,6 +34,89 @@
   </div>
 </div>
 
+<!-- ================= VISITS LIST ================= -->
+
+<div class="list-section" *ngIf="visits.length">
+
+  <h3>Uploaded IV Visits</h3>
+
+  <table class="visit-table">
+
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>College</th>
+        <th>Short Name</th>
+        <th>Date</th>
+        <th>Total Students</th>
+        <th>View</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let v of visits; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ v.college_name }}</td>
+        <td>{{ v.college_short_name }}</td>
+        <td>{{ v.visit_date }}</td>
+        <td>{{ v.total_count }}</td>
+        <td>
+          <button class="icon-btn view-btn" (click)="openStudents(v)" title="View Students">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+        </td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>
+<!-- ================= STUDENTS MODAL ================= -->
+
+<div class="students-backdrop" *ngIf="showStudentsModal">
+  <div class="students-modal">
+    <div class="header">
+      <h2>College Name – {{ selectedVisit?.college_name }}</h2>
+      <button class="close-btn" (click)="closeStudents()">✕</button>
+    </div>
+
+    <p>Total Students: {{ students.length }}</p>
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Register No</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Department</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let s of students; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.register_number }}</td>
+            <td>{{ s.email_id }}</td>
+            <td>{{ s.phone_number }}</td>
+            <td>{{ s.department }}</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+</div>
+
+
 
 <!-- ================= UPLOAD POPUP ================= -->
 

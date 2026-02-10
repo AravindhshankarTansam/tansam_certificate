@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+{{styles}}
+<link rel="stylesheet" href="./iv_certificate.css">
+</head>
+
+<body>
+
+<div class="certificate">
+
+  <div class="corner left-top1"></div>
+  <div class="corner left-top"></div>
+  <div class="middle-shape"></div>
+  <div class="corner left-bottom"></div>
+  <div class="corner right-top"></div>
+
+  <!-- LOGOS -->
+  <div class="top-left-logo">
+    <img src="{{logoPath}}">
+  </div>
+
+  <div class="top-center-logos">
+    <img src="{{tidcoLogo}}">
+    <img src="{{tansamLogo}}">
+    <img src="{{siemensLogo}}">
+  </div>
+
+  <h1>Industrial Visit Certificate</h1>
+  <p class="presented">Presented to</p>
+
+  <p class="content">
+    This is to certify that test
+    <b>{{name}}</b>
+    of <b>{{college_name}}</b> from  the  Department   of
+    <b>{{department}}</b>
+    has  been a part  of the  industrial visit to
+    <b>TANSAM</b>
+    - <b>Tamil Nadu Smart  and  Advanced  Manufacturing  Centre</b> on
+    <b class="date">{{visited_date}}</b>.
+  </p>
+
+<div class="signature-section">
+
+  <img src="{{signatureImage}}" style="height:70px;margin-bottom:8px">
+
+  <div class="signature-line"></div>
+
+  <p><b>{{signName}}</b></p>
+  <p>{{signDesignation}}</p>
+
+</div>
+
+
+  <div class="certificate-number">
+    Certificate Number – <b>{{certificateNo}}</b>
+  </div>
+
+</div>
+
+</body>
+</html>

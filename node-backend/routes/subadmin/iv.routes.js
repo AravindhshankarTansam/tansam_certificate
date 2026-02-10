@@ -20,7 +20,10 @@ router.post(
 );
 
 router.get('/visits', isFinance, controller.getVisits);
+router.get('/sub-admin/visits', isAdminOrSubAdmin,controller.getVisits)
+router.get('/visit/:id/students', controller.getStudentsByVisit);
+router.put('/visit/payment/:id', isFinance, controller.updatePayment);
 router.put('/pay/:id', isFinance, controller.markPaid);
-router.get('/generate/:id', isFinance, controller.generate);
+router.get('/generate/:id', controller.generate);
 
 module.exports = router;

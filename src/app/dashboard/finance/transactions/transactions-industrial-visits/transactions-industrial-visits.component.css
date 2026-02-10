@@ -1,0 +1,247 @@
+/* ================= PAGE TITLE ================= */
+h2 {
+  margin-bottom: 18px;
+  font-weight: 700;
+  color: #0f766e;
+  letter-spacing: 0.3px;
+}
+
+
+/* ================= TABLE CARD CONTAINER ================= */
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+
+/* ================= HEADER ================= */
+.payment-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.payment-table th {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: white;
+  padding: 14px;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+
+/* ================= BODY ================= */
+.payment-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+
+/* zebra */
+.payment-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+
+/* hover effect */
+.payment-table tbody tr:hover {
+  background: #f0fdfa;
+  transition: 0.2s ease;
+}
+
+
+/* ================= INPUTS ================= */
+input,
+select {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f9fafb;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #14b8a6;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.15);
+}
+
+
+/* ================= CASH FIELDS GROUP ================= */
+.cash-fields {
+  display: flex;
+  gap: 6px;
+}
+
+
+/* ================= AMOUNT STYLE ================= */
+input[type="number"] {
+  text-align: right;
+  font-weight: 600;
+  color: #0f766e;
+}
+
+
+/* ================= SAVE BUTTON ================= */
+.save-btn {
+  background: linear-gradient(135deg, #14b8a6, #0f766e);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(20, 184, 166, 0.4);
+}
+
+.save-btn:active {
+  transform: scale(0.95);
+}
+
+
+/* ================= STATUS BADGE (optional future use) ================= */
+.badge {
+  padding: 6px 10px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge.paid {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.badge.pending {
+  background: #fee2e2;
+  color: #dc2626;
+}
+/* ================= ALIGNMENT HELPERS ================= */
+
+.center {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+
+/* make inputs centered inside cells */
+td.center input,
+td.center select {
+  margin: auto;
+  text-align: center;
+}
+
+/* amount input right aligned */
+td.right input {
+  text-align: right;
+}
+/* ================= PREMIUM DROPDOWN ================= */
+
+.select-wrapper {
+  position: relative;
+  width: 130px;
+  margin: auto;
+}
+
+/* remove default arrow */
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 100%;
+  padding: 8px 36px 8px 12px;
+
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+
+  background: linear-gradient(145deg, #ffffff, #f1f5f9);
+
+  font-weight: 600;
+  font-size: 13px;
+  color: #0f766e;
+
+  cursor: pointer;
+
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+
+  transition: all 0.2s ease;
+}
+
+
+/* hover */
+.custom-select:hover {
+  border-color: #14b8a6;
+  box-shadow: 0 4px 10px rgba(20,184,166,0.15);
+}
+
+
+/* focus glow */
+.custom-select:focus {
+  outline: none;
+  border-color: #14b8a6;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(20,184,166,0.25);
+}
+
+
+/* custom arrow */
+.select-wrapper::after {
+  content: "⌄";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f766e;
+}
+
+
+/* click animation */
+.custom-select:active {
+  transform: scale(0.98);
+}
+.edit-btn {
+  background: #e2e8f0;
+  color: #0f766e;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.edit-btn:hover {
+  background: #cbd5e1;
+}

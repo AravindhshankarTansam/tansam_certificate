@@ -1,7 +1,7 @@
 const db = require('../../db');
 const fs = require('fs');
 const path = require('path');
-const { generateCertificate } = require('../../utils/certificate.helper');
+const { generateIVCertificate } = require('../../utils/ivCertificate.helper');
 const { generateIVCertNo } = require('../../utils/certNo.helper');
 
 
@@ -118,6 +118,33 @@ exports.getVisits = async (req, res) => {
   }
 };
 
+/* ======================================================
+   GET STUDENTS BY VISIT
+====================================================== */
+exports.getStudentsByVisit = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [rows] = await db.query(`
+      SELECT
+        id,
+        student_name AS name,
+        register_number,
+        email AS email_id,
+        phone AS phone_number,
+        department
+      FROM iv_students
+      WHERE visit_id = ?
+      ORDER BY id ASC
+    `, [id]);
+
+    res.json(rows);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to fetch students' });
+  }
+};
 
 
 /* ======================================================
@@ -140,7 +167,6 @@ exports.markPaid = async (req, res) => {
 };
 
 
-
 /* ======================================================
    GENERATE CERTIFICATE (ONLY PAID)
 ====================================================== */
@@ -158,17 +184,14 @@ exports.generate = async (req, res) => {
     `, [id]);
 
     if (!row) return res.status(404).send('Not found');
-
     if (!row.paid_status)
       return res.status(400).send('Payment not completed');
 
 
     /* ================= CERT NO ================= */
-
     let certNo = row.certificate_no;
 
     if (!certNo) {
-
       certNo = generateIVCertNo(
         row.college_short_name,
         row.visit_date
@@ -179,31 +202,20 @@ exports.generate = async (req, res) => {
         SET certificate_generated = 1, certificate_no = ?
         WHERE id = ?
       `, [certNo, id]);
-
-      await db.query(`
-        UPDATE iv_visits
-        SET generated_count = generated_count + 1
-        WHERE id = ?
-      `, [row.visit_id]);
     }
 
 
-    /* ================= GENERATE PDF ================= */
-
-const { highQualityPDF, lowQualityPDF } =
-  await generateCertificate({
-    name: row.student_name,
-    institution: row.college_name,
-    department: row.department,
-    programme: 'Industrial Visit',
-    visitDate: row.visit_date,
-    certificateNo: certNo
-  }, db);
+    /* ================= ⭐ USE NEW IV HELPER ================= */
+    const pdfBuffer = await generateIVCertificate({
+      name: row.student_name,
+      institution: row.college_name,
+      department: row.department,
+      visitDate: row.visit_date,
+      certificateNo: certNo
+    }, db);
 
 
-
-    /* ================= SAVE PDF IN SAME COLLEGE FOLDER ================= */
-
+    /* ================= SAVE FILE ================= */
     const short = safeName(row.college_short_name);
 
     const folder = path.join(
@@ -215,25 +227,26 @@ const { highQualityPDF, lowQualityPDF } =
       fs.mkdirSync(folder, { recursive: true });
     }
 
-    const pdfPath = path.join(folder, `${certNo}.pdf`);
+    const safeCertNo = certNo.replace(/[\/\\]/g, '_');
+    const pdfPath = path.join(folder, `${safeCertNo}.pdf`);
 
-    fs.writeFileSync(pdfPath, lowQualityPDF);
+    fs.writeFileSync(pdfPath, pdfBuffer);
+
 
     await db.query(`
       UPDATE iv_students
       SET certificate_path = ?
       WHERE id = ?
-    `, [`iv/${short}/${certNo}.pdf`, id]);
+    `, [`iv/${short}/${safeCertNo}.pdf`, id]);
 
 
-    /* ================= SEND TO CLIENT ================= */
-
+    /* ================= SEND ================= */
     res.set({
       'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=${certNo}.pdf`
+      'Content-Disposition': `attachment; filename=${safeCertNo}.pdf`
     });
 
-    res.send(highQualityPDF);
+    res.send(pdfBuffer);
 
   }
   catch (err) {
@@ -241,3 +254,49 @@ const { highQualityPDF, lowQualityPDF } =
     res.status(500).send('Certificate generation failed');
   }
 };
+
+
+/* ======================================================
+   UPDATE PAYMENT (FINANCE)
+====================================================== */
+exports.updatePayment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      payment_mode,
+      amount,
+      transaction_id,
+      payment_date,
+      received_by
+    } = req.body;
+
+    /* ================= VISIT UPDATE ================= */
+    await db.query(`
+      UPDATE iv_visits
+      SET
+        payment_mode = ?,
+        amount = ?,
+        transaction_id = ?,
+        payment_date = ?,
+        received_by = ?,
+        paid_status = 1
+      WHERE id = ?
+    `, [payment_mode, amount, transaction_id, payment_date, received_by, id]);
+
+
+    /* ================= ⭐ STUDENTS AUTO UPDATE ================= */
+    await db.query(`
+      UPDATE iv_students
+      SET paid_status = 1
+      WHERE visit_id = ?
+    `, [id]);
+
+
+    res.json({ message: 'Payment + Students updated successfully' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Payment failed' });
+  }
+};
+

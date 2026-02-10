@@ -159,3 +159,10 @@ h2 {
     font-size: 12.5px;
   }
 }
+.payment-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #f8fafc;
+  font-weight: 500;
+}

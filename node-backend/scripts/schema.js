@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS sdp_students (
   to_date DATE,
 
   /* PAYMENT */
-  payment_mode ENUM('ONLINE','CASH') NULL,
+  payment_mode ENUM('RTGS','NEFT','CHEQUE','UPI') NULL,
   amount DECIMAL(10,2) NULL,
   transaction_id VARCHAR(150) NULL,
   payment_date DATE NULL,
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS fdp_staff (
   to_date DATE,
 
   /* PAYMENT */
-  payment_mode ENUM('ONLINE','CASH') NULL,
+  payment_mode ENUM('RTGS','NEFT','CHEQUE','UPI') NULL,
   amount DECIMAL(10,2) NULL,
   transaction_id VARCHAR(150) NULL,
   payment_date DATE NULL,
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS industry_staff (
   to_date DATE,
 
   /* PAYMENT */
-  payment_mode ENUM('ONLINE','CASH') NULL,
+  payment_mode ENUM('RTGS','NEFT','CHEQUE','UPI') NULL,
   amount DECIMAL(10,2) NULL,
   transaction_id VARCHAR(150) NULL,
   payment_date DATE NULL,
@@ -297,12 +297,12 @@ CREATE TABLE IF NOT EXISTS iv_visits (
   excel_file VARCHAR(255) NULL,  -- stored filename
 
   /* PAYMENT (Finance controlled) */
-  payment_mode ENUM('ONLINE','CASH') NULL,
+  payment_mode ENUM('RTGS','NEFT','CHEQUE','UPI') NULL,
   amount DECIMAL(10,2) NULL,
   transaction_id VARCHAR(150) NULL,
   payment_date DATE NULL,
   paid_status BOOLEAN DEFAULT FALSE,
-
+  received_by VARCHAR(150) NULL,
   /* COUNTS */
   total_count INT DEFAULT 0,
   generated_count INT DEFAULT 0,
