@@ -111,7 +111,7 @@ body {
   content: "";
   position: absolute;
   top: 20px;
-  right: 50px;     /* moved slightly left */
+  right: 40px;     /* moved slightly left */
   width: 300px;    /* increased width */
   height: 220px;   /* increased height */
   background:linear-gradient(135deg, #2fbcc0, #0b8f94);
@@ -124,11 +124,12 @@ body {
     100% 0      /* top-right corner */
   );
   z-index: 1;
+  border-radius: 8px;
 }
 .corner.right-top::after {
   content: "";
   position: absolute;
-  top: 70px;       /* inside the big L */
+  top: 80px;       /* inside the big L */
   right: 100px;     /* adjust to fit */
   width: 120px;    /* smaller width */
   height: 80px;    /* smaller height */
@@ -142,6 +143,7 @@ body {
     100% 0
   );
   z-index: 2;
+  border-radius: 8px;
 }
 /* =========================
    BOTTOM LEFT SHAPE
@@ -156,6 +158,7 @@ body {
   clip-path: polygon(0 100%, 0 0, 70% 100%);
   z-index: 1;
   overflow: hidden;
+  border-radius: 8px;
 }
 
 .corner.left-bottom::before {
@@ -175,6 +178,7 @@ body {
     0 100%
   );
   z-index: 1;
+  border-radius: 8px;
 }
 
 .corner.left-bottom::after {
@@ -250,7 +254,7 @@ h1 {
   font-weight: bolder;
   /* text-transform: uppercase; */
   font-family: "Great Vibes", cursive;
-  letter-spacing: 0.1cm;
+  letter-spacing: 0.05cm;
 }
 
 .presented {
@@ -279,7 +283,7 @@ h1 {
    CONTENT
 ========================= */
 .content {
-  margin-top: 50px;
+  margin-top: 45px;
   padding-bottom: 0px;
   font-size: 25px;          /* increased */
   line-height: 1.6;         /* tighter */
@@ -346,7 +350,7 @@ h1 {
 .signature-section {
   position: absolute;
   margin-top: 20px;
-  bottom: 140px;            /* moved closer to content */
+  bottom: 80px;            /* moved closer to content */
   right: 80px;
   text-align: center;
 }
@@ -375,6 +379,6 @@ h1 {
 }
 
 .qr-img {
-  width: 180px;      /* 🔥 bigger */
-  height: 180px;     /* square */
+  width: 180px;
+  height: 180px;
 }
