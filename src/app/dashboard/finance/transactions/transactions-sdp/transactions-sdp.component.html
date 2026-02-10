@@ -7,7 +7,7 @@
     <th>College</th>
     <th>Mode</th>
     <th>Amount</th>
-    <th>Txn ID</th>
+    <th>Txn / Ref No</th>
     <th>Date</th>
     <th *ngIf="isFinance">Action</th>
   </tr>
@@ -17,33 +17,55 @@
     <td>{{ r.student_name }}</td>
     <td>{{ r.college_name }}</td>
 
+    <!-- MODE -->
     <td>
       <span *ngIf="!r.isEdit">{{ r.payment_mode }}</span>
-      <select *ngIf="r.isEdit" [(ngModel)]="r.payment_mode">
-        <option value="ONLINE">Online</option>
-        <option value="CASH">Cash</option>
+
+      <select *ngIf="r.isEdit" [(ngModel)]="r.payment_mode" class="payment-select">
+
+        <option value="">Select</option>
+        <option value="RTGS"> RTGS</option>
+        <option value="NEFT">NEFT</option>
+        <option value="CHEQUE">Cheque</option>
+        <option value="UPI">UPI</option>
+
       </select>
     </td>
 
+    <!-- AMOUNT -->
     <td>
       <span *ngIf="!r.isEdit">{{ r.amount }}</span>
       <input *ngIf="r.isEdit" type="number" [(ngModel)]="r.amount">
     </td>
 
+    <!-- TXN / CHEQUE -->
     <td>
+
       <span *ngIf="!r.isEdit">{{ r.transaction_id }}</span>
-      <input *ngIf="r.isEdit && r.payment_mode==='ONLINE'" [(ngModel)]="r.transaction_id">
+
+      <input *ngIf="r.isEdit" [(ngModel)]="r.transaction_id" [placeholder]="
+      r.payment_mode === 'CHEQUE'
+        ? 'Enter Cheque No'
+        : 'Enter Reference No'
+    ">
     </td>
 
+
+    <!-- DATE -->
     <td>
       <span *ngIf="!r.isEdit">{{ r.payment_date }}</span>
       <input *ngIf="r.isEdit" type="date" [(ngModel)]="r.payment_date">
     </td>
 
+    <!-- ACTION -->
     <td *ngIf="isFinance">
-      <button *ngIf="!r.isEdit" (click)="edit(r)">✏️</button>
-      <button *ngIf="r.isEdit" (click)="save(r)">💾</button>
-      <button *ngIf="r.isEdit" (click)="cancel(r)">❌</button>
+
+      <button *ngIf="!r.isEdit" (click)="edit(r)"> Edit</button>
+
+      <button *ngIf="r.isEdit" (click)="save(r)">Save</button>
+
+      <button *ngIf="r.isEdit" (click)="cancel(r)">Cancel</button>
+
     </td>
 
   </tr>

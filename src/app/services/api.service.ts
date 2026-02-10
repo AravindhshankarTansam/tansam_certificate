@@ -430,6 +430,29 @@ getIVVisits() {
   );
 }
 
+updateIVPayment(id: number, data: any) {
+  return this.http.put(
+    `${this.BASE_URL}/iv/visit/payment/${id}`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+/* ---------- LIST VISITS (SUB ADMIN) ---------- */
+
+getSubAdminVisits() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/iv/sub-admin/visits`,
+    { withCredentials: true }
+  );
+}
+/* ---------- GET STUDENTS BY VISIT ---------- */
+getVisitStudents(id: number) {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/iv/visit/${id}/students`,
+    { withCredentials: true }
+  );
+}
 
 /* ---------- MARK PAID ---------- */
 

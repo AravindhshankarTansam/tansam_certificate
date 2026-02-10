@@ -1,0 +1,125 @@
+<h2>Industrial Visits Payments</h2>
+
+<table class="payment-table">
+
+  <!-- ================= HEADER ================= -->
+  <thead>
+    <tr>
+      <th>Sl</th>
+      <th>Date</th>
+      <th>College</th>
+      <th>Total</th>
+      <th>Status</th>
+      <th>Mode</th>
+      <th>Txn / Ref No</th>
+      <th>Amount (₹)</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+
+
+  <!-- ================= BODY ================= -->
+  <tbody>
+
+    <tr *ngFor="let v of visits; let i = index">
+
+      <!-- SL -->
+      <td class="center">{{ i + 1 }}</td>
+
+      <!-- DATE -->
+      <td class="center">{{ v.visit_date }}</td>
+
+      <!-- COLLEGE -->
+      <td class="left">{{ v.college_name }}</td>
+
+      <!-- TOTAL -->
+      <td class="center">{{ v.total_count }}</td>
+
+      <!-- STATUS -->
+      <td class="center">
+        <span
+          class="badge"
+          [ngClass]="v.paid_status ? 'paid' : 'pending'">
+          {{ v.paid_status ? 'Paid' : 'Pending' }}
+        </span>
+      </td>
+
+
+      <!-- ================= MODE ================= -->
+      <td class="center">
+
+        <span *ngIf="!v.isEditing">{{ v.payment_mode }}</span>
+
+        <select
+          *ngIf="v.isEditing"
+          [(ngModel)]="v.payment_mode"
+          class="payment-select">
+
+          <option value="">Select</option>
+          <option value="RTGS">RTGS</option>
+          <option value="NEFT">NEFT</option>
+          <option value="CHEQUE">Cheque</option>
+          <option value="UPI">UPI</option>
+
+        </select>
+
+      </td>
+
+
+      <!-- ================= TXN / CHEQUE ================= -->
+      <td class="center">
+
+        <span *ngIf="!v.isEditing">{{ v.transaction_id }}</span>
+
+        <input
+          *ngIf="v.isEditing"
+          [(ngModel)]="v.transaction_id"
+          [placeholder]="
+            v.payment_mode === 'CHEQUE'
+              ? 'Enter Cheque No'
+              : 'Enter Reference No'
+          " />
+
+      </td>
+
+
+      <!-- ================= AMOUNT ================= -->
+      <td class="right">
+
+        <span *ngIf="!v.isEditing">₹ {{ v.amount }}</span>
+
+        <input
+          *ngIf="v.isEditing"
+          type="number"
+          min="0"
+          step="1"
+          [(ngModel)]="v.amount" />
+
+      </td>
+
+
+      <!-- ================= ACTION ================= -->
+      <td class="center">
+
+        <!-- EDIT -->
+        <button
+          *ngIf="!v.isEditing"
+          class="edit-btn"
+          (click)="edit(v)">
+          ✏️ Edit
+        </button>
+
+        <!-- SAVE -->
+        <button
+          *ngIf="v.isEditing"
+          class="save-btn"
+          (click)="save(v)">
+          💾 Save
+        </button>
+
+      </td>
+
+    </tr>
+
+  </tbody>
+</table>

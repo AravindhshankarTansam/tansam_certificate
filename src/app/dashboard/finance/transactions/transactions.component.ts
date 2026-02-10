@@ -11,7 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-transactions',
   standalone: true,
-  imports: [CommonModule, FormsModule, TransactionsSdpComponent, TransactionsFdpComponent, TransactionsIndustryComponent, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css'
 })
@@ -76,8 +76,8 @@ loadAll() {
       return;
     }
 
-    if (row.payment_mode === 'ONLINE' && !row.transaction_id) {
-      this.toast.show('Transaction ID required', 'error');
+    if (!row.transaction_id) {
+      this.toast.show('Reference / Cheque number required', 'error');
       return;
     }
 

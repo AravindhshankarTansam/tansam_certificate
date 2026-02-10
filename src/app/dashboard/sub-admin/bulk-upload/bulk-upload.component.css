@@ -188,3 +188,105 @@ tbody tr:nth-child(even) {
   color: #006666;
   font-weight: 600;
 }
+/* ================= VISITS LIST SECTION ================= */
+.list-section {
+  margin-top: 30px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  animation: fadeIn 0.3s ease;
+}
+
+.list-section h3 {
+  margin-bottom: 14px;
+  color: #0f766e;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* table inside list */
+.visit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.visit-table thead {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: white;
+}
+
+.visit-table th {
+  padding: 12px;
+  font-weight: 600;
+}
+
+.visit-table td {
+  padding: 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.visit-table tbody tr:hover {
+  background: #f0fdfa;
+  transition: 0.2s;
+}
+/* ================= STUDENTS MODAL BACKDROP (unique) ================= */
+.students-backdrop {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1200;
+}
+
+/* ================= STUDENTS MODAL CARD ================= */
+.students-modal {
+  width: 92vw;
+  height: 88vh;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+.view-btn {
+  background: #ecfeff;
+  border: 1px solid #99f6e4;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #0f766e;
+}
+
+.view-btn:hover {
+  background: #14b8a6;
+  color: white;
+  transform: scale(1.12);
+}

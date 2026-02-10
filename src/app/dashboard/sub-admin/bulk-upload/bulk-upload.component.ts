@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { OnInit } from '@angular/core'
 import { ApiService } from '../../../services/api.service';
 
 import * as XLSX from 'xlsx';
@@ -12,9 +13,13 @@ import * as XLSX from 'xlsx';
   templateUrl: './bulk-upload.component.html',
   styleUrls: ['./bulk-upload.component.css']
 })
-export class BulkUploadComponent {
+export class BulkUploadComponent implements OnInit{
 
   constructor(private api: ApiService) {}
+  visits: any[] = [];
+  showStudentsModal = false;
+  selectedVisit: any = null;
+  students: any[] = [];
 
   /* ================= BASIC INFO ================= */
 
@@ -213,22 +218,18 @@ export class BulkUploadComponent {
   ===================================================== */
 
 confirmUpload() {
-
   const formData = new FormData();
-
   formData.append('file', this.selectedFile!);
-
   formData.append('collegeName', this.collegeName);
   formData.append('collegeShortName', this.collegeShortName);
   formData.append('visitDate', this.visitDate);
-
   formData.append('students', JSON.stringify(this.uploadedData));
-
   this.api.bulkUploadIV(formData)
     .subscribe({
       next: () => {
         alert('File + data uploaded');
         this.closePreview();
+        this.loadVisits();
       }
     });
 }
@@ -250,4 +251,52 @@ confirmUpload() {
 
     XLSX.writeFile(wb, 'IV_Template.xlsx');
   }
+
+loadVisits() {
+  console.log('🚀 Calling Sub Admin Visits API...');
+
+  this.api.getSubAdminVisits().subscribe({
+    next: (res: any) => {
+      console.log('✅ Visits API Success:', res);
+
+      this.visits = res;
+
+      console.log('📦 visits assigned:', this.visits);
+      console.log('📊 total visits:', this.visits?.length);
+    },
+
+    error: (err) => {
+      console.error('❌ Visits API Error:', err);
+    },
+
+    complete: () => {
+      console.log('🏁 Visits API completed');
+    }
+  });
+}
+
+ngOnInit() {
+  this.loadVisits();
+}
+
+openStudents(visit: any) {
+  this.selectedVisit = visit;
+  this.showStudentsModal = true;
+
+  console.log('👁️ Opening visit:', visit);
+
+  this.api.getVisitStudents(visit.id).subscribe({
+    next: (res: any) => {
+      console.log('✅ Students:', res);
+      this.students = res;
+    },
+    error: (err) => console.error(err)
+  });
+}
+
+closeStudents() {
+  this.showStudentsModal = false;
+  this.students = [];
+}
+
 }

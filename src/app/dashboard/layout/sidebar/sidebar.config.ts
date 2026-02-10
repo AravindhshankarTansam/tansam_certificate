@@ -80,7 +80,8 @@ TEAM_LEAD: [
           children: [
             { label: 'SDP', route: '/dashboard/finance/transactions/sdp' },
             { label: 'FDP', route: '/dashboard/finance/transactions/fdp' },
-            { label: 'Industry', route: '/dashboard/finance/transactions/industry' }
+            { label: 'Industry', route: '/dashboard/finance/transactions/industry' },
+            { label:'Industrial Visits', route: '/dashboard/finance/transactions/industrial-visits' }
           ]
         },
 

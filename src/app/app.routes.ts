@@ -27,6 +27,7 @@ import { TlFdpComponent } from './dashboard/team-lead/attendance/tl-fdp/tl-fdp.c
 import { TlIndustryComponent } from './dashboard/team-lead/attendance/tl-industry/tl-industry.component';
 import { TlNotEligibleComponent } from './dashboard/team-lead/reports/tl-not-eligible/tl-not-eligible.component';
 import { VerifyComponent } from './dashboard/verify/verify.component';
+import { TransactionsIndustrialVisitsComponent } from './dashboard/finance/transactions/transactions-industrial-visits/transactions-industrial-visits.component';
 
 
 
@@ -70,6 +71,7 @@ export const routes: Routes = [
           { path: 'sdp', component: TransactionsSdpComponent },
           { path: 'fdp', component: TransactionsFdpComponent },
           { path: 'industry', component: TransactionsIndustryComponent },
+          { path: 'industrial-visits', component: TransactionsIndustrialVisitsComponent },
           { path: '', redirectTo: 'sdp', pathMatch: 'full' }
         ]
       },
