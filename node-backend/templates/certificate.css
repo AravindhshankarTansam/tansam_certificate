@@ -1,7 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Beau+Rivage&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poiret+One&display=swap');
 
 @page {
   size: A4 landscape;
@@ -35,11 +32,11 @@ body {
   margin: 0;
   padding: 25mm 25mm 30mm;
   background: #ffffff;
-  font-family: "Times New Roman", serif;
   overflow: hidden;
   box-sizing: border-box;
   border: 10px solid #aaf2f400;
   -webkit-font-smoothing: antialiased;
+  font-family: "DM Sans", sans-serif;
 }
 
 
@@ -248,20 +245,18 @@ h1,
 ========================= */
 h1 {
   text-align: center;
-  font-size: 55px;
+  font-size: 45px;
   margin-top: 80px;
   color: #1e7e7e;
   font-weight: bolder;
-  /* text-transform: uppercase; */
-  font-family: "Great Vibes", cursive;
-  letter-spacing: 0.05cm;
+  text-transform: uppercase;
+  font-family: "DM Sans", sans-serif;
 }
 
 .presented {
   text-align: center;
   margin-top: 25px;
-  font-size: 38px;
-  font-family: "Monsieur La Doulaise", cursive;
+  font-size: 30px;
   color: #1e7e7e;
 }
 
@@ -290,7 +285,7 @@ h1 {
   text-align: justify;
   padding-left: 120px;      /* prevents left band overlap */
   padding-right: 60px;
-  font-family: "Beau Rivage", cursive;
+  font-family: "DM Sans", sans-serif;
 }
 
 .content b{
