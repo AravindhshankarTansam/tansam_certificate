@@ -219,3 +219,113 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Required fields css */
+
+/* ================= FORM GROUP ================= */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2f3a40;
+}
+
+.required {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-left: 3px;
+}
+
+/* ================= ERROR MESSAGES ================= */
+.error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.global-error {
+  margin: 12px 0;
+  text-align: center;
+  font-weight: 500;
+  padding: 8px;
+  background: #ffebee;
+  border-radius: 6px;
+}
+
+/* ================= TOAST ================= */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 14px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: slideIn 0.4s ease-out, fadeOut 0.4s 2.6s forwards;
+}
+
+.toast.success {
+  background: #27ae60;
+}
+
+.toast.info {
+  background: #2980b9;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: translateY(-20px); }
+}
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 14px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: slideIn 0.4s ease-out, fadeOut 0.4s 2.6s forwards;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 280px;
+}
+
+.toast-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.toast.success {
+  background: #27ae60;
+}
+
+.toast.success .toast-icon {
+  color: white;
+}
+
+.toast.info {
+  background: #2980b9;
+}
+
+.toast.error {
+  background: #e74c3c;
+}
+
+.toast.error .toast-icon {
+  color: white;
+}

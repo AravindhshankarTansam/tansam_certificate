@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +20,9 @@ export class IndustryComponent implements OnInit {
   editingId: number | null = null;
 
   form: any = this.emptyForm();
+  toastMessage: string = '';
+  toastType: 'success' | 'info' | 'error' = 'success';
+  showValidationError = false;
 
   constructor(private api: ApiService) {}
 
@@ -67,17 +71,58 @@ export class IndustryComponent implements OnInit {
     this.editingId = null;
   }
 
-  save() {
-    if (this.editingId) {
-      this.api.updateIndustry(this.editingId, this.form).subscribe(() => {
-        this.closeModal();
-        this.load();
-      });
-    } else {
-      this.api.addIndustry(this.form).subscribe(() => {
-        this.closeModal();
-        this.load();
-      });
+save() {
+    // Client-side required fields check
+    if (!this.form.industry_staff_name ||
+        !this.form.industry_name ||
+        !this.form.phone ||
+        !this.form.lab_id) {
+      this.showValidationError = true;
+      return;
     }
+
+    this.showValidationError = false;
+
+    const operation = this.editingId
+      ? this.api.updateIndustry(this.editingId, this.form)
+      : this.api.addIndustry(this.form);
+
+    const successMessage = this.editingId
+      ? 'Staff updated successfully'
+      : 'Staff created successfully';
+
+    const toastType: 'success' | 'info' = this.editingId ? 'info' : 'success';
+
+    operation.subscribe({
+      next: () => {
+        this.showToast(successMessage, toastType);
+        this.closeModal();
+        this.load();
+      },
+      error: (err) => {
+        console.error('Save error:', err);
+
+        if (err.status === 403) {
+          this.showToast(
+            'Please contact admin to update this record',
+            'error'           // ← now allowed
+          );
+        } else {
+          this.showToast(
+            'Something went wrong. Please try again later.',
+            'error'
+          );
+        }
+      }
+    });
+  }
+
+  private showToast(message: string, type: 'success' | 'info' | 'error' = 'success') {
+    this.toastMessage = message;
+    this.toastType = type;
+
+    setTimeout(() => {
+      this.toastMessage = '';
+    }, 3000);
   }
 }
