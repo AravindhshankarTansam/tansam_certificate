@@ -58,13 +58,13 @@ save() {
 
   fd.append('name', this.form.name);
   fd.append('designation', this.form.designation);
-  fd.append('is_active', this.form.is_active ? '1' : '0'); // better to send 1/0 for boolean
+  fd.append('is_active', this.form.is_active ? '1' : '0'); 
 
-  // Very important: field name MUST be 'signature' (matches multer.single('signature'))
+
   if (this.form.signature instanceof File) {
     fd.append('signature', this.form.signature, this.form.signature.name);
   } else if (this.form.signature) {
-    // If editing and no new file selected → send existing filename (optional)
+
     fd.append('existing_signature', this.form.signature);
   }
 
