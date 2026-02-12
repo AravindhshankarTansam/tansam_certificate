@@ -1,77 +1,131 @@
-<h2>FDP Staff Transactions</h2>
+<div class="sdp-transactions-container">
 
-<table class="table">
+  <h2>FDP Staff Transactions</h2>
 
-  <tr>
-    <th>Name</th>
-    <th>College</th>
-    <th>Mode</th>
-    <th>Amount</th>
-    <th>Txn / Ref No</th>
-    <th>Date</th>
-    <th *ngIf="isFinance">Action</th>
-  </tr>
+  <!-- Toast -->
+  <div class="toast" *ngIf="toastMessage" [ngClass]="toastType">
+    <span class="toast-icon">
+      <i *ngIf="toastType === 'success'" class="fa-solid fa-circle-check"></i>
+      <i *ngIf="toastType === 'info'" class="fa-solid fa-circle-info"></i>
+      <i *ngIf="toastType === 'error'" class="fa-solid fa-circle-xmark"></i>
+    </span>
+    {{ toastMessage }}
+  </div>
 
-  <tr *ngFor="let r of rows">
+  <div class="table-responsive">
+    <table class="transactions-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>College</th>
+          <th>Mode</th>
+          <th>Amount</th>
+          <th>Txn / Ref No</th>
+          <th>Date</th>
+          <th *ngIf="isFinance" class="action-col">Action</th>
+        </tr>
+      </thead>
 
-    <td>{{ r.staff_name }}</td>
-    <td>{{ r.college_name }}</td>
+      <tbody>
+        <tr *ngFor="let r of rows" [class.editing]="r.isEdit">
 
-    <!-- MODE -->
-    <td>
-      <span *ngIf="!r.isEdit">{{ r.payment_mode }}</span>
+          <!-- Name -->
+          <td>{{ r.staff_name }}</td>
 
-      <select
-        *ngIf="r.isEdit"
-        [(ngModel)]="r.payment_mode"
-        class="payment-select">
+          <!-- College -->
+          <td>{{ r.college_name }}</td>
 
-        <option value="">Select</option>
-        <option value="RTGS">RTGS</option>
-        <option value="NEFT">NEFT</option>
-        <option value="CHEQUE">Cheque</option>
-        <option value="UPI">UPI</option>
+          <!-- Mode -->
+          <td class="mode-cell">
+            <ng-container *ngIf="!r.isEdit">
+              <span class="badge" [ngClass]="getModeClass(r.payment_mode)">
+                {{ r.payment_mode || '—' }}
+              </span>
+            </ng-container>
 
-      </select>
-    </td>
+            <ng-container *ngIf="r.isEdit">
+              <select [(ngModel)]="r.payment_mode" class="form-select">
+                <option value="" disabled>Select mode</option>
+                <option value="RTGS">RTGS</option>
+                <option value="NEFT">NEFT</option>
+                <option value="CHEQUE">Cheque</option>
+                <option value="UPI">UPI</option>
+              </select>
+            </ng-container>
+          </td>
 
-    <!-- AMOUNT -->
-    <td>
-      <span *ngIf="!r.isEdit">{{ r.amount }}</span>
-      <input *ngIf="r.isEdit" type="number" [(ngModel)]="r.amount">
-    </td>
+          <!-- Amount -->
+          <td>
+            <ng-container *ngIf="!r.isEdit">
+              {{ r.amount | number:'1.2-2' }}
+            </ng-container>
 
-    <!-- TXN / CHEQUE -->
-    <td>
-      <span *ngIf="!r.isEdit">{{ r.transaction_id }}</span>
+            <input
+              *ngIf="r.isEdit"
+              type="number"
+              [(ngModel)]="r.amount"
+              class="form-input"
+              min="1"
+              step="0.01"
+            />
+          </td>
 
-      <input
-        *ngIf="r.isEdit"
-        [(ngModel)]="r.transaction_id"
-        [placeholder]="
-          r.payment_mode === 'CHEQUE'
-            ? 'Enter Cheque No'
-            : 'Enter Reference No'
-        ">
-    </td>
+          <!-- Transaction ID -->
+          <td>
+            <ng-container *ngIf="!r.isEdit">
+              {{ r.transaction_id || '—' }}
+            </ng-container>
 
-    <!-- DATE -->
-    <td>
-      <span *ngIf="!r.isEdit">{{ r.payment_date }}</span>
-      <input *ngIf="r.isEdit" type="date" [(ngModel)]="r.payment_date">
-    </td>
+            <input
+              *ngIf="r.isEdit"
+              [(ngModel)]="r.transaction_id"
+              class="form-input"
+              [placeholder]="r.payment_mode === 'CHEQUE' ? 'Cheque No' : 'Reference No'"
+            />
+          </td>
 
-    <!-- ACTION -->
-    <td *ngIf="isFinance">
+          <!-- Date -->
+          <td>
+            <ng-container *ngIf="!r.isEdit">
+              {{ r.payment_date | date:'dd-MM-yyyy' }}
+            </ng-container>
 
-      <button *ngIf="!r.isEdit" (click)="edit(r)">✏️ Edit</button>
+            <input
+              *ngIf="r.isEdit"
+              type="date"
+              [(ngModel)]="r.payment_date"
+              class="form-input"
+            />
+          </td>
 
-      <button *ngIf="r.isEdit" (click)="save(r)">💾 Save</button>
+          <!-- Actions -->
+          <td *ngIf="isFinance" class="action-col">
 
-      <button *ngIf="r.isEdit" (click)="cancel(r)">❌ Cancel</button>
+            <ng-container *ngIf="!r.isEdit">
+              <button class="btn btn-edit" (click)="edit(r)">
+                <i class="fa-solid fa-pen"></i> Edit
+              </button>
+            </ng-container>
 
-    </td>
+            <ng-container *ngIf="r.isEdit">
+              <button class="btn btn-save" (click)="save(r)">
+                <i class="fa-solid fa-check"></i> Save
+              </button>
 
-  </tr>
+              <button class="btn btn-cancel" (click)="cancel(r)">
+                <i class="fa-solid fa-xmark"></i> Cancel
+              </button>
+            </ng-container>
 
-</table>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!rows.length" class="empty-state">
+    No transactions found
+  </div>
+
+</div>

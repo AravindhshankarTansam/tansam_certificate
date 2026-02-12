@@ -8,10 +8,15 @@
     </button>
   </div>
 
-  <!-- ================= TOAST ================= -->
-  <div class="toast" *ngIf="toastMessage" [ngClass]="toastType">
-    {{ toastMessage }}
-  </div>
+   <!-- Toast Notification -->
+<div class="toast" *ngIf="toastMessage" [ngClass]="toastType">
+  <span class="toast-icon">
+    <i *ngIf="toastType === 'success'" class="fa-solid fa-circle-check"></i>
+    <i *ngIf="toastType === 'info'" class="fa-solid fa-circle-info"></i>
+    <i *ngIf="toastType === 'error'" class="fa-solid fa-circle-xmark"></i>
+  </span>
+  {{ toastMessage }}
+</div>
 
   <!-- ================= TABLE ================= -->
   <div class="table-wrapper" *ngIf="students.length; else empty">
