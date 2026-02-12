@@ -52,3 +52,4 @@ testem.log
 Thumbs.db
 # Local environment files
 node-backend/.env
+tansam_certificate/node-backend/.env
