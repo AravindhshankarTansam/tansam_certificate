@@ -14,6 +14,7 @@
   "author": "Aravindh Uma Shankar - Full stack lead",
   "license": "ISC",
   "dependencies": {
+    "archiver": "^7.0.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",

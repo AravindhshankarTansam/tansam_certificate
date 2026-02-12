@@ -477,5 +477,29 @@ downloadIVCertificate(id: number) {
   );
 }
 
+getIVStudentsByCollege(visitId: number) {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/iv/visit/${visitId}/students`,
+    { withCredentials: true }
+  );
+}
+
+getIVCertificateSummary() {
+  return this.http.get<any>(
+    `${this.BASE_URL}/iv/certificate-summary`,
+    { withCredentials: true }
+  );
+}
+
+bulkDownloadIVCertificates(visitId: number) {
+  return this.http.get(
+    `${this.BASE_URL}/iv/bulk-download/${visitId}`,
+    {
+      responseType: 'blob',
+      withCredentials: true
+    }
+  );
+}
+
 
 }

@@ -18,9 +18,17 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
         { label: 'Add Leads', route: '/dashboard/admin/leads' },
         { label: 'Certificate Signature', route: '/dashboard/admin/signature' },
         { label: 'Roles', route: '/dashboard/admin/roles' },
-        { label: 'holidays', route: '/dashboard/admin/holidays' }
+        { label: 'holidays', route: '/dashboard/admin/holidays' },
       ]
-    }
+    },
+    { label: 'Generated Certificates',
+      children: [
+        { label: 'SDP', route: '/dashboard/admin/certificates/sdp' },
+        { label: 'FDP', route: '/dashboard/admin/certificates/fdp' },
+        { label: 'Industry', route: '/dashboard/admin/certificates/industry' },
+        { label: 'Industrial Visits', route: '/dashboard/admin/certificates/industrial-visits' }
+      ]
+     }
 
   ],
 

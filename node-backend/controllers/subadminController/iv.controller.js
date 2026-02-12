@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { generateIVCertificate } = require('../../utils/ivCertificate.helper');
 const { generateIVCertNo } = require('../../utils/certNo.helper');
-
+const archiver = require('archiver');
 
 /* ======================================================
    SMALL HELPERS
@@ -128,11 +128,15 @@ exports.getStudentsByVisit = async (req, res) => {
     const [rows] = await db.query(`
       SELECT
         id,
-        student_name AS name,
+        student_name,
         register_number,
-        email AS email_id,
-        phone AS phone_number,
-        department
+        email,
+        phone,
+        department,
+        certificate_no,
+        certificate_generated,
+        certificate_path,
+        paid_status
       FROM iv_students
       WHERE visit_id = ?
       ORDER BY id ASC
@@ -147,24 +151,25 @@ exports.getStudentsByVisit = async (req, res) => {
 };
 
 
+
 /* ======================================================
    MARK PAYMENT
 ====================================================== */
-exports.markPaid = async (req, res) => {
-  try {
+// exports.markPaid = async (req, res) => {
+//   try {
 
-    const { id } = req.params;
+//     const { id } = req.params;
 
-    await db.query(`
-      UPDATE iv_visits SET paid_status = 1 WHERE id = ?
-    `, [id]);
+//     await db.query(`
+//       UPDATE iv_visits SET paid_status = 1 WHERE id = ?
+//     `, [id]);
 
-    res.json({ message: 'Payment updated' });
+//     res.json({ message: 'Payment updated' });
 
-  } catch {
-    res.status(500).json({ message: 'Payment update failed' });
-  }
-};
+//   } catch {
+//     res.status(500).json({ message: 'Payment update failed' });
+//   }
+// };
 
 
 /* ======================================================
@@ -261,7 +266,9 @@ exports.generate = async (req, res) => {
 ====================================================== */
 exports.updatePayment = async (req, res) => {
   try {
+
     const { id } = req.params;
+
     const {
       payment_mode,
       amount,
@@ -284,15 +291,103 @@ exports.updatePayment = async (req, res) => {
     `, [payment_mode, amount, transaction_id, payment_date, received_by, id]);
 
 
-    /* ================= ⭐ STUDENTS AUTO UPDATE ================= */
-    await db.query(`
-      UPDATE iv_students
-      SET paid_status = 1
-      WHERE visit_id = ?
+    /* ================= GET STUDENTS ================= */
+    const [students] = await db.query(`
+      SELECT s.*, v.college_name, v.college_short_name, v.visit_date
+      FROM iv_students s
+      JOIN iv_visits v ON s.visit_id = v.id
+      WHERE s.visit_id = ?
+      AND s.certificate_generated = 0
     `, [id]);
 
 
-    res.json({ message: 'Payment + Students updated successfully' });
+    for (const student of students) {
+
+      /* ========= CERTIFICATE NUMBER ========= */
+      const certNo = generateIVCertNo(
+        student.college_short_name,
+        student.visit_date
+      );
+
+      /* ========= GENERATE PDF ========= */
+      const pdfBuffer = await generateIVCertificate({
+        name: student.student_name,
+        institution: student.college_name,
+        department: student.department,
+        visitDate: student.visit_date,
+        certificateNo: certNo
+      }, db);
+
+      const short = safeName(student.college_short_name);
+
+      const folder = path.join(
+        __dirname,
+        `../../uploads/iv/${short}`
+      );
+
+      if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder, { recursive: true });
+      }
+
+      const safeCertNo = certNo.replace(/[\/\\]/g, '_');
+      const pdfPath = path.join(folder, `${safeCertNo}.pdf`);
+
+      fs.writeFileSync(pdfPath, pdfBuffer);
+
+      /* ========= UPDATE DB ========= */
+      await db.query(`
+        UPDATE iv_students
+        SET
+          certificate_generated = 1,
+          certificate_no = ?,
+          certificate_path = ?,
+          paid_status = 1
+        WHERE id = ?
+      `, [
+        certNo,
+        `iv/${short}/${safeCertNo}.pdf`,
+        student.id
+      ]);
+    }
+
+    /* ================= UPDATE VISIT COUNTS ================= */
+
+// Count generated certificates
+const [[countResult]] = await db.query(`
+  SELECT COUNT(*) AS generated
+  FROM iv_students
+  WHERE visit_id = ?
+  AND certificate_generated = 1
+`, [id]);
+
+const generatedCount = countResult.generated;
+
+// Get total count
+const [[visitInfo]] = await db.query(`
+  SELECT total_count
+  FROM iv_visits
+  WHERE id = ?
+`, [id]);
+
+const totalCount = visitInfo.total_count;
+
+// Update iv_visits
+await db.query(`
+  UPDATE iv_visits
+  SET
+    generated_count = ?,
+    certificate_generated = ?
+  WHERE id = ?
+`, [
+  generatedCount,
+  generatedCount === totalCount,
+  id
+]);
+
+
+    res.json({
+      message: 'Payment updated and certificates generated successfully'
+    });
 
   } catch (err) {
     console.error(err);
@@ -300,3 +395,96 @@ exports.updatePayment = async (req, res) => {
   }
 };
 
+
+exports.getCertificateSummary = async (req, res) => {
+  try {
+
+    const [colleges] = await db.query(`
+      SELECT
+        v.id,
+        v.college_name,
+        COUNT(s.id) AS count
+      FROM iv_visits v
+      LEFT JOIN iv_students s
+        ON s.visit_id = v.id
+        AND s.certificate_generated = 1
+      GROUP BY v.id, v.college_name
+      ORDER BY v.id DESC
+    `);
+
+    const [total] = await db.query(`
+      SELECT COUNT(*) AS total
+      FROM iv_students
+      WHERE certificate_generated = 1
+    `);
+
+    res.json({
+      colleges,
+      total: total[0]?.total || 0
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to fetch summary' });
+  }
+};
+
+
+exports.bulkDownloadCertificates = async (req, res) => {
+  try {
+
+    const { visitId } = req.params;
+
+    // Get visit info
+    const [[visit]] = await db.query(`
+      SELECT college_short_name
+      FROM iv_visits
+      WHERE id = ?
+    `, [visitId]);
+
+    if (!visit) return res.status(404).send('Visit not found');
+
+    const short = safeName(visit.college_short_name);
+
+    // Get generated certificates
+    const [students] = await db.query(`
+      SELECT certificate_no, certificate_path
+      FROM iv_students
+      WHERE visit_id = ?
+      AND certificate_generated = 1
+      AND certificate_path IS NOT NULL
+    `, [visitId]);
+
+    if (!students.length) {
+      return res.status(400).send('No certificates generated');
+    }
+
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=${short}_certificates.zip`
+    );
+
+    const archive = archiver('zip', { zlib: { level: 9 } });
+    archive.pipe(res);
+
+    students.forEach(student => {
+      const filePath = path.join(
+        __dirname,
+        `../../uploads/${student.certificate_path}`
+      );
+
+      if (fs.existsSync(filePath)) {
+        archive.file(filePath, {
+          name: `${student.certificate_no}.pdf`
+        });
+      }
+    });
+
+    await archive.finalize();
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Bulk download failed');
+  }
+};

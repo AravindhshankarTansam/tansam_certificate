@@ -28,6 +28,10 @@ import { TlIndustryComponent } from './dashboard/team-lead/attendance/tl-industr
 import { TlNotEligibleComponent } from './dashboard/team-lead/reports/tl-not-eligible/tl-not-eligible.component';
 import { VerifyComponent } from './dashboard/verify/verify.component';
 import { TransactionsIndustrialVisitsComponent } from './dashboard/finance/transactions/transactions-industrial-visits/transactions-industrial-visits.component';
+import { CertificateSdpComponent } from './dashboard/admin/certificates/certificate-sdp/certificate-sdp.component';
+import { CertificateFdpComponent } from './dashboard/admin/certificates/certificate-fdp/certificate-fdp.component';
+import { CertificateIndustryComponent } from './dashboard/admin/certificates/certificate-industry/certificate-industry.component';
+import { CertificateIndustrialVisitsComponent } from './dashboard/admin/certificates/certificate-industrial-visits/certificate-industrial-visits.component';
 
 
 
@@ -48,6 +52,11 @@ export const routes: Routes = [
       { path: 'admin/signature', component: CertificateSignatureComponent },
       { path: 'admin/roles', component: RolesComponent },
       { path: 'admin/holidays', component: HolidayComponent },
+      // Admin Certificate Routes
+      { path: 'admin/certificates/sdp', component: CertificateSdpComponent },
+      { path: 'admin/certificates/fdp', component: CertificateFdpComponent },
+      { path: 'admin/certificates/industry', component: CertificateIndustryComponent },
+      { path: 'admin/certificates/industrial-visits', component: CertificateIndustrialVisitsComponent },
       // Sub Admin Routes
       { path: 'sub-admin/dashboard', component: SubAdminComponent },
       { path: 'sub-admin/sdp', component: SdpComponent },

@@ -1,0 +1,105 @@
+<div class="container">
+
+  <h2>Industrial Visits Certificates</h2>
+
+  <div class="summary-card">
+    <h3>Total Certificates Generated: {{ totalCertificates }}</h3>
+  </div>
+
+  <table class="table modern-table">
+    <thead>
+      <tr>
+        <th>College Name</th>
+        <th>Certificate Count</th>
+        <th>Action</th>
+        <th>Bulk Download</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let college of colleges">
+        <td>{{ college.college_name }}</td>
+        <td>{{ college.count }}</td>
+        <td>
+          <button class="btn-primary" (click)="openCollege(college.id)">
+            View Students
+          </button>
+        </td>
+        <td>
+          <button
+            class="btn-success"
+            *ngIf="college.count > 0"
+            (click)="bulkDownload(college.id, college.college_name)">
+            Download All
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+
+<div class="modal-backdrop" *ngIf="showModal">
+  <div class="modal-card">
+
+    <div class="modal-header">
+      <h3>Generated Certificates</h3>
+      <button class="close-btn" (click)="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <table class="table modern-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Certificate No</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let student of selectedStudents">
+
+            <td>{{ student.student_name }}</td>
+            <td>{{ student.department }}</td>
+
+            <td>
+              <span *ngIf="student.certificate_no; else noCert">
+                {{ student.certificate_no }}
+              </span>
+              <ng-template #noCert>
+                <span class="text-muted">Not Generated</span>
+              </ng-template>
+            </td>
+
+            <td>
+              <span class="badge success" *ngIf="student.certificate_generated">
+                Generated
+              </span>
+              <span class="badge pending" *ngIf="!student.certificate_generated">
+                Pending
+              </span>
+            </td>
+
+            <td>
+              <button
+                *ngIf="student.certificate_generated"
+                class="btn-primary"
+                (click)="download(student.id)">
+                Download
+              </button>
+            </td>
+
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+</div>
