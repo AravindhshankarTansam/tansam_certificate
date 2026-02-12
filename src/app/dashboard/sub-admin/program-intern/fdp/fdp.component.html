@@ -1,18 +1,26 @@
 <div class="fdp-container">
 
   <!-- ================= HEADER ================= -->
+
+    <!-- Toast Notification -->
+<div class="toast" *ngIf="toastMessage" [ngClass]="toastType">
+  <span class="toast-icon">
+    <i *ngIf="toastType === 'success'" class="fa-solid fa-circle-check"></i>
+    <i *ngIf="toastType === 'info'" class="fa-solid fa-circle-info"></i>
+    <i *ngIf="toastType === 'error'" class="fa-solid fa-circle-xmark"></i>
+  </span>
+  {{ toastMessage }}
+</div>
   <div class="header">
     <h2>FDP Registration</h2>
-
-    <button class="add-btn" (click)="openModal()">
-      + Add Staff
-    </button>
+    <button class="add-btn" (click)="openModal()">+ Add Staff</button>
   </div>
 
+  <!-- ================= TOAST (you already have ToastService) ================= -->
+  <!-- Your ToastService should already handle showing toasts -->
 
   <!-- ================= TABLE ================= -->
   <div class="table-wrapper" *ngIf="staffs.length; else empty">
-
     <table>
       <thead>
         <tr>
@@ -29,7 +37,6 @@
           <th>Action</th>
         </tr>
       </thead>
-
       <tbody>
         <tr *ngFor="let row of staffs; let i = index">
           <td>{{ i + 1 }}</td>
@@ -40,79 +47,106 @@
           <td>{{ row.phone }}</td>
           <td>{{ row.email }}</td>
           <td>{{ row.lab_name }}</td>
-          <td>{{ row.from_date | date }}</td>
-          <td>{{ row.to_date | date }}</td>
-
+          <td>{{ row.from_date | date:'dd-MM-yyyy' }}</td>
+          <td>{{ row.to_date | date:'dd-MM-yyyy' }}</td>
           <td>
-            <button class="edit-btn" (click)="openModal(row)">
-              Edit
-            </button>
+            <button class="edit-btn" (click)="openModal(row)">Edit</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-
-  <!-- ================= EMPTY ================= -->
   <ng-template #empty>
-    <div class="empty">
-      No FDP records found
-    </div>
+    <div class="empty">No FDP records found</div>
   </ng-template>
-
 
   <!-- ================= MODAL ================= -->
   <div class="modal-backdrop" *ngIf="showModal">
-
     <div class="modal">
+      <h3>{{ editingId ? 'Edit FDP Staff' : 'Add FDP Staff' }}</h3>
 
-      <h3>
-        {{ editingId ? 'Edit Staff' : 'Add Staff' }}
-      </h3>
-
-      <form (ngSubmit)="save()">
+      <form (ngSubmit)="save(fdpForm)" #fdpForm="ngForm" novalidate>
 
         <div class="grid">
 
-          <input [(ngModel)]="form.staff_name" name="name" placeholder="Staff Name" required>
-
-          <input [(ngModel)]="form.staff_id_no" name="staffid" placeholder="Staff ID No">
-
-          <input [(ngModel)]="form.college_name" name="college" placeholder="College Name">
-
-          <input [(ngModel)]="form.department" name="dept" placeholder="Department">
-
-          <input [(ngModel)]="form.phone" name="phone" placeholder="Phone">
-
-          <input [(ngModel)]="form.email" name="email" placeholder="Email">
-
-          <select [(ngModel)]="form.lab_id" name="lab">
-            <option value="">Select Lab</option>
-            <option *ngFor="let lab of labs" [value]="lab.id">
-              {{ lab.name }}
-            </option>
-          </select>
-
-          <div>
-            <label>From Date</label>
-            <input type="date" [(ngModel)]="form.from_date" name="from">
+          <div class="form-group">
+            <label>Staff Name <span class="required">*</span></label>
+            <input [(ngModel)]="form.staff_name" name="staff_name" required #nameCtrl="ngModel">
+            <div class="error" *ngIf="nameCtrl.invalid && (nameCtrl.dirty || nameCtrl.touched)">
+              Staff name is required
+            </div>
           </div>
 
-          <div>
+          <div class="form-group">
+            <label>Staff ID No</label>
+            <input [(ngModel)]="form.staff_id_no" name="staff_id_no">
+          </div>
+
+          <div class="form-group">
+            <label>College Name <span class="required">*</span></label>
+            <input [(ngModel)]="form.college_name" name="college_name" required #collegeCtrl="ngModel">
+            <div class="error" *ngIf="collegeCtrl.invalid && (collegeCtrl.dirty || collegeCtrl.touched)">
+              College name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Department <span class="required">*</span></label>
+            <input [(ngModel)]="form.department" name="department" required #deptCtrl="ngModel">
+            <div class="error" *ngIf="deptCtrl.invalid && (deptCtrl.dirty || deptCtrl.touched)">
+              Department is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Phone <span class="required">*</span></label>
+            <input [(ngModel)]="form.phone" name="phone" required pattern="^[0-9]{10}$" #phoneCtrl="ngModel">
+            <div class="error" *ngIf="phoneCtrl.invalid && (phoneCtrl.dirty || phoneCtrl.touched)">
+              <span *ngIf="phoneCtrl.errors?.['required']">Phone is required</span>
+              <span *ngIf="phoneCtrl.errors?.['pattern']">Must be exactly 10 digits</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email <span class="required">*</span></label>
+            <input [(ngModel)]="form.email" name="email" type="email" required #emailCtrl="ngModel">
+            <div class="error" *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)">
+              <span *ngIf="emailCtrl.errors?.['required']">Email is required</span>
+              <span *ngIf="emailCtrl.errors?.['email']">Please enter a valid email</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Lab <span class="required">*</span></label>
+            <select [(ngModel)]="form.lab_id" name="lab_id" required #labCtrl="ngModel">
+              <option value="">Select Lab</option>
+              <option *ngFor="let lab of labs" [value]="lab.id">{{ lab.name }}</option>
+            </select>
+            <div class="error" *ngIf="labCtrl.invalid && (labCtrl.dirty || labCtrl.touched)">
+              Please select a lab
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>From Date</label>
+            <input type="date" [(ngModel)]="form.from_date" name="from_date">
+          </div>
+
+          <div class="form-group">
             <label>To Date</label>
-            <input type="date" [(ngModel)]="form.to_date" name="to">
+            <input type="date" [(ngModel)]="form.to_date" name="to_date">
           </div>
 
         </div>
 
-        <!-- buttons -->
-        <div class="modal-actions">
-          <button type="button" class="cancel-btn" (click)="closeModal()">
-            Cancel
-          </button>
+        <div class="error global-error" *ngIf="showValidationError">
+          Please fill all required fields
+        </div>
 
-          <button type="submit" class="save-btn">
+        <div class="modal-actions">
+          <button type="button" class="cancel-btn" (click)="closeModal()">Cancel</button>
+          <button type="submit" class="save-btn" [disabled]="fdpForm.invalid">
             {{ editingId ? 'Update' : 'Save' }}
           </button>
         </div>

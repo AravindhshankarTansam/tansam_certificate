@@ -210,3 +210,145 @@ tbody tr:hover {
 .actions-btn .save:hover {
   background: #007777;
 }
+
+
+/* ================= FORM GRID ================= */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.grid input,
+.grid select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d9e1e2;
+  font-size: 14px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.grid input:focus,
+.grid select:focus {
+  outline: none;
+  border-color: #009999;
+  box-shadow: 0 0 0 1px rgba(0, 153, 153, 0.3);
+}
+
+/* ================= REQUIRED MARK ================= */
+
+.required {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-left: 3px;
+}
+
+/* ================= ERROR TEXT ================= */
+
+.error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ================= MODAL ACTIONS ================= */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.cancel-btn {
+  background: #e4ecee;
+  border: none;
+  color: #2f3a40;
+  padding: 9px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-btn:hover {
+  background: #d3dde0;
+}
+
+.save-btn {
+  background: #009999;
+  border: none;
+  color: #ffffff;
+  padding: 9px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.save-btn:hover {
+  background: #007777;
+}
+
+.save-btn:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+/* ================= TOAST ================= */
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 14px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: slideIn 0.4s ease-out, fadeOut 0.4s 2.6s forwards;
+  min-width: 260px;
+}
+
+.toast.success {
+  background: #27ae60;
+}
+
+.toast.info {
+  background: #2980b9;
+}
+
+.toast.error {
+  background: #e74c3c;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: translateY(-20px); }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

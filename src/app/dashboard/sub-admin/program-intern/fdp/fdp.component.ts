@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule,NgForm } from '@angular/forms';
 
 import { ApiService } from '../../../../services/api.service';
 import { ToastService } from '../../../../services/toast.service';
@@ -19,6 +19,10 @@ export class FdpComponent implements OnInit {
 
   showModal = false;
   editingId: number | null = null;
+  showValidationError = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'info' | 'error' = 'success';
+
 
   form: any = this.getEmptyForm();
 
@@ -78,26 +82,43 @@ export class FdpComponent implements OnInit {
     this.showModal = false;
   }
 
-  save() {
+save(fdpForm: NgForm) {
+  this.showValidationError = false;
 
-    if (!this.form.staff_name) {
-      this.toast.show('Staff name required', 'error');
-      return;
-    }
+  if (fdpForm.invalid) {
+    this.showValidationError = true;
+    fdpForm.control.markAllAsTouched();
+    return;
+  }
 
-    const req = this.editingId
-      ? this.api.updateFDP(this.editingId, this.form)
-      : this.api.addFDP(this.form);
+  const operation = this.editingId
+    ? this.api.updateFDP(this.editingId, this.form)
+    : this.api.addFDP(this.form);
 
-    req.subscribe(() => {
-      this.toast.show(
-        this.editingId ? 'Updated successfully' : 'Added successfully',
+  operation.subscribe({
+    next: () => {
+      this.showToast(
+        this.editingId
+          ? 'FDP staff updated successfully'
+          : 'FDP staff created successfully',
         'success'
       );
-
       this.closeModal();
-      this.reset();
       this.loadStaffs();
-    });
+    },
+    error: (err) => {
+      console.error('Save failed:', err);
+      this.showToast('Failed to save. Please try again.', 'error');
+    }
+  });
+}
+  private showToast(message: string, type: 'success' | 'info' | 'error' = 'success') {
+    this.toastMessage = message;
+    this.toastType = type;
+
+    setTimeout(() => {
+      this.toastMessage = '';
+    }, 3000);
   }
+
 }

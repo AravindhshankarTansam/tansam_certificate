@@ -15,6 +15,9 @@ export class TransactionsIndustryComponent implements OnInit {
 
   rows: any[] = [];
   isFinance = localStorage.getItem('role') === 'FINANCE';
+  toastMessage: string = '';
+toastType: 'success' | 'info' | 'error' = 'success';
+
 
   constructor(
     private api: ApiService,
@@ -34,31 +37,62 @@ export class TransactionsIndustryComponent implements OnInit {
   edit(r:any){ r.isEdit = true; }
   cancel(r:any){ r.isEdit = false; }
 
-  save(r: any) {
+save(r: any) {
 
-    if (!r.payment_mode || !r.amount || !r.payment_date) {
-      this.toast.show('Fill all fields', 'error');
-      return;
-    }
+  if (!r.payment_mode || !r.amount || !r.payment_date) {
+    this.showToast('Please fill all required fields', 'error');
+    return;
+  }
 
-    if (!r.transaction_id) {
-      this.toast.show('Reference / Cheque number required', 'error');
-      return;
-    }
+  if (!r.transaction_id) {
+    this.showToast('Reference / Cheque number required', 'error');
+    return;
+  }
 
-    const payload = {
-      payment_mode: r.payment_mode,
-      amount: r.amount,
-      transaction_id: r.transaction_id,
-      payment_date: r.payment_date
-    };
+  const payload = {
+    payment_mode: r.payment_mode,
+    amount: Number(r.amount),
+    transaction_id: r.transaction_id.trim(),
+    payment_date: r.payment_date
+  };
 
-    this.api.updatePayment('industry', r.id, payload)
-      .subscribe(() => {
+  this.api.updatePayment('industry', r.id, payload)
+    .subscribe({
+      next: () => {
         r.isEdit = false;
         r.paid_status = true;
-        this.toast.show('Payment saved', 'success');
-      });
-  }
+        this.showToast('Payment updated successfully', 'success');
+      },
+      error: () => {
+        this.showToast('Failed to update payment', 'error');
+      }
+    });
+}
+getModeClass(mode: string): string {
+  if (!mode) return '';
+
+  const map: Record<string, string> = {
+    RTGS: 'badge-rtgs',
+    NEFT: 'badge-neft',
+    CHEQUE: 'badge-cheque',
+    UPI: 'badge-upi'
+  };
+
+  return map[mode] || '';
+}
+
+
+  private showToast(
+  message: string,
+  type: 'success' | 'info' | 'error' = 'success'
+) {
+  this.toastMessage = message;
+  this.toastType = type;
+
+  setTimeout(() => {
+    this.toastMessage = '';
+  }, 3000);
+}
+
 
 }

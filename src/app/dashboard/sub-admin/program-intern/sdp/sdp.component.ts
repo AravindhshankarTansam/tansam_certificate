@@ -20,6 +20,9 @@ export class SdpComponent implements OnInit {
   editingId: number | null = null;
 
   form: any = this.getEmptyForm();
+  toastMessage: string = '';
+  toastType: 'success' | 'info' | 'error' = 'success';
+
 
   constructor(
     private api: ApiService,
@@ -87,27 +90,36 @@ closeModal() {
   this.showModal = false;
 }
 
-/* modify save() */
 save() {
 
-  if (!this.form.student_name) {
-    this.toast.show('Student name required', 'error');
-    return;
-  }
-
-  const req = this.editingId
+  const operation = this.editingId
     ? this.api.updateSDP(this.editingId, this.form)
     : this.api.addSDP(this.form);
 
-  req.subscribe(() => {
-    this.toast.show(
-      this.editingId ? 'Updated successfully' : 'Added successfully',
-      'success'
-    );
+  const message = this.editingId
+    ? 'SDP updated successfully'
+    : 'SDP created successfully';
 
-    this.closeModal();
-    this.reset();
-    this.loadStudents();
+  operation.subscribe({
+    next: () => {
+      this.showToast(message, 'success');
+      this.closeModal();
+      this.reset();
+      this.loadStudents();
+    },
+    error: () => {
+      this.showToast('Something went wrong', 'error');
+    }
   });
 }
+private showToast(message: string, type: 'success' | 'info' | 'error' = 'success') {
+  this.toastMessage = message;
+  this.toastType = type;
+
+  setTimeout(() => {
+    this.toastMessage = '';
+  }, 3000);
+}
+
+
 }
