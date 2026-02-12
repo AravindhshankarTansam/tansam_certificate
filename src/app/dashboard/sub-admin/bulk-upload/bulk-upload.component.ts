@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { OnInit } from '@angular/core'
 import { ApiService } from '../../../services/api.service';
 
+
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -55,6 +56,36 @@ export class BulkUploadComponent implements OnInit{
     'department'
   ];
 
+  isDragActive = false;
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragActive = true;
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragActive = false;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragActive = false;
+
+    const file = event.dataTransfer?.files[0];
+    if (file) {
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      if (['csv', 'xlsx', 'xls'].includes(ext || '')) {
+        this.selectedFile = file;
+        this.fileName = file.name;
+      } else {
+        alert('Please upload CSV or Excel file only');
+      }
+    }
+  }
   /* =====================================================
      POPUP
   ===================================================== */
