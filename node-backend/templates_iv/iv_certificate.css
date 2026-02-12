@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
 @page{
   size:A4 landscape;
   margin:0;
@@ -136,7 +138,7 @@ body{
   margin-right:auto;
   padding-left:0;       /* remove side shift */
   padding-right:0;
-  font-family:"Beau Rivage", cursive;
+ font-family: "DM Sans", sans-serif;
 }
 
 
