@@ -2,60 +2,56 @@
 <html>
 <head>
 <meta charset="UTF-8">
-{{styles}}
-<link rel="stylesheet" href="./iv_certificate.css">
+<title>Industrial Visit Certificate</title>
+<link rel="stylesheet" href="iv_certificate.css">
 </head>
 
 <body>
 
 <div class="certificate">
 
-  <div class="corner left-top1"></div>
-  <div class="corner left-top"></div>
-  <div class="middle-shape"></div>
-  <div class="corner left-bottom"></div>
-  <div class="corner right-top"></div>
+<div class="watermark"></div>
 
-  <!-- LOGOS -->
-  <div class="top-left-logo">
-    <img src="{{logoPath}}">
-  </div>
+<!-- CORNERS -->
+<div class="corner green"></div>
+<div class="corner gold"></div>
+<div class="corner white"></div>
+<div class="corner bottom-green"></div>
+<div class="corner bottom-gold"></div>
+<div class="corner bottom-white"></div>
 
-  <div class="top-center-logos">
-    <img src="{{tidcoLogo}}">
-    <img src="{{tansamLogo}}">
-    <img src="{{siemensLogo}}">
-  </div>
-
-  <h1>Industrial Visit Certificate</h1>
-  <p class="presented">Presented to</p>
-
-  <p class="content">
-    This is to certify that test
-    <b>{{name}}</b>
-    of <b>{{college_name}}</b> from  the  Department   of
-    <b>{{department}}</b>
-    has  been a part  of the  industrial visit to
-    <b>TANSAM</b>
-    - <b>Tamil Nadu Smart  and  Advanced  Manufacturing  Centre</b> on
-    <b class="date">{{visited_date}}</b>.
-  </p>
-
-<div class="signature-section">
-
-  <img src="{{signatureImage}}" style="height:70px;margin-bottom:8px">
-
-  <div class="signature-line"></div>
-
-  <p><b>{{signName}}</b></p>
-  <p>{{signDesignation}}</p>
-
+<!-- LOGOS -->
+<div class="top-bar">
+  <img src="../public/images/tansam.png">
+  <img src="../public/images/tidco.png">
+  <img src="../public/images/siemens1.png">
 </div>
 
+<!-- TITLE -->
+<h1 class="title">INDUSTRIAL VISIT CERTIFICATE</h1>
 
-  <div class="certificate-number">
-    Certificate Number – <b>{{certificateNo}}</b>
+<p class="award-text">Presented to</p>
+
+<p class="content">
+This is to certify that <b>{{name}}</b> of <b>{{college}}</b> from the
+Department of <b>{{department}}</b> has been a part of the Industrial Visit to
+<b>TANSAM - Tamil Nadu Smart and Advanced Manufacturing Center</b>
+on <b>{{date}}</b>.
+</p>
+
+<!-- SIGNATURE -->
+<div class="signatures">
+  <div class="sign">
+    <div class="line"></div>
+    <p><b>{{signName}}</b></p>
+    <p>{{signRole}}</p>
   </div>
+</div>
+
+<!-- CERTIFICATE NUMBER -->
+<div class="certificate-number">
+  Certificate Number – <b>{{certificateNo}}</b>
+</div>
 
 </div>
 

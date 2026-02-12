@@ -50,7 +50,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("{{watermark}}") no-repeat center;
+  background: url("../public/images/watermark.png") no-repeat center;
   background-size: 600px;
   opacity: 0.18;
   z-index: 2;
@@ -60,6 +60,25 @@ body {
 /* =========================
    LEFT BIG DIAGONAL STRIP
 ========================= */
+
+.certificate::before {
+  content: "";
+  position: absolute;
+
+  right: 50px;
+  bottom: 50px;
+
+    width: 800px;
+    height: 470px;
+
+  border-right: 4px solid #0b8f94;
+  border-bottom: 4px solid #0b8f94;
+
+  z-index: 2;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
 
 
 /* =========================
@@ -106,26 +125,23 @@ body {
 /* =========================
    TOP RIGHT FOLD
 ========================= */
-
 .corner.right-top::before {
   content: "";
   position: absolute;
   top: 20px;
-  right: 40px;     /* moved slightly left */
-  width: 300px;    /* increased width */
-  height: 220px;   /* increased height */
-  background:linear-gradient(135deg, #2fbcc0, #0b8f94);
-  clip-path: polygon(
-    100% 100%,  /* bottom-right */
-    88% 100%,   /* bottom-right inner */
-    88% 16%,    /* vertical leg */
-    22% 16%,    /* horizontal leg */
-    22% 0,      /* top-left inner */
-    100% 0      /* top-right corner */
-  );
+  right: 40px;
+  width: 300px;
+  height: 220px;
+
+  background: linear-gradient(135deg, #2fbcc0, #0b8f94);
+
+  /* ✅ SAME exact curve as ::after */
+  clip-path: polygon(100% 100%, 88% 100%, 88% 16%, 22% 16%, 22% 0, 100% 0);
+
   z-index: 1;
   border-radius: 8px;
 }
+
 .corner.right-top::after {
   content: "";
   position: absolute;
@@ -145,6 +161,8 @@ body {
   z-index: 2;
   border-radius: 8px;
 }
+
+
 /* =========================
    BOTTOM LEFT SHAPE
 ========================= */
@@ -248,21 +266,23 @@ h1,
 ========================= */
 h1 {
   text-align: center;
-  font-size: 55px;
+  font-size: 45px;
   margin-top: 80px;
   color: #1e7e7e;
-  font-weight: bolder;
-  /* text-transform: uppercase; */
-  font-family: "Great Vibes", cursive;
-  letter-spacing: 0.05cm;
+  font-weight: bold;
+  font-family: "Georgia", serif;
+  /* letter-spacing: 2px; better than 0.05cm */
 }
+
 
 .presented {
   text-align: center;
   margin-top: 25px;
-  font-size: 38px;
-  font-family: "Monsieur La Doulaise", cursive;
+  font-family: "Times New Roman", serif;
+  font-weight: 600;      /* slightly softer than bold */
+  font-size: 24px;       /* better proportion */
   color: #1e7e7e;
+  letter-spacing: 1px;   /* subtle elegance */
 }
 
 /* =========================
@@ -367,18 +387,25 @@ h1 {
 ========================= */
 .certificate-number {
   position: absolute;
-  bottom: 40px;
-  right: 80px;
+  bottom: 30px;       /* adjust vertical spacing */
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 14px;
+  text-align: center;
+  margin-bottom: 55px;
 }
+
 .qr-code {
   position: absolute;
-  bottom: 60px;
-  left: 90px;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 5;
 }
 
 .qr-img {
-  width: 180px;
-  height: 180px;
+    width: 130px;
+    height: 130px;
+  display: block;
+  margin-bottom: 60px;
 }

@@ -1,379 +1,178 @@
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Beau+Rivage&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
-
-@page {
-  size: A4 landscape;
-  margin: 0;
+@page{
+  size:A4 landscape;
+  margin:0;
 }
 
-body {
-  margin: 0;
+body{
+  margin:0;
+  background:#f3f3f3;
+  font-family:Tahoma, Segoe UI, Geneva, Verdana, sans-serif;
 }
 
-
-/* =========================
-   CERTIFICATE BASE
-========================= */
-/* .certificate {
-  position: relative;
-  width: 1000px;
-  height: 700px;
-  margin: auto;
-  padding: 90px 80px 120px;
-  background: #ffffff;
-  font-family: "Times New Roman", serif;
-  overflow: hidden;
-  border: 10px solid #0b8f94;
-} */
-
-.certificate {
-  position: relative;
-  width: 297mm;
-  height: 210mm;
-  margin: 0;
-  padding: 25mm 25mm 30mm;
-  background: #ffffff;
-  font-family: "Times New Roman", serif;
-  overflow: hidden;
-  box-sizing: border-box;
-  border: 10px solid #aaf2f400;
-  -webkit-font-smoothing: antialiased;
+.certificate{
+  width:297mm;
+  height:210mm;
+  margin:0 auto;
+  background:#fff;
+  border:4px solid #c89b3c;
+  padding:25mm;
+  box-sizing:border-box;
+  position:relative;
+  overflow:hidden;
 }
 
-
-/* =========================
-   WATERMARK
-========================= */
-.certificate::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("{{watermark}}") no-repeat center;
-  background-size: 600px;
-  opacity: 0.18;
-  z-index: 2;
-  pointer-events: none;
+/* WATERMARK */
+.watermark{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:520px;
+  height:520px;
+  background:url("../public/images/watermark.png") no-repeat center;
+  background-size:contain;
+  opacity:0.18;
+  z-index:0;
 }
 
-/* =========================
-   LEFT BIG DIAGONAL STRIP
-========================= */
+/* CORNERS */
+.corner{ position:absolute; pointer-events:none; }
 
-
-/* =========================
-   TOP LEFT CORNER
-========================= */
-.corner.left-top1 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 360px;
-  height: 500px;
-  background: #00999971;
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-  z-index: 1;
+.corner.green{
+  top:0; left:0;
+  width:160px; height:240px;
+  background:#009999;
+  clip-path:polygon(0 0,95% 0,0 100%);
+  z-index:1;
 }
 
-.corner.left-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 200px;
-  height: 800px;
-  background: linear-gradient(135deg, #0b8f94, #2fbcc0);
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-  z-index: 1;
-}
-/* =========================
-   middle shape
-========================= */
-
-.middle-shape {
-    position: absolute;
-    top: 520px;        /* fine-tune vertically */
-    left: 0;           /* anchor to left edge */
-    width: 190px;
-    height: 240px;
-    background: #4FD0D0;
-    clip-path: polygon(0 0, 80% 0, 50% 100%, 0 100%);
-    transform: rotate(25deg) scale(1.5);
-    transform-origin: left center;
-    z-index: 1;
+.corner.gold{
+  top:18px; left:18px;
+  width:150px; height:220px;
+  background:#d4a537;
+  clip-path:polygon(0 0,95% 0,0 100%);
+  z-index:2;
 }
 
-/* =========================
-   TOP RIGHT FOLD
-========================= */
-
-.corner.right-top::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  right: 50px;     /* moved slightly left */
-  width: 300px;    /* increased width */
-  height: 220px;   /* increased height */
-  background:linear-gradient(135deg, #2fbcc0, #0b8f94);
-  clip-path: polygon(
-    100% 100%,  /* bottom-right */
-    88% 100%,   /* bottom-right inner */
-    88% 16%,    /* vertical leg */
-    22% 16%,    /* horizontal leg */
-    22% 0,      /* top-left inner */
-    100% 0      /* top-right corner */
-  );
-  z-index: 1;
-}
-.corner.right-top::after {
-  content: "";
-  position: absolute;
-  top: 70px;       /* inside the big L */
-  right: 100px;     /* adjust to fit */
-  width: 120px;    /* smaller width */
-  height: 80px;    /* smaller height */
-  background: linear-gradient(135deg, #67e1e5, #04878b); /* slightly different shade */
-  clip-path: polygon(
-    100% 100%,
-    88% 100%,
-    88% 16%,
-    22% 16%,
-    22% 0,
-    100% 0
-  );
-  z-index: 2;
-}
-/* =========================
-   BOTTOM LEFT SHAPE
-========================= */
-.corner.left-bottom {
-  position: absolute;
-  bottom: -40px;
-  left: -60px;
-  width: 600px;
-  height: 500px;
-  background: linear-gradient(135deg, #0b8f94, #2fbcc0);
-  clip-path: polygon(0 100%, 0 0, 70% 100%);
-  z-index: 1;
-  overflow: hidden;
+.corner.white {
+  top:44px;
+  left:44px;
+  width:120px;
+  height:180px;
+  background:#009999;
+  clip-path:polygon(0 0,95% 0,0 100%);
+  z-index:3;
 }
 
-.corner.left-bottom::before {
-  content: "";
-  position: absolute;
-  bottom: 70px;
-  left: 80px;
-  width: 260px;
-  height: 180px;
-  background: #aaf1f4;
-  clip-path: polygon(
-    0 0,
-    12% 0,
-    12% 84%,
-    78% 84%,
-    78% 100%,
-    0 100%
-  );
-  z-index: 1;
+.corner.bottom-green{
+  bottom:0; right:0;
+  width:160px; height:240px;
+  background:#009999;
+  clip-path:polygon(100% 100%,100% 5%,0 100%);
+  z-index:1;
 }
 
-.corner.left-bottom::after {
-  content: "";
-  position: absolute;
-  bottom: 110px;   /* increased spacing from bottom */
-  left: 120px;    /* increased spacing from left */
-  width: 160px;   /* slightly smaller than before */
-  height: 116px;  /* 180 - 2*(22+10) */
-  background: #6fdde1;
-  clip-path: polygon(
-    0 0,
-    12% 0,
-    12% 84%,
-    78% 84%,
-    78% 100%,
-    0 100%
-  );
-  z-index: 2;
+.corner.bottom-gold{
+  bottom:18px; right:18px;
+  width:150px; height:220px;
+  background:#d4a537;
+  clip-path:polygon(100% 100%,100% 5%,0 100%);
+  z-index:2;
+}
+
+.corner.bottom-white{
+  bottom:44px;
+  right:44px;
+  width:120px;
+  height:180px;
+  background:#009999;
+  clip-path:polygon(100% 100%,100% 5%,0 100%);
+  z-index:3;
+}
+
+/* LOGOS */
+.top-bar{
+  position:absolute;
+  top:30px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:40px;
+}
+
+.top-bar img {
+  height:95px;
+}
+
+/* TITLE */
+.title{
+  text-align:center;
+  font-size:45px;
+  margin-top:80px;
+  color:#009999;
+  font-weight:bold;
+  font-family:"Georgia", serif;
+}
+
+/* TEXT */
+.award-text{
+  text-align:center;
+  margin-top:25px;
+  font-family:"Times New Roman", serif;
+  font-weight:600;
+  font-size:24px;
+  color:#009999;
+  letter-spacing:1px;
+}
+
+.content{
+  margin-top:45px;
+  padding-bottom:0px;
+  font-size:28px;
+  line-height:1.7;
+  text-align:justify;
+  max-width:1500px;     /* keeps same visual width */
+  margin-left:auto;
+  margin-right:auto;
+  padding-left:0;       /* remove side shift */
+  padding-right:0;
+  font-family:"Beau Rivage", cursive;
 }
 
 
-
-/* =========================
-   CONTENT LAYER
-========================= */
-.top-left-logo,
-.top-center-logos,
-h1,
-.presented,
-.name,
-.content,
-.signature-section,
-.certificate-number {
-  position: relative;
-  z-index: 3;
+/* SIGNATURE */
+.signatures{
+  position:absolute;
+  bottom:75px;
+  left:50%;
+  transform:translateX(-50%);
+  text-align:center;
 }
 
-/* =========================
-   LOGOS
-========================= */
-.top-left-logo {
-  position: absolute;
-  top: 30px;
-  left: 40px;
+.line{
+  width:260px;
+  border-top:2px solid #000;
+  margin:0 auto 10px;
 }
 
-.top-left-logo img {
-  height: 95px;
+/* QR */
+.qr-code{
+  position:absolute;
+  bottom:55px;
+  left:50%;
+  transform:translateX(-50%);
 }
 
-.top-center-logos {
-  position: absolute;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 40px;
+.qr-img{
+  width:100px;
+  height:100px;
 }
 
-.top-center-logos img {
-  height: 95px;
-}
-
-/* =========================
-   TITLE
-========================= */
-h1 {
-  text-align: center;
-  font-size: 55px;
-  margin-top: 80px;
-  color: #1e7e7e;
-  font-weight: bolder;
-  /* text-transform: uppercase; */
-  font-family: "Great Vibes", cursive;
-  letter-spacing: 0.1cm;
-}
-
-.presented {
-  text-align: center;
-  margin-top: 25px;
-  font-size: 38px;
-  font-family: "Monsieur La Doulaise", cursive;
-  color: #1e7e7e;
-}
-
-/* =========================
-   NAME
-========================= */
-.name {
-  text-align: center;
-  margin: 22px 0;
-  margin-top: 30px;          /* tightened */
-}
-
-.name-input {
-  font-size: 32px;          /* increased */
-  font-weight: bold;
-}
-
-/* =========================
-   CONTENT
-========================= */
-.content {
-  margin-top: 40px;
-  padding-bottom: 0px;
-  font-size: 25px;          /* increased */
-  line-height: 1.6;         /* tighter */
-  text-align: justify;
-  padding-left: 120px;      /* prevents left band overlap */
-  padding-right: 60px;
-  font-family: "Beau Rivage", cursive;
-}
-
-.content b{
-  font-weight: 600;
-  font-family: "Poiret One", sans-serif;
-  padding-left: 5px;
-  padding-right: 5px;
-  font-size: 25px;
-
-}
-.date {
-  font-family: "Poiret One", sans-serif; /* same as your bold fields */
-  font-weight: 700;
-  font-size: 24px;
-  letter-spacing: 1px;
-  padding: 4px 10px;
-  border-bottom: 2px solid #000; /* signature-style underline */
-}
-
-/* =========================
-   INPUTS
-========================= */
-.editable-text {
-  border: none;
-  border-bottom: 1px solid #000;
-  background: transparent;
-  font-family: inherit;
-  text-align: center;
-  font-size: 18px;          /* increased */
-}
-
-.editable-text.inline {
-  width: 200px;             /* increased */
-}
-
-.programme-input {
-  width: 360px;             /* increased */
-}
-
-.editable-text.small {
-  width: 190px;
-  font-size: 14px;
-}
-
-.editable-date {
-  border: none;
-  border-bottom: 1px solid #000;
-  background: transparent;
-  width: 150px;
-  text-align: center;
-  font-size: 15px;
-}
-
-/* =========================
-   SIGNATURE
-========================= */
-.signature-section {
-  position: absolute;
-  bottom: 80px;            /* moved closer to content */
-  right: 80px;
-  text-align: center;
-}
-
-.signature-line {
-  width: 240px;
-  height: 2px;
-  background: #2fbcc0;
-  margin-bottom: 8px;
-}
-
-/* =========================
-   CERTIFICATE NUMBER
-========================= */
-.certificate-number {
-  position: absolute;
-  bottom: 40px;
-  right: 80px;
-  font-size: 14px;
-}
-.qr-code {
-  position: absolute;
-  bottom: 60px;
-  left: 90px;
-  z-index: 5;
-}
-
-.qr-img {
-  width: 180px;
-  height: 180px;
+/* CERT NUMBER */
+.certificate-number{
+  position:absolute;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:14px;
 }
