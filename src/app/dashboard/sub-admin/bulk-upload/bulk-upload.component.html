@@ -1,195 +1,200 @@
-<div class="bulk-container">
+<div class="bulk-upload-page">
 
-  <h2>Industrial visit Excel-upload</h2>
-
-  <!-- ================= FORM ================= -->
-
-  <div class="college-input">
-
-    <input
-      type="text"
-      placeholder="Enter College Name"
-      [(ngModel)]="collegeName"
-    />
-
-    <input
-      type="text"
-      placeholder="College Short Name (ex: PSG)"
-      [(ngModel)]="collegeShortName"
-    />
-
-    <input
-      type="date"
-      [(ngModel)]="visitDate"
-    />
-
-    <button class="primary" (click)="openPopup()">
-      Upload Excel
-    </button>
-
-    <button (click)="downloadTemplate()">
-      Download Template
-    </button>
-
+  <!-- Hero / Title -->
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Industrial Visit – Bulk Upload</h1>
+      <p>Upload student lists efficiently using Excel or CSV files</p>
+    </div>
   </div>
-</div>
 
-<!-- ================= VISITS LIST ================= -->
-
-<div class="list-section" *ngIf="visits.length">
-
-  <h3>Uploaded IV Visits</h3>
-
-  <table class="visit-table">
-
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>College</th>
-        <th>Short Name</th>
-        <th>Date</th>
-        <th>Total Students</th>
-        <th>View</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let v of visits; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ v.college_name }}</td>
-        <td>{{ v.college_short_name }}</td>
-        <td>{{ v.visit_date }}</td>
-        <td>{{ v.total_count }}</td>
-        <td>
-          <button class="icon-btn view-btn" (click)="openStudents(v)" title="View Students">
-            <i class="fa-solid fa-eye"></i>
-          </button>
-        </td>
-
-      </tr>
-    </tbody>
-
-  </table>
-
-</div>
-<!-- ================= STUDENTS MODAL ================= -->
-
-<div class="students-backdrop" *ngIf="showStudentsModal">
-  <div class="students-modal">
-    <div class="header">
-      <h2>College Name – {{ selectedVisit?.college_name }}</h2>
-      <button class="close-btn" (click)="closeStudents()">✕</button>
+  <!-- Main Action Card -->
+  <div class="upload-card modern-card">
+    <div class="card-header">
+      <h2>New Industrial Visit Record</h2>
+      <p class="subtitle">Enter college details to start upload</p>
     </div>
 
-    <p>Total Students: {{ students.length }}</p>
+    <!-- Form Fields – Aligned & Balanced -->
+    <div class="form-row">
+      <div class="input-group floating-label college-wide">
+        <input type="text" id="collegeName" placeholder=" " [(ngModel)]="collegeName" />
+        <label for="collegeName">College Full Name</label>
+      </div>
 
-    <div class="table-wrapper">
+      <div class="input-group floating-label short-input">
+        <input type="text" id="collegeShortName" placeholder=" " [(ngModel)]="collegeShortName" maxlength="10" />
+        <label for="collegeShortName">College Short Code (ex: PSG)</label>
+      </div>
 
-      <table>
+      <div class="input-group floating-label short-input date-group">
+        <input type="date" id="visitDate" [(ngModel)]="visitDate" />
+        <label for="visitDate">Visit Date</label>
+      </div>
+    </div>
 
+    <!-- Drag & Drop Zone (clickable for browse) -->
+    <div class="dropzone modern-dropzone"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onDrop($event)"
+         [class.active]="isDragActive"
+         (click)="fileInput.click()">
+      <div class="dropzone-content">
+        <div class="icon-circle">
+          <i class="fa-solid fa-cloud-arrow-up fa-3x"></i>
+        </div>
+        <p class="drop-text">Drag & drop your Excel / CSV file here</p>
+        <p class="or">or</p>
+        <p class="browse-text">Click to <strong>Browse File</strong></p>
+      </div>
+      <input
+        #fileInput
+        type="file"
+        accept=".csv,.xlsx,.xls"
+        (change)="onFileSelected($event)"
+        hidden
+      />
+    </div>
+
+    <!-- Selected File Name -->
+    <div class="file-status" *ngIf="fileName">
+      <p>Selected: <strong>{{ fileName }}</strong></p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-bar">
+      <button class="btn btn-outline template-btn" (click)="downloadTemplate()">
+        <i class="fa-solid fa-file-arrow-down"></i> Download Template
+      </button>
+
+      <button class="btn btn-primary upload-btn"
+              [disabled]="!collegeName || !visitDate || !selectedFile"
+              (click)="uploadFile()">
+        <i class="fa-solid fa-upload"></i> Upload Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Uploaded Visits Section -->
+  <div class="visits-section modern-section" *ngIf="visits.length">
+    <h3>Previously Uploaded Visits</h3>
+    <div class="table-container">
+      <table class="modern-table visit-table">
         <thead>
           <tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Register No</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Department</th>
+            <th>College</th>
+            <th>Short Code</th>
+            <th>Date</th>
+            <th>Total Students</th>
+            <th>View</th>
           </tr>
         </thead>
-
         <tbody>
-          <tr *ngFor="let s of students; let i = index">
+          <tr *ngFor="let v of visits; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ s.name }}</td>
-            <td>{{ s.register_number }}</td>
-            <td>{{ s.email_id }}</td>
-            <td>{{ s.phone_number }}</td>
-            <td>{{ s.department }}</td>
-          </tr>
-        </tbody>
-
-      </table>
-
-    </div>
-
-  </div>
-</div>
-
-
-
-<!-- ================= UPLOAD POPUP ================= -->
-
-<div class="modal-backdrop" *ngIf="showUploadPopup">
-
-  <div class="modal small">
-
-    <h3>Upload CSV / Excel</h3>
-
-    <input
-      type="file"
-      accept=".csv,.xlsx,.xls"
-      (change)="onFileSelected($event)"
-    />
-
-    <p *ngIf="fileName">{{ fileName }}</p>
-
-    <div class="actions">
-      <button (click)="closePopup()">Cancel</button>
-      <button [disabled]="!selectedFile" (click)="uploadFile()">
-        Upload
-      </button>
-    </div>
-
-  </div>
-</div>
-
-
-<!-- ================= PREVIEW MODAL ================= -->
-
-<div class="modal-backdrop" *ngIf="showPreviewModal">
-
-  <div class="modal fullscreen">
-
-    <div class="header">
-      <h2>{{ category }} – Preview</h2>
-      <button class="close-btn" (click)="closePreview()">✕</button>
-    </div>
-
-    <p>Total Records: {{ uploadedData.length }}</p>
-
-    <div class="table-wrapper">
-
-      <table>
-
-        <thead>
-          <tr>
-            <th *ngFor="let h of tableHeaders">
-              {{ h }}
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr *ngFor="let row of uploadedData">
-
-            <td *ngFor="let h of tableHeaders">
-              {{ row[h] }}
+            <td>{{ v.college_name }}</td>
+            <td><span class="badge short-badge">{{ v.college_short_name }}</span></td>
+            <td>{{ v.visit_date | date:'dd-MM-yyyy' }}</td>
+            <td><span class="badge count-badge">{{ v.total_count }}</span></td>
+            <td>
+              <button class="btn-icon view-btn" (click)="openStudents(v)" title="View Students">
+                <i class="fa-solid fa-eye"></i>
+              </button>
             </td>
-
           </tr>
         </tbody>
-
       </table>
-
     </div>
-
-    <div class="footer">
-      <button (click)="closePreview()">Close</button>
-      <button class="primary" (click)="confirmUpload()">
-        Confirm Upload
-      </button>
-    </div>
-
   </div>
+
+  <!-- Empty State -->
+  <div class="empty-state modern-empty" *ngIf="!visits.length">
+    <div class="empty-icon">
+      <i class="fa-solid fa-folder-open fa-4x"></i>
+    </div>
+    <h3>No visits uploaded yet</h3>
+    <p>Use the form above to add your first industrial visit record.</p>
+  </div>
+
+  <!-- Preview Modal – Shown after file selection/upload -->
+  <div class="modal-backdrop" *ngIf="showPreviewModal">
+    <div class="modal fullscreen modern-modal">
+      <div class="modal-header">
+        <h2>{{ category }} – Preview</h2>
+        <button class="close-btn" (click)="closePreview()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-info">
+        <p>Total Records: <strong>{{ uploadedData.length }}</strong></p>
+      </div>
+
+      <div class="preview-table-wrapper">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th *ngFor="let h of tableHeaders">{{ h | titlecase }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of uploadedData; let i = index">
+              <td *ngFor="let h of tableHeaders">{{ row[h] || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="closePreview()">Close</button>
+        <button class="btn btn-primary" (click)="confirmUpload()">
+          Confirm Upload
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Students Modal -->
+  <div class="students-backdrop" *ngIf="showStudentsModal">
+    <div class="students-modal excel-modal">
+      <div class="modal-header">
+        <h2>{{ selectedVisit?.college_name }}</h2>
+        <button class="close-btn" (click)="closeStudents()">
+      <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-info">
+        Total Students: <strong>{{ students.length }}</strong>
+      </div>
+
+      <div class="excel-table-wrapper">
+        <table class="excel-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Register No</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Department</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of students; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ s.name || '—' }}</td>
+              <td>{{ s.register_number || '—' }}</td>
+              <td>{{ s.email_id || '—' }}</td>
+              <td>{{ s.phone_number || '—' }}</td>
+              <td>{{ s.department || '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div>
