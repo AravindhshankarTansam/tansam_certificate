@@ -8,6 +8,10 @@ body {
 
 .fdp-container {
   padding: 24px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f4f7f8;
+  min-height: 100vh;
+  color: #2f3a40;
 }
 
 /* ================= HEADER ================= */
