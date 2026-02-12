@@ -18,7 +18,13 @@ const app = express();
 
 app.disable('x-powered-by'); // hide express fingerprint
 app.set('trust proxy', 1); // required for secure cookies behind proxy
-app.use(helmet()); // security headers
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+  })
+);
+
+ // security headers
 app.use(compression()); // gzip
 app.use(express.json({ limit: '10kb' })); // prevent big payload attacks
 app.use(morgan('dev')); // logs
