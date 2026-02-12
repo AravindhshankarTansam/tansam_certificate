@@ -19,22 +19,22 @@
 
 .header h2 {
   margin: 0;
-  color: #006666;
+  color: #006666;  /* 🔥 Same as FDP */
   font-weight: 600;
+  font-size: 22px;
 }
+
 
 .add-btn {
   background: #009999;
   color: #fff;
   border: none;
-  padding: 10px 14px;
-  border-radius: 6px;
+  padding: 10px 18px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
 }
+
 
 .add-btn:hover {
   background: #007777;
@@ -42,37 +42,42 @@
 
 /* ================= TABLE ================= */
 
+/* ================= TABLE ================= */
+
 .table-wrapper {
   background: #ffffff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
 }
 
 thead {
-  background: #e6f4f4;
+  background: #006666;   /* 🔥 Dark teal like FDP */
+  color: #ffffff;
 }
 
 th,
 td {
-  padding: 12px 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #d9e1e2;
   text-align: left;
-  font-size: 14px;
+  white-space: nowrap;
+}
+
+tbody tr:hover {
+  background: #f0fafa;
 }
 
 th {
-  color: #2f3a40;
   font-weight: 600;
 }
 
-tbody tr {
-  border-top: 1px solid #d9e1e2;
-}
 
 tbody tr:hover {
   background: #f0fafa;
@@ -83,9 +88,9 @@ tbody tr:hover {
 .edit-btn {
   background: #00b3b3;
   border: none;
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 5px;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 13px;
 }
@@ -93,6 +98,7 @@ tbody tr:hover {
 .edit-btn:hover {
   background: #009999;
 }
+
 
 /* ================= EMPTY STATE ================= */
 

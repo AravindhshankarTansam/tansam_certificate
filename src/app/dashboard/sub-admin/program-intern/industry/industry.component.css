@@ -42,9 +42,9 @@
 
 .table-wrapper {
   background: #ffffff;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow-x: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 table {
@@ -54,27 +54,24 @@ table {
 }
 
 thead {
-  background: #e6f4f4;
+  background: #006666;
+  color: #ffffff;
 }
 
 th,
 td {
-  padding: 12px 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #d9e1e2;
   text-align: left;
   white-space: nowrap;
 }
 
-th {
-  font-weight: 600;
-  color: #2f3a40;
-}
-
-tbody tr {
-  border-top: 1px solid #d9e1e2;
-}
-
 tbody tr:hover {
   background: #f0fafa;
+}
+
+th {
+  font-weight: 600;
 }
 
 /* ================= ACTION BUTTON ================= */
