@@ -27,7 +27,7 @@ async function markAttendance(table, id, date, labId) {
 
   if (!row) throw new Error('Not found');
 
-  let dates = row.present_dates ? JSON.parse(row.present_dates) : [];
+  let dates = row.present_dates || [];
 
 
   /* ---------- toggle ---------- */
@@ -89,7 +89,7 @@ async function markAttendance(table, id, date, labId) {
     [id]
   );
 
-  await generateCertificate(updatedRow, table, db);
+  await generateCertificate(updatedRow, db);
 }
 
 
@@ -110,9 +110,12 @@ router.get('/sdp/get', isAuth, isTeamLead, async (req, res) => {
       ORDER BY id DESC
     `, [labId]);
 
-    rows.forEach(r => {
-      r.present_dates = r.present_dates ? JSON.parse(r.present_dates) : [];
-    });
+ rows.forEach(r => {
+  if (!r.present_dates) {
+    r.present_dates = [];
+  }
+});
+
 
     res.json(rows);
 
@@ -152,9 +155,12 @@ router.get('/fdp/get', isAuth, isTeamLead, async (req, res) => {
       WHERE lab_id=?
     `, [labId]);
 
-    rows.forEach(r => {
-      r.present_dates = r.present_dates ? JSON.parse(r.present_dates) : [];
-    });
+   rows.forEach(r => {
+  if (!r.present_dates) {
+    r.present_dates = [];
+  }
+});
+
 
     res.json(rows);
 
@@ -195,8 +201,10 @@ router.get('/industry/get', isAuth, isTeamLead, async (req, res) => {
     `, [labId]);
 
     rows.forEach(r => {
-      r.present_dates = r.present_dates ? JSON.parse(r.present_dates) : [];
-    });
+  if (!r.present_dates) {
+    r.present_dates = [];
+  }
+});
 
     res.json(rows);
 
