@@ -101,25 +101,51 @@ async function markAttendance(table, id, date, labId) {
 
 router.get('/sdp/get', isAuth, isTeamLead, async (req, res) => {
   try {
+    /* ================= SESSION SAFETY ================= */
+    if (!req.session?.user?.lab_id) {
+      return res.status(403).json({
+        message: 'Lab not assigned to this Team Lead'
+      });
+    }
+
     const labId = req.session.user.lab_id;
 
-    const [rows] = await db.query(`
+    /* ================= FETCH DATA ================= */
+    const [rows] = await db.query(
+      `
       SELECT *
       FROM sdp_students
-      WHERE lab_id=?
+      WHERE lab_id = ?
       ORDER BY id DESC
-    `, [labId]);
+      `,
+      [labId]
+    );
 
-    rows.forEach(r => {
-      r.present_dates = r.present_dates ? JSON.parse(r.present_dates) : [];
+    /* ================= SAFE JSON PARSE ================= */
+    rows.forEach(row => {
+      try {
+        row.present_dates = row.present_dates
+          ? JSON.parse(row.present_dates)
+          : [];
+      } catch (e) {
+        console.warn(
+          `Invalid present_dates JSON for SDP ID ${row.id}`
+        );
+        row.present_dates = [];
+      }
     });
 
-    res.json(rows);
+    /* ================= RESPONSE ================= */
+    return res.json(rows);
 
   } catch (err) {
-    res.status(500).json(err);
+    console.error('TEAM LEAD SDP GET ERROR:', err);
+    return res.status(500).json({
+      message: 'Failed to fetch SDP students'
+    });
   }
 });
+
 
 
 router.post('/sdp/mark-date', isAuth, isTeamLead, async (req, res) => {
@@ -144,41 +170,92 @@ router.post('/sdp/mark-date', isAuth, isTeamLead, async (req, res) => {
 
 router.get('/fdp/get', isAuth, isTeamLead, async (req, res) => {
   try {
+    /* ================= SESSION SAFETY ================= */
+    if (!req.session?.user?.lab_id) {
+      return res.status(403).json({
+        message: 'Lab not assigned to this Team Lead'
+      });
+    }
+
     const labId = req.session.user.lab_id;
 
-    const [rows] = await db.query(`
+    /* ================= FETCH DATA ================= */
+    const [rows] = await db.query(
+      `
       SELECT *
       FROM fdp_staff
-      WHERE lab_id=?
-    `, [labId]);
+      WHERE lab_id = ?
+      ORDER BY id DESC
+      `,
+      [labId]
+    );
 
-    rows.forEach(r => {
-      r.present_dates = r.present_dates ? JSON.parse(r.present_dates) : [];
+    /* ================= SAFE JSON PARSE ================= */
+    rows.forEach(row => {
+      try {
+        row.present_dates = row.present_dates
+          ? JSON.parse(row.present_dates)
+          : [];
+      } catch {
+        console.warn(
+          `Invalid present_dates JSON for FDP ID ${row.id}`
+        );
+        row.present_dates = [];
+      }
     });
 
-    res.json(rows);
+    return res.json(rows);
 
   } catch (err) {
-    res.status(500).json(err);
+    console.error('TEAM LEAD FDP GET ERROR:', err);
+    return res.status(500).json({
+      message: 'Failed to fetch FDP staff'
+    });
   }
 });
 
 
 router.post('/fdp/mark-date', isAuth, isTeamLead, async (req, res) => {
   try {
-    const { id, date } = req.body;
+    /* ================= SESSION SAFETY ================= */
+    if (!req.session?.user?.lab_id) {
+      return res.status(403).json({
+        message: 'Lab not assigned to this Team Lead'
+      });
+    }
+
     const labId = req.session.user.lab_id;
 
+    /* ================= INPUT VALIDATION ================= */
+    const { id, date } = req.body;
+
+    if (!id || !date) {
+      return res.status(400).json({
+        message: 'id and date are required'
+      });
+    }
+
+    /* ================= BUSINESS LOGIC ================= */
     await markAttendance('fdp_staff', id, date, labId);
 
-    res.json({ message: 'Updated with stats' });
+    return res.json({ message: 'Attendance updated successfully' });
 
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('TEAM LEAD FDP MARK ERROR:', err);
+
+    /* ================= KNOWN ERROR ================= */
+    if (err.message === 'Not found') {
+      return res.status(404).json({
+        message: 'FDP staff not found for this lab'
+      });
+    }
+
+    /* ================= UNKNOWN ERROR ================= */
+    return res.status(500).json({
+      message: 'Failed to update attendance'
+    });
   }
 });
-
-
 
 /* =====================================================
    🟡 INDUSTRY
