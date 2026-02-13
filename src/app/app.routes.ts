@@ -64,6 +64,9 @@ export const routes: Routes = [
       { path: 'sub-admin/industry', component: IndustryComponent },
       { path: 'sub-admin/bulk-upload', component: BulkUploadComponent },
       { path: 'sub-admin/reports', component: ReportsComponent },
+      {path: 'sub-admin/sdp-bulk-upload', loadComponent: () => import('./dashboard/sub-admin/program-intern/sdp-bulkupload/sdpbulkupload.component').then(m => m.SdpBulkUploadComponent)},
+      {path: 'sub-admin/fdp-bulk-upload', loadComponent: () => import('./dashboard/sub-admin/program-intern/fdp-bulkupload/fdpbulkupload.component').then(m => m.FdpBulkUploadComponent)},
+      {path: 'sub-admin/industry-bulk-upload', loadComponent: () => import('./dashboard/sub-admin/program-intern/industry-bulkupload/industrybulkupload.component').then(m => m.IndustryBulkUploadComponent)},
       // Team Lead Routes
       { path: 'teamlead/dashboard', component: TeamLeadDashboardComponent },
       { path: 'teamlead/sdp', component: TlSdpComponent },
