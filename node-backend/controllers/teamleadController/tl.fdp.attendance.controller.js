@@ -21,26 +21,26 @@ exports.getMyLabStudents = async (req, res) => {
 
 
 /* ================= MARK ATTENDANCE ONLY ================= */
-exports.markAttendance = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
+// exports.markAttendance = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { status } = req.body;
 
-    const labId = req.session.user.lab_id;
-    const userId = req.session.user.id;
+//     const labId = req.session.user.lab_id;
+//     const userId = req.session.user.id;
 
-    await db.query(`
-      UPDATE fdp_staff
-      SET
-        attendance_status = ?,
-        attendance_marked_by = ?,
-        attendance_date = CURDATE()
-      WHERE id = ? AND lab_id = ?
-    `, [status, userId, id, labId]);
+//     await db.query(`
+//       UPDATE fdp_staff
+//       SET
+//         attendance_status = ?,
+//         attendance_marked_by = ?,
+//         attendance_date = CURDATE()
+//       WHERE id = ? AND lab_id = ?
+//     `, [status, userId, id, labId]);
 
-    res.json({ message: 'Attendance updated' });
+//     res.json({ message: 'Attendance updated' });
 
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
