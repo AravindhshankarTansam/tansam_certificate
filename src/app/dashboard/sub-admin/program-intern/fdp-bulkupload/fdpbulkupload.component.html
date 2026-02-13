@@ -1,0 +1,136 @@
+<h1>works</h1><div class="fdp-bulk-page">
+
+  <!-- HERO -->
+  <div class="fdp-hero">
+    <div class="fdp-hero-content">
+      <h1>FDP – Bulk Upload</h1>
+      <p>Upload FDP staff list using Excel file</p>
+    </div>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="fdp-upload-card">
+
+    <div class="fdp-card-header">
+      <h2>New FDP Record</h2>
+      <p class="fdp-subtitle">Enter institution details to start upload</p>
+    </div>
+
+    <!-- FORM ROW -->
+    <div class="fdp-form-row">
+
+      <div class="fdp-input-group">
+        <input type="text" placeholder=" " [(ngModel)]="institutionName">
+        <label>Institution Full Name</label>
+      </div>
+
+      <div class="fdp-input-group">
+        <input type="text" placeholder=" " [(ngModel)]="institutionShortName" maxlength="10">
+        <label>Institution Short Code</label>
+      </div>
+
+      <div class="fdp-input-group">
+        <input type="date" [(ngModel)]="fromDate">
+        <label>From Date</label>
+      </div>
+
+      <div class="fdp-input-group">
+        <input type="date" [(ngModel)]="toDate">
+        <label>To Date</label>
+      </div>
+
+    </div>
+
+    <!-- DROPZONE -->
+    <div class="fdp-dropzone"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onDrop($event)"
+         [class.active]="isDragActive"
+         (click)="fileInput.click()">
+
+      <div class="fdp-icon-circle">
+        <i class="fa-solid fa-cloud-arrow-up fa-3x"></i>
+      </div>
+
+      <p>Drag & Drop FDP Excel file here</p>
+      <p>or</p>
+      <p><strong>Click to Browse File</strong></p>
+
+      <input #fileInput
+             type="file"
+             accept=".xlsx,.xls"
+             hidden
+             (change)="onFileSelected($event)">
+    </div>
+
+    <div class="fdp-file-status" *ngIf="fileName">
+      Selected: <strong>{{ fileName }}</strong>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="fdp-action-bar">
+
+      <button class="fdp-btn-outline"
+              (click)="downloadTemplate()">
+        <i class="fa-solid fa-file-arrow-down"></i>
+        Download Template
+      </button>
+
+      <button class="fdp-btn-primary"
+              [disabled]="!institutionName || !fromDate || !toDate || !selectedFile"
+              (click)="uploadFile()">
+        <i class="fa-solid fa-upload"></i>
+        Upload Excel
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- PREVIEW MODAL -->
+  <div class="fdp-modal-backdrop" *ngIf="showPreviewModal">
+    <div class="fdp-modal">
+
+      <div class="fdp-modal-header">
+        <h2>FDP Preview</h2>
+        <button (click)="closePreview()">✕</button>
+      </div>
+
+      <div class="fdp-modal-info">
+        Total Records: <strong>{{ uploadedData.length }}</strong>
+      </div>
+
+      <div class="fdp-preview-wrapper">
+        <table class="fdp-preview-table">
+          <thead>
+            <tr>
+              <th *ngFor="let h of tableHeaders">{{ h | titlecase }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of uploadedData">
+              <td *ngFor="let h of tableHeaders">
+                {{ row[h] || '—' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="fdp-modal-footer">
+        <button class="fdp-btn-outline"
+                (click)="closePreview()">
+          Close
+        </button>
+
+        <button class="fdp-btn-primary"
+                (click)="confirmUpload()">
+          Confirm Upload
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
