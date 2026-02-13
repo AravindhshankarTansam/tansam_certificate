@@ -3,8 +3,8 @@ const router = express.Router();
 const db = require('../db');
 const { generateCertificate } = require('../utils/certificate.helper');
 const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
 const generateSecureCode = () =>
   crypto.randomBytes(7).toString('hex').toUpperCase();
@@ -64,8 +64,21 @@ const [[row]] = await db.query(
 
 
     /* ================= GENERATE PDF ================= */
-    const { highQualityPDF, lowQualityPDF } =
-      await generateCertificate({
+      
+
+    /* ================= SAVE LOW QUALITY ================= */
+    // const folder = path.join(__dirname, `../uploads/${type}`);
+
+    // if (!fs.existsSync(folder)) {
+    //   fs.mkdirSync(folder, { recursive: true });
+    // }
+
+    // const filePath = path.join(folder, `${certNo}.pdf`);
+
+    // fs.writeFileSync(filePath, lowQualityPDF);
+
+ 
+      const pdfBuffer = await generateCertificate({
         name: row.student_name || row.staff_name || row.industry_staff_name,
         institution: row.college_name || row.industry_name,
         department: row.department || row.designation_name,
@@ -75,26 +88,15 @@ const [[row]] = await db.query(
         certificateNo: certNo
       }, db);
 
+      /* ================= SEND PDF ================= */
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename=${certNo}.pdf`
+      });
 
-    /* ================= SAVE LOW QUALITY ================= */
-    const folder = path.join(__dirname, `../uploads/${type}`);
+      return res.send(pdfBuffer);
 
-    if (!fs.existsSync(folder)) {
-      fs.mkdirSync(folder, { recursive: true });
-    }
-
-    const filePath = path.join(folder, `${certNo}.pdf`);
-
-    fs.writeFileSync(filePath, lowQualityPDF);
-
-
-    /* ================= SEND HIGH QUALITY ================= */
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename=${certNo}.pdf`
-    });
-
-    return res.send(highQualityPDF);
+        
 
   } catch (err) {
     console.error(err);

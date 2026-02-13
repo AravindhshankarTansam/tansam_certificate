@@ -16,51 +16,89 @@ const { generateCertificate } = require('../../utils/certificate.helper');
 ===================================================== */
 
 async function markAttendance(table, id, date, labId) {
+  /* ================= BASIC INPUT CHECK ================= */
+  if (!table || !id || !date || !labId) {
+    throw new Error('Invalid attendance input');
+  }
 
-  /* ---------- fetch row ---------- */
-  const [[row]] = await db.query(`
-    SELECT *
-    FROM ${table}
-    WHERE id=? AND lab_id=?`,
+  if (isNaN(Date.parse(date))) {
+    throw new Error('Invalid date format');
+  }
+
+  /* ================= FETCH RECORD ================= */
+  const [[row]] = await db.query(
+    `SELECT * FROM ${table} WHERE id=? AND lab_id=?`,
     [id, labId]
   );
 
-  if (!row) throw new Error('Not found');
+  if (!row) {
+    throw new Error('Not found');
+  }
 
-  let dates = row.present_dates ? JSON.parse(row.present_dates) : [];
+  /* ================= DATE RANGE SAFETY ================= */
+  if (!row.from_date || !row.to_date) {
+    throw new Error('Invalid date range');
+  }
 
+  const fromDate = new Date(row.from_date);
+  const toDate = new Date(row.to_date);
 
-  /* ---------- toggle ---------- */
-  if (dates.includes(date))
-    dates = dates.filter(d => d !== date);
-  else
-    dates.push(date);
+  if (isNaN(fromDate) || isNaN(toDate) || fromDate > toDate) {
+    throw new Error('Invalid date range');
+  }
 
+  /* ================= PRESENT DATES (SAFE JSON) ================= */
+  let dates = [];
 
-  /* ---------- holidays ---------- */
-  const year = row.from_date.substring(0, 4);
+  try {
+    dates = row.present_dates ? JSON.parse(row.present_dates) : [];
+  } catch {
+    dates = [];
+  }
+
+  if (!Array.isArray(dates)) {
+    dates = [];
+  }
+
+  /* ================= TOGGLE DATE ================= */
+  const formattedDate = new Date(date).toISOString().slice(0, 10);
+
+  if (dates.includes(formattedDate)) {
+    dates = dates.filter(d => d !== formattedDate);
+  } else {
+    dates.push(formattedDate);
+  }
+
+  /* ================= HOLIDAYS ================= */
+  const year = fromDate.getFullYear();
 
   const [holidayRows] = await db.query(
     `SELECT holiday_date FROM holidays WHERE YEAR(holiday_date)=?`,
     [year]
   );
 
-  const holidays = holidayRows.map(h => h.holiday_date);
+  const holidays = holidayRows.map(h =>
+    new Date(h.holiday_date).toISOString().slice(0, 10)
+  );
 
-
-  /* ---------- calculate stats ---------- */
-  const workingDays = getWorkingDays(row.from_date, row.to_date, holidays);
+  /* ================= CALCULATE ATTENDANCE ================= */
+  const workingDays = getWorkingDays(
+    fromDate.toISOString().slice(0, 10),
+    toDate.toISOString().slice(0, 10),
+    holidays
+  );
 
   const total = workingDays.length;
   const present = dates.length;
   const absent = total - present;
-  const percentage = total
-    ? ((present / total) * 100).toFixed(2)
+
+  const percentage = total > 0
+    ? Number(((present / total) * 100).toFixed(2))
     : 0;
 
-
-  /* ---------- update DB ---------- */
-  await db.query(`
+  /* ================= UPDATE DATABASE ================= */
+  await db.query(
+    `
     UPDATE ${table}
     SET
       present_dates=?,
@@ -68,7 +106,8 @@ async function markAttendance(table, id, date, labId) {
       absent_count=?,
       total_days=?,
       attendance_percentage=?
-    WHERE id=?`,
+    WHERE id=?
+    `,
     [
       JSON.stringify(dates),
       present,
@@ -79,18 +118,16 @@ async function markAttendance(table, id, date, labId) {
     ]
   );
 
-
-  /* =====================================================
-     🔥 AUTO CERTIFICATE TRIGGER (ADD HERE)
-  ===================================================== */
-
-  const [[updatedRow]] = await db.query(
-    `SELECT * FROM ${table} WHERE id=?`,
-    [id]
-  );
-
-  await generateCertificate(updatedRow, table, db);
+  /* ================= RETURN DATA (OPTIONAL) ================= */
+  return {
+    id,
+    present,
+    absent,
+    total,
+    percentage
+  };
 }
+
 
 
 
@@ -101,25 +138,51 @@ async function markAttendance(table, id, date, labId) {
 
 router.get('/sdp/get', isAuth, isTeamLead, async (req, res) => {
   try {
+    /* ================= SESSION SAFETY ================= */
+    if (!req.session?.user?.lab_id) {
+      return res.status(403).json({
+        message: 'Lab not assigned to this Team Lead'
+      });
+    }
+
     const labId = req.session.user.lab_id;
 
-    const [rows] = await db.query(`
+    /* ================= FETCH DATA ================= */
+    const [rows] = await db.query(
+      `
       SELECT *
       FROM sdp_students
-      WHERE lab_id=?
+      WHERE lab_id = ?
       ORDER BY id DESC
-    `, [labId]);
+      `,
+      [labId]
+    );
 
-    rows.forEach(r => {
-      r.present_dates = r.present_dates ? JSON.parse(r.present_dates) : [];
+    /* ================= SAFE JSON PARSE ================= */
+    rows.forEach(row => {
+      try {
+        row.present_dates = row.present_dates
+          ? JSON.parse(row.present_dates)
+          : [];
+      } catch (e) {
+        console.warn(
+          `Invalid present_dates JSON for SDP ID ${row.id}`
+        );
+        row.present_dates = [];
+      }
     });
 
-    res.json(rows);
+    /* ================= RESPONSE ================= */
+    return res.json(rows);
 
   } catch (err) {
-    res.status(500).json(err);
+    console.error('TEAM LEAD SDP GET ERROR:', err);
+    return res.status(500).json({
+      message: 'Failed to fetch SDP students'
+    });
   }
 });
+
 
 
 router.post('/sdp/mark-date', isAuth, isTeamLead, async (req, res) => {
@@ -144,41 +207,102 @@ router.post('/sdp/mark-date', isAuth, isTeamLead, async (req, res) => {
 
 router.get('/fdp/get', isAuth, isTeamLead, async (req, res) => {
   try {
+    /* ================= SESSION SAFETY ================= */
+    if (!req.session?.user?.lab_id) {
+      return res.status(403).json({
+        message: 'Lab not assigned to this Team Lead'
+      });
+    }
+
     const labId = req.session.user.lab_id;
 
-    const [rows] = await db.query(`
+    /* ================= FETCH DATA ================= */
+    const [rows] = await db.query(
+      `
       SELECT *
       FROM fdp_staff
-      WHERE lab_id=?
-    `, [labId]);
+      WHERE lab_id = ?
+      ORDER BY id DESC
+      `,
+      [labId]
+    );
 
-    rows.forEach(r => {
-      r.present_dates = r.present_dates ? JSON.parse(r.present_dates) : [];
+    /* ================= SAFE JSON PARSE ================= */
+    rows.forEach(row => {
+      try {
+        row.present_dates = row.present_dates
+          ? JSON.parse(row.present_dates)
+          : [];
+      } catch {
+        console.warn(
+          `Invalid present_dates JSON for FDP ID ${row.id}`
+        );
+        row.present_dates = [];
+      }
     });
 
-    res.json(rows);
+    return res.json(rows);
 
   } catch (err) {
-    res.status(500).json(err);
+    console.error('TEAM LEAD FDP GET ERROR:', err);
+    return res.status(500).json({
+      message: 'Failed to fetch FDP staff'
+    });
   }
 });
 
 
 router.post('/fdp/mark-date', isAuth, isTeamLead, async (req, res) => {
   try {
-    const { id, date } = req.body;
+    /* ================= SESSION SAFETY ================= */
+    if (!req.session?.user?.lab_id) {
+      return res.status(403).json({
+        message: 'Lab not assigned to this Team Lead'
+      });
+    }
+
     const labId = req.session.user.lab_id;
 
+    /* ================= INPUT VALIDATION ================= */
+    const { id, date } = req.body;
+
+    if (!id || !date) {
+      return res.status(400).json({
+        message: 'id and date are required'
+      });
+    }
+
+    /* ================= OPTIONAL DATE VALIDATION ================= */
+    if (isNaN(Date.parse(date))) {
+      return res.status(400).json({
+        message: 'Invalid date format'
+      });
+    }
+
+    /* ================= BUSINESS LOGIC ================= */
     await markAttendance('fdp_staff', id, date, labId);
 
-    res.json({ message: 'Updated with stats' });
+    /* ================= SUCCESS RESPONSE ================= */
+    return res.json({
+      message: 'Attendance updated successfully'
+    });
 
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('TEAM LEAD FDP MARK ERROR:', err);
+
+    /* ================= KNOWN ERROR ================= */
+    if (err.message === 'Not found') {
+      return res.status(404).json({
+        message: 'FDP staff not found for this lab'
+      });
+    }
+
+    /* ================= UNKNOWN ERROR ================= */
+    return res.status(500).json({
+      message: 'Failed to update attendance'
+    });
   }
 });
-
-
 
 /* =====================================================
    🟡 INDUSTRY
@@ -186,37 +310,91 @@ router.post('/fdp/mark-date', isAuth, isTeamLead, async (req, res) => {
 
 router.get('/industry/get', isAuth, isTeamLead, async (req, res) => {
   try {
+    /* ================= SESSION SAFETY ================= */
+    if (!req.session?.user?.lab_id) {
+      return res.status(403).json({
+        message: 'Lab not assigned to this Team Lead'
+      });
+    }
+
     const labId = req.session.user.lab_id;
 
-    const [rows] = await db.query(`
+    /* ================= FETCH DATA ================= */
+    const [rows] = await db.query(
+      `
       SELECT *
       FROM industry_staff
-      WHERE lab_id=?
-    `, [labId]);
+      WHERE lab_id = ?
+      ORDER BY id DESC
+      `,
+      [labId]
+    );
 
-    rows.forEach(r => {
-      r.present_dates = r.present_dates ? JSON.parse(r.present_dates) : [];
+    /* ================= SAFE JSON PARSE ================= */
+    rows.forEach(row => {
+      try {
+        row.present_dates = row.present_dates
+          ? JSON.parse(row.present_dates)
+          : [];
+      } catch {
+        console.warn(
+          `Invalid present_dates JSON for Industry ID ${row.id}`
+        );
+        row.present_dates = [];
+      }
     });
 
-    res.json(rows);
+    return res.json(rows);
 
   } catch (err) {
-    res.status(500).json(err);
+    console.error('TEAM LEAD INDUSTRY GET ERROR:', err);
+    return res.status(500).json({
+      message: 'Failed to fetch industry staff'
+    });
   }
 });
 
 
+
 router.post('/industry/mark-date', isAuth, isTeamLead, async (req, res) => {
   try {
-    const { id, date } = req.body;
+    /* ================= SESSION SAFETY ================= */
+    if (!req.session?.user?.lab_id) {
+      return res.status(403).json({
+        message: 'Lab not assigned to this Team Lead'
+      });
+    }
+
     const labId = req.session.user.lab_id;
 
+    /* ================= INPUT VALIDATION ================= */
+    const { id, date } = req.body;
+
+    if (!id || !date) {
+      return res.status(400).json({
+        message: 'id and date are required'
+      });
+    }
+
+    /* ================= BUSINESS LOGIC ================= */
     await markAttendance('industry_staff', id, date, labId);
 
-    res.json({ message: 'Updated with stats' });
+    return res.json({ message: 'Attendance updated successfully' });
 
   } catch (err) {
-    res.status(500).json(err.message);
+    console.error('TEAM LEAD INDUSTRY MARK ERROR:', err);
+
+    /* ================= KNOWN ERROR ================= */
+    if (err.message === 'Not found') {
+      return res.status(404).json({
+        message: 'Industry staff not found for this lab'
+      });
+    }
+
+    /* ================= UNKNOWN ERROR ================= */
+    return res.status(500).json({
+      message: 'Failed to update attendance'
+    });
   }
 });
 
