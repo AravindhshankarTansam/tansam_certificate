@@ -192,7 +192,7 @@ router.post('/fdp/mark-date', isAuth, isTeamLead, async (req, res) => {
 
 router.get('/industry/get', isAuth, isTeamLead, async (req, res) => {
   try {
-    const labId = req.session.user.lab_id;
+    const labId = req.session.user.lab_id;  
 
     const [rows] = await db.query(`
       SELECT *

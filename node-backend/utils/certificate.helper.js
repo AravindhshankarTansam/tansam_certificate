@@ -82,10 +82,7 @@ exports.generateCertificate = async (data, db) => {
 
   html = html.replace('{{styles}}', `<style>${css}</style>`);
 
-
-  /* =============================
-     SIGNATURE FROM DB
-  ============================== */
+  /* ================= SIGNATURE ================= */
   const [[sign]] = await db.query(`
     SELECT name, designation, signature
     FROM certificate_signatures
@@ -93,41 +90,29 @@ exports.generateCertificate = async (data, db) => {
     LIMIT 1
   `);
 
+  const emptyImg =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=';
+
   const signatureImg = sign
-    ? imgBase64(`uploads/signatures/${sign.signature}`)
-    : '';
+    ? imgBase64(`uploads/signatures/${sign.signature}`) || emptyImg
+    : emptyImg;
 
-  const signName = sign?.name || '';
-  const signDesignation = sign?.designation || '';
+  /* ================= IMAGES ================= */
+  const logo = imgBase64('public/images/logo.png') || emptyImg;
+  const tidco = imgBase64('public/images/tidco.png') || emptyImg;
+  const tansam = imgBase64('public/images/tansam.png') || emptyImg;
+  const siemens = imgBase64('public/images/siemens1.png') || emptyImg;
+  const watermark = imgBase64('public/images/watermark.png') || emptyImg;
 
+  /* ================= QR ================= */
+  const qr = await QRCode.toDataURL(
+    `http://localhost:4200/verify/${data.certificateNo}`,
+    { width: 600, margin: 1 }
+  );
 
-  /* =============================
-     STATIC IMAGES
-  ============================== */
-  const logo = imgBase64('public/images/logo.png');
-  const tidco = imgBase64('public/images/tidco.png');
-  const tansam = imgBase64('public/images/tansam.png');
-  const siemens = imgBase64('public/images/siemens1.png');
-  const watermark = imgBase64('public/images/watermark.png');
-
-
-  /* =============================
-     QR
-  ============================== */
-  const verifyUrl =
-    `http://192.168.1.79:4200/verify/${encodeURIComponent(data.certificateNo)}`;
-
-  const qr = await QRCode.toDataURL(verifyUrl, {
-    width: 600,
-    margin: 1
-  });
-
-
-  /* =============================
-     REPLACE VALUES
-  ============================== */
-  const r = (k,v) =>
-    html = html.replace(new RegExp(k,'g'), v || '');
+  /* ================= REPLACE ================= */
+  const r = (k, v) =>
+    html = html.replace(new RegExp(k, 'g'), v ?? '');
 
   r('{{name}}', data.name);
   r('{{institution}}', data.institution);
@@ -142,31 +127,30 @@ exports.generateCertificate = async (data, db) => {
   r('{{tansamLogo}}', tansam);
   r('{{siemensLogo}}', siemens);
   r('{{signatureImage}}', signatureImg);
-  r('{{signName}}', signName);
-  r('{{signDesignation}}', signDesignation);
+  r('{{signName}}', sign?.name || '');
+  r('{{signDesignation}}', sign?.designation || '');
   r('{{watermark}}', watermark);
 
-  /* =============================
-     PUPPETEER
-  ============================== */
+  /* ================= PUPPETEER ================= */
   const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox']
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
   const page = await browser.newPage();
 
   await page.setContent(html, {
-    waitUntil: 'networkidle0'
+    waitUntil: 'load'
   });
 
-  const highQualityPDF = await createPDF(page, 'high');
-  const lowQualityPDF  = await createPDF(page, 'low');
+  const pdf = await page.pdf({
+    format: 'A4',
+    landscape: true,
+    printBackground: true,
+    scale: 1
+  });
 
   await browser.close();
 
-  return {
-    highQualityPDF,
-    lowQualityPDF
-  };
+  return pdf; // 🔥 THIS IS THE KEY
 };
