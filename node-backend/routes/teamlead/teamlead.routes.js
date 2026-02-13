@@ -6,15 +6,14 @@ const { isAuth } = require('../../middleware/auth.middleware');
 const { isTeamLead } = require('../../middleware/role.middleware');
 
 const { getWorkingDays } = require('../../utils/attendance.helper');
-const { generateCertificate } = require('../../utils/certificate.helper');
-const { generateIVCertNo } = require('../../utils/certNo.helper');
+const { tryGenerateCertificate } =
+  require('../../utils/certificate.trigger');
 
 
 
 /* =====================================================
    COMMON FUNCTION (REUSABLE FOR ALL 3 TABLES)
 ===================================================== */
-
 async function markAttendance(table, id, date, labId) {
 
   /* =====================================================
@@ -116,69 +115,11 @@ async function markAttendance(table, id, date, labId) {
   );
 
   /* =====================================================
-     8️⃣ 🔥 AUTO CERTIFICATE (ONE TIME ONLY)
+     8️⃣ 🔥 CENTRALIZED CERTIFICATE TRIGGER
+     (NO LOGIC HERE)
   ===================================================== */
-  if (
-    updatedRow.paid_status === 1 &&
-    Number(updatedRow.attendance_percentage) >= 90 &&
-    updatedRow.certificate_generated === 0
-  ) {
-    const certShortMap = {
-      sdp_students: 'SDP',
-      fdp_staff: 'FDP',
-      industry_staff: 'IND'
-    };
-
-    const short = certShortMap[table];
-
-    if (!short) {
-      throw new Error(`Invalid table for certificate: ${table}`);
-    }
-
-    const certNo =
-      updatedRow.certificate_no ||
-      generateIVCertNo(short, updatedRow.to_date);
-
-    /* ---------- GENERATE CERTIFICATE PDF ---------- */
-    await generateCertificate(
-      {
-        name:
-          updatedRow.student_name ||
-          updatedRow.staff_name ||
-          updatedRow.industry_staff_name,
-
-        institution:
-          updatedRow.college_name ||
-          updatedRow.industry_name,
-
-        department:
-          updatedRow.department ||
-          updatedRow.designation_name,
-
-        programme: short,
-        startDate: updatedRow.from_date,
-        endDate: updatedRow.to_date,
-        certificateNo: certNo
-      },
-      db
-    );
-
-    /* ---------- SAVE CERT NO + MARK GENERATED ---------- */
-    await db.query(
-      `
-      UPDATE ${table}
-      SET
-        certificate_no = ?,
-        certificate_generated = 1
-      WHERE id = ?
-      `,
-      [certNo, id]
-    );
-  }
+  await tryGenerateCertificate(table, updatedRow, db);
 }
-
-
-
 
 
 /* =====================================================
