@@ -21,7 +21,7 @@ export class CertificateIndustrialVisitsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-  }
+  } 
 
   loadData() {
     this.api.getIVCertificateSummary()

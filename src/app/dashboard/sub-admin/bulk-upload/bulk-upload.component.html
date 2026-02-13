@@ -185,11 +185,12 @@
           <tbody>
             <tr *ngFor="let s of students; let i = index">
               <td>{{ i + 1 }}</td>
-              <td>{{ s.name || '—' }}</td>
+              <td>{{ s.student_name || '—' }}</td>
               <td>{{ s.register_number || '—' }}</td>
-              <td>{{ s.email_id || '—' }}</td>
-              <td>{{ s.phone_number || '—' }}</td>
+              <td>{{ s.email || '—' }}</td>
+              <td>{{ s.phone || '—' }}</td>
               <td>{{ s.department || '—' }}</td>
+
             </tr>
           </tbody>
         </table>
