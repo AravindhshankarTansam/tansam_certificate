@@ -8,6 +8,8 @@ const { isTeamLead } = require('../../middleware/role.middleware');
 const { getWorkingDays } = require('../../utils/attendance.helper');
 const { generateCertificate } = require('../../utils/certificate.helper');
 const { generateIVCertNo } = require('../../utils/certNo.helper');
+const { generateAccessToken } = require('../../utils/token.helper');
+const { sendCertificateMail } = require('../../services/mail.service');
 
 
 
@@ -174,6 +176,84 @@ async function markAttendance(table, id, date, labId) {
       `,
       [certNo, id]
     );
+    /* =====================================================
+   8️⃣ 🔥 AUTO CERTIFICATE (ONE TIME ONLY)
+===================================================== */
+if (
+  updatedRow.paid_status === 1 &&
+  Number(updatedRow.attendance_percentage) >= 90 &&
+  updatedRow.certificate_generated === 0
+) {
+  const certShortMap = {
+    sdp_students: 'SDP',
+    fdp_staff: 'FDP',
+    industry_staff: 'IND'
+  };
+
+  const short = certShortMap[table];
+
+  if (!short) {
+    throw new Error(`Invalid table for certificate: ${table}`);
+  }
+
+  const certNo =
+    updatedRow.certificate_no ||
+    generateIVCertNo(short, updatedRow.to_date);
+
+  /* ---------- GENERATE CERTIFICATE PDF (for TL dashboard) ---------- */
+  await generateCertificate(
+    {
+      name:
+        updatedRow.student_name ||
+        updatedRow.staff_name ||
+        updatedRow.industry_staff_name,
+
+      institution:
+        updatedRow.college_name ||
+        updatedRow.industry_name,
+
+      department:
+        updatedRow.department ||
+        updatedRow.designation_name,
+
+      programme: short,
+      startDate: updatedRow.from_date,
+      endDate: updatedRow.to_date,
+      certificateNo: certNo
+    },
+    db
+  );
+
+  /* ---------- SAVE CERT NO ---------- */
+  await db.query(
+    `
+    UPDATE ${table}
+    SET
+      certificate_no = ?,
+      certificate_generated = 1
+    WHERE id = ?
+    `,
+    [certNo, id]
+  );
+
+  /* =====================================================
+     🔐 CREATE SECURE ACCESS TOKEN
+  ===================================================== */
+  const token = generateAccessToken();
+
+  await db.query(`
+    INSERT INTO certificate_access (type, user_id, access_token)
+    VALUES (?, ?, ?)
+  `, [short.toLowerCase(), id, token]);
+
+  /* =====================================================
+     ✉️ SEND SECURE EMAIL LINK
+  ===================================================== */
+  if (updatedRow.email) {
+    await sendCertificateMail(updatedRow.email, token);
+  }
+}
+
   }
 }
 
@@ -278,7 +358,7 @@ router.post('/fdp/mark-date', isAuth, isTeamLead, async (req, res) => {
 
 router.get('/industry/get', isAuth, isTeamLead, async (req, res) => {
   try {
-    const labId = req.session.user.lab_id;  
+    const labId = req.session.user.lab_id;
 
     const [rows] = await db.query(`
       SELECT *
