@@ -7,7 +7,7 @@ const { isTeamLead } = require('../../middleware/role.middleware');
 
 const { getWorkingDays } = require('../../utils/attendance.helper');
 const { generateCertificate } = require('../../utils/certificate.helper');
-
+const { generateIVCertNo } = require('../../utils/certNo.helper');
 
 
 
@@ -17,27 +17,45 @@ const { generateCertificate } = require('../../utils/certificate.helper');
 
 async function markAttendance(table, id, date, labId) {
 
-  /* ---------- fetch row ---------- */
-  const [[row]] = await db.query(`
-    SELECT *
-    FROM ${table}
-    WHERE id=? AND lab_id=?`,
+  /* =====================================================
+     1️⃣ FETCH ROW (SECURITY CHECK)
+  ===================================================== */
+  const [[row]] = await db.query(
+    `SELECT * FROM ${table} WHERE id=? AND lab_id=?`,
     [id, labId]
   );
 
-  if (!row) throw new Error('Not found');
+  if (!row) {
+    throw new Error('Not found');
+  }
 
-  let dates = row.present_dates || [];
+  /* =====================================================
+     2️⃣ SAFE NORMALIZATION OF present_dates
+  ===================================================== */
+  let dates = [];
 
+  if (Array.isArray(row.present_dates)) {
+    dates = row.present_dates;
+  } else if (typeof row.present_dates === 'string') {
+    try {
+      dates = JSON.parse(row.present_dates);
+    } catch {
+      dates = [];
+    }
+  }
 
-  /* ---------- toggle ---------- */
-  if (dates.includes(date))
+  /* =====================================================
+     3️⃣ TOGGLE DATE
+  ===================================================== */
+  if (dates.includes(date)) {
     dates = dates.filter(d => d !== date);
-  else
+  } else {
     dates.push(date);
+  }
 
-
-  /* ---------- holidays ---------- */
+  /* =====================================================
+     4️⃣ FETCH HOLIDAYS
+  ===================================================== */
   const year = row.from_date.substring(0, 4);
 
   const [holidayRows] = await db.query(
@@ -47,20 +65,29 @@ async function markAttendance(table, id, date, labId) {
 
   const holidays = holidayRows.map(h => h.holiday_date);
 
-
-  /* ---------- calculate stats ---------- */
-  const workingDays = getWorkingDays(row.from_date, row.to_date, holidays);
+  /* =====================================================
+     5️⃣ CALCULATE ATTENDANCE
+  ===================================================== */
+  const workingDays = getWorkingDays(
+    row.from_date,
+    row.to_date,
+    holidays
+  );
 
   const total = workingDays.length;
   const present = dates.length;
   const absent = total - present;
-  const percentage = total
-    ? ((present / total) * 100).toFixed(2)
-    : 0;
 
+  const percentage =
+    total > 0
+      ? Number(((present / total) * 100).toFixed(2))
+      : 0;
 
-  /* ---------- update DB ---------- */
-  await db.query(`
+  /* =====================================================
+     6️⃣ UPDATE ATTENDANCE
+  ===================================================== */
+  await db.query(
+    `
     UPDATE ${table}
     SET
       present_dates=?,
@@ -68,7 +95,8 @@ async function markAttendance(table, id, date, labId) {
       absent_count=?,
       total_days=?,
       attendance_percentage=?
-    WHERE id=?`,
+    WHERE id=?
+    `,
     [
       JSON.stringify(dates),
       present,
@@ -79,18 +107,76 @@ async function markAttendance(table, id, date, labId) {
     ]
   );
 
-
   /* =====================================================
-     🔥 AUTO CERTIFICATE TRIGGER (ADD HERE)
+     7️⃣ FETCH UPDATED ROW
   ===================================================== */
-
   const [[updatedRow]] = await db.query(
     `SELECT * FROM ${table} WHERE id=?`,
     [id]
   );
 
-  await generateCertificate(updatedRow, db);
+  /* =====================================================
+     8️⃣ 🔥 AUTO CERTIFICATE (ONE TIME ONLY)
+  ===================================================== */
+  if (
+    updatedRow.paid_status === 1 &&
+    Number(updatedRow.attendance_percentage) >= 90 &&
+    updatedRow.certificate_generated === 0
+  ) {
+    const certShortMap = {
+      sdp_students: 'SDP',
+      fdp_staff: 'FDP',
+      industry_staff: 'IND'
+    };
+
+    const short = certShortMap[table];
+
+    if (!short) {
+      throw new Error(`Invalid table for certificate: ${table}`);
+    }
+
+    const certNo =
+      updatedRow.certificate_no ||
+      generateIVCertNo(short, updatedRow.to_date);
+
+    /* ---------- GENERATE CERTIFICATE PDF ---------- */
+    await generateCertificate(
+      {
+        name:
+          updatedRow.student_name ||
+          updatedRow.staff_name ||
+          updatedRow.industry_staff_name,
+
+        institution:
+          updatedRow.college_name ||
+          updatedRow.industry_name,
+
+        department:
+          updatedRow.department ||
+          updatedRow.designation_name,
+
+        programme: short,
+        startDate: updatedRow.from_date,
+        endDate: updatedRow.to_date,
+        certificateNo: certNo
+      },
+      db
+    );
+
+    /* ---------- SAVE CERT NO + MARK GENERATED ---------- */
+    await db.query(
+      `
+      UPDATE ${table}
+      SET
+        certificate_no = ?,
+        certificate_generated = 1
+      WHERE id = ?
+      `,
+      [certNo, id]
+    );
+  }
 }
+
 
 
 
