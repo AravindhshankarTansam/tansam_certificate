@@ -41,8 +41,15 @@
       <!-- From Date -->
       <div class="industry-input-group">
         <input type="date"
-               [(ngModel)]="visitDate">
-        <label>Visit Date</label>
+               [(ngModel)]="fromDate">
+        <label>From Date</label>
+      </div>
+
+      <!-- To Date -->
+      <div class="industry-input-group">
+        <input type="date"
+               [(ngModel)]="toDate">
+        <label>To Date</label>
       </div>
 
 
@@ -87,7 +94,7 @@
       </button>
 
       <button class="industry-btn-primary"
-              [disabled]="!industryName || !visitDate || !selectedFile"
+              [disabled]="!industryName ||  !fromDate || !toDate || !selectedFile"
               (click)="uploadFile()">
         <i class="fa-solid fa-upload"></i>
         Upload Excel

@@ -39,8 +39,15 @@
   <!-- Visit Date -->
   <div class="sdp-input-group">
     <input type="date"
-           [(ngModel)]="visitDate">
-    <label>Visit Date</label>
+           [(ngModel)]="fromDate">
+    <label>From Date</label>
+  </div>
+
+  <!-- To Date -->
+  <div class="sdp-input-group">
+    <input type="date"
+           [(ngModel)]="toDate">
+    <label>To Date</label>
   </div>
 
 </div>
@@ -84,7 +91,7 @@
       </button>
 
       <button class="sdp-btn-primary"
-              [disabled]="!collegeName || !visitDate || !selectedFile"
+              [disabled]="!collegeName ||  !fromDate || !toDate || !selectedFile"
               (click)="uploadFile()">
         <i class="fa-solid fa-upload"></i>
         Upload Excel

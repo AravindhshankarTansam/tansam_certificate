@@ -30,8 +30,13 @@
       </div>
 
       <div class="fdp-input-group">
-        <input type="date" [(ngModel)]="visitDate">
-        <label>Visit Date</label>
+        <input type="date" [(ngModel)]="fromDate">
+        <label>From Date</label>
+      </div>
+
+      <div class="fdp-input-group">
+        <input type="date" [(ngModel)]="toDate">
+        <label>To Date</label>
       </div>
 
     
@@ -74,7 +79,7 @@
       </button>
 
       <button class="fdp-btn-primary"
-              [disabled]="!institutionName || !visitDate || !selectedFile"
+              [disabled]="!institutionName ||  !fromDate || !toDate || !selectedFile"
               (click)="uploadFile()">
         <i class="fa-solid fa-upload"></i>
         Upload Excel

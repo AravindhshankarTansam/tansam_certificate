@@ -16,7 +16,8 @@ export class SdpBulkUploadComponent implements OnInit {
 
   collegeName: string = '';
   collegeShortName: string = '';
-visitDate: string = '';
+  fromDate = '';
+  toDate = '';
 
 
   /* ================= FILE STATE ================= */
@@ -114,7 +115,8 @@ visitDate: string = '';
         ...row,
         college_name: this.collegeName,
         college_short_name: this.collegeShortName,
-        visit_date: this.visitDate
+        from_date: this.fromDate,
+        to_date: this.toDate
       }));
 
       this.uploadedData = enrichedData;
