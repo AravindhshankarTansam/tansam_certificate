@@ -15,8 +15,7 @@ export class IndustryBulkUploadComponent {
   /* ================= BASIC INFO ================= */
   industryName = '';
   industryShortCode = '';
-  fromDate = '';
-  toDate = '';
+ visitDate: string = '';
 
   /* ================= FILE ================= */
   selectedFile: File | null = null;

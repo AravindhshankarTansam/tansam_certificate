@@ -16,41 +16,35 @@
       <p class="sdp-subtitle">Enter college details to start upload</p>
     </div>
 
-    <!-- FORM ROW -->
-    <div class="sdp-form-row">
+ <!-- FORM ROW -->
+<div class="sdp-form-row">
 
-      <!-- College Name -->
-      <div class="sdp-input-group">
-        <input type="text"
-               placeholder=" "
-               [(ngModel)]="collegeName">
-        <label>College Full Name</label>
-      </div>
+  <!-- College Name -->
+  <div class="sdp-input-group">
+    <input type="text"
+           placeholder=" "
+           [(ngModel)]="collegeName">
+    <label>College Full Name</label>
+  </div>
 
-      <!-- Short Code -->
-      <div class="sdp-input-group">
-        <input type="text"
-               placeholder=" "
-               [(ngModel)]="collegeShortName"
-               maxlength="10">
-        <label>College Short Code</label>
-      </div>
+  <!-- Short Code -->
+  <div class="sdp-input-group">
+    <input type="text"
+           placeholder=" "
+           [(ngModel)]="collegeShortName"
+           maxlength="10">
+    <label>College Short Code</label>
+  </div>
 
-      <!-- From Date -->
-      <div class="sdp-input-group">
-        <input type="date"
-               [(ngModel)]="fromDate">
-        <label>From Date</label>
-      </div>
+  <!-- Visit Date -->
+  <div class="sdp-input-group">
+    <input type="date"
+           [(ngModel)]="visitDate">
+    <label>Visit Date</label>
+  </div>
 
-      <!-- To Date -->
-      <div class="sdp-input-group">
-        <input type="date"
-               [(ngModel)]="toDate">
-        <label>To Date</label>
-      </div>
+</div>
 
-    </div>
 
     <!-- DROPZONE -->
     <div class="sdp-dropzone"
@@ -90,7 +84,7 @@
       </button>
 
       <button class="sdp-btn-primary"
-              [disabled]="!collegeName || !fromDate || !toDate || !selectedFile"
+              [disabled]="!collegeName || !visitDate || !selectedFile"
               (click)="uploadFile()">
         <i class="fa-solid fa-upload"></i>
         Upload Excel

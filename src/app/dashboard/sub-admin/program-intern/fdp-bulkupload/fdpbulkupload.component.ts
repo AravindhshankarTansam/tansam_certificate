@@ -14,8 +14,7 @@ export class FdpBulkUploadComponent {
 
   institutionName = '';
   institutionShortName = '';
-  fromDate = '';
-  toDate = '';
+  visitDate: string = '';
 
   showPreviewModal = false;
   uploadedData: any[] = [];
