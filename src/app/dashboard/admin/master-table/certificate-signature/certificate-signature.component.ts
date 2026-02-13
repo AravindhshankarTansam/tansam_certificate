@@ -53,29 +53,37 @@ export class CertificateSignatureComponent implements OnInit {
     this.form.signature = file;
   }
 
-  save() {
-    const fd = new FormData();
+save() {
+  const fd = new FormData();
 
-    fd.append('name', this.form.name);
-    fd.append('designation', this.form.designation);
-    fd.append('is_active', this.form.is_active);
+  fd.append('name', this.form.name);
+  fd.append('designation', this.form.designation);
+  fd.append('is_active', this.form.is_active ? '1' : '0'); 
 
-    if (this.form.signature instanceof File) {
-      fd.append('signature', this.form.signature);
-    }
 
-    if (this.editing) {
-      this.api.updateSignature(this.editing.id, fd).subscribe(() => {
-        this.toast.show('Updated', 'success');
-        this.showModal = false;
-        this.load();
-      });
-    } else {
-      this.api.addSignature(fd).subscribe(() => {
-        this.toast.show('Added', 'success');
-        this.showModal = false;
-        this.load();
-      });
-    }
+  if (this.form.signature instanceof File) {
+    fd.append('signature', this.form.signature, this.form.signature.name);
+  } else if (this.form.signature) {
+
+    fd.append('existing_signature', this.form.signature);
   }
+
+  const apiCall = this.editing
+    ? this.api.updateSignature(this.editing.id, fd)
+    : this.api.addSignature(fd);
+
+  apiCall.subscribe({
+    next: () => {
+      this.toast.show(this.editing ? 'Updated' : 'Added', 'success');
+      this.showModal = false;
+      this.form = { name: '', designation: '', signature: null, is_active: true };
+      this.load();
+    },
+    error: (err) => {
+      console.error('Signature save failed:', err);
+      this.toast.show('Failed to save signature', 'error');
+    }
+  });
+}
+
 }
