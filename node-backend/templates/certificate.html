@@ -1,73 +1,75 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-{{styles}}
-<link rel="stylesheet" href="./certificate.css">
+  <meta charset="UTF-8">
+  {{styles}}
+  <link rel="stylesheet" href="./certificate.css">
 </head>
 
 <body>
 
-<div class="certificate">
+  <div class="certificate">
 
 
-  <div class="corner left-top1"></div>
-  <div class="corner left-top"></div>
-  <div class="middle-shape"></div>
-  <div class="corner left-bottom"></div>
-  <div class="corner right-top"></div>
+    <div class="corner left-top1"></div>
+    <div class="corner left-top"></div>
+    <div class="middle-shape"></div>
+    <div class="corner left-bottom"></div>
+    <div class="corner right-top"></div>
 
-  <!-- LOGOS -->
-<div class="top-left-logo">
-  <img src="../public/images/logo.png">
-</div>
+    <!-- LOGOS -->
+    <div class="top-left-logo">
+      <img src="{{logoPath}}">
+    </div>
 
-<div class="top-center-logos">
-  <img src="../public/images/tidco.png">
-  <img src="../public/images/tansam.png">
-  <img src="../public/images/siemens1.png">
-</div>
+    <div class="top-center-logos">
+      <img src="{{tidcoLogo}}">
+      <img src="{{tansamLogo}}">
+      <img src="{{siemensLogo}}">
+    </div>
 
 
-  <h1>Internship Completion Certificate</h1>
-  <p class="presented">Presented to</p>
+    <h1>Internship Completion Certificate</h1>
+    <p class="presented">Presented to</p>
 
-  <p class="content">
-    This is to certify that test
-    <b>{{name}}</b>
-    of <b>{{institution}}</b>
-    pursuing Department of
-    <b>{{department}}</b>
-    has successfully completed the Internship Programme on
-    <b>{{programme}}</b>
-    in <b>TANSAM</b> during
-    <b class="date">{{startDate}} – {{endDate}}</b>.
-  </p>
+    <p class="content">
+      This is to certify that test
+      <b>{{name}}</b>
+      of <b>{{institution}}</b>
+      pursuing Department of
+      <b>{{department}}</b>
+      has successfully completed the Internship Programme on
+      <b>{{programme}}</b>
+      in <b>TANSAM</b>- <b>Tamil Nadu Smart and Advance Manufucting Centre</b> during
+      <b class="date">{{startDate}} – {{endDate}}</b>.
+    </p>
 
-  <div class="certificate-number">
-    Certificate Number – <b>{{certificateNo}}</b>
+    <div class="certificate-number">
+      Certificate Number – <b>{{certificateNo}}</b>
+    </div>
+
+    <div class="signature-section">
+
+      <img src="{{signatureImage}}">
+
+      <div class="signature-line"></div>
+
+      <p><b>{{signName}}</b></p>
+      <p>{{signDesignation}}</p>
+
+    </div>
+
+
+
+
+    <!-- QR -->
+    <div class="qr-code">
+      <img src="{{qrCode}}" class="qr-img">
+    </div>
+
   </div>
 
-  <div class="signature-section">
-
- <img src="../public/images/tansam.png" style="height:70px;margin-bottom:8px">
-
-  <div class="signature-line"></div>
-
-  <p><b>{{signName}}</b></p>
-  <p>{{signDesignation}}</p>
-
-</div>
-
-
-
-
-  <!-- QR -->
-<div class="qr-code">
-  <img src="../public/images/download1.png" class="qr-img">
-</div>
-
-</div>
-
 </body>
+
 </html>
