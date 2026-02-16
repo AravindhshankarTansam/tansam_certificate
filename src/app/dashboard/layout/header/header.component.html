@@ -23,14 +23,22 @@
 
     <!-- Icons -->
     <ul class="header-icons">
-      <li class="notif-box">
+      <!-- <li class="notif-box">
         <i class="material-icons">notifications</i>
         <span class="notification">5</span>
-      </li>
+      </li> -->
 
-      <li class="profile-icon">
-        <i class="material-icons">person</i>
-      </li>
+<li class="profile-wrapper">
+  <div class="profile-icon" (click)="toggleDropdown()">
+    <i class="material-icons">person</i>
+  </div>
+
+  <!-- Dropdown -->
+  <div class="profile-dropdown" *ngIf="showDropdown">
+    <p><strong>Role:</strong> {{ role }}</p>
+  </div>
+</li>
+
     </ul>
 
   </div>

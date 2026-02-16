@@ -71,18 +71,20 @@
           </td>
 
           <!-- Transaction -->
-          <td>
-            <ng-container *ngIf="!r.isEdit">
-              {{ r.transaction_id || '—' }}
-            </ng-container>
+        <!-- Transaction -->
+        <td>
+          <ng-container *ngIf="!r.isEdit">
+            {{ r.transaction_id || '—' }}
+          </ng-container>
+        
+          <input *ngIf="r.isEdit" [(ngModel)]="r.transaction_id" (blur)="r.submitted = true" class="form-input"
+            [class.input-error]="r.submitted && !isTxnValid(r)" [placeholder]="getTxnPlaceholder(r.payment_mode)" />
+        
+          <div class="error-text" *ngIf="r.submitted && !isTxnValid(r)">
+            {{ getTxnError(r.payment_mode) }}
+          </div>
+        </td>
 
-            <input
-              *ngIf="r.isEdit"
-              [(ngModel)]="r.transaction_id"
-              class="form-input"
-              [placeholder]="r.payment_mode === 'CHEQUE' ? 'Cheque No' : 'Reference No'"
-            />
-          </td>
 
           <!-- Date -->
           <td>

@@ -54,45 +54,114 @@ export class TransactionsSdpComponent implements OnInit {
     // Optionally reload or revert changes if needed
   }
 
-  isRowValid(row: any): boolean {
-    return !!(
-      row.payment_mode &&
-      row.amount &&
-      row.transaction_id &&
-      row.payment_date
-    );
+isRowValid(row: any): boolean {
+
+  if (!row.payment_mode || !row.amount || !row.transaction_id || !row.payment_date) {
+    return false;
   }
 
-  save(row: any) {
-    row.submitted = true;
+  const txn = row.transaction_id.trim();
 
-    if (!this.isRowValid(row)) {
-     this.showToast('Please fill all required fields', 'error');
-      return;
+  switch (row.payment_mode) {
+
+    case 'CHEQUE':
+      // exactly 6 digits
+      return /^[0-9]{6}$/.test(txn);
+
+    case 'RTGS':
+    case 'NEFT':
+      // 12 to 22 alphanumeric
+      return /^[A-Za-z0-9]{12,22}$/.test(txn);
+
+    case 'UPI':
+      // must contain @ (basic UPI pattern)
+      return /^[\w.-]+@[\w.-]+$/.test(txn);
+
+    default:
+      return false;
+  }
+}
+isTxnValid(row: any): boolean {
+  if (!row.transaction_id) return false;
+
+  const txn = row.transaction_id.trim();
+
+  switch (row.payment_mode) {
+
+    case 'CHEQUE':
+      return /^[0-9]{6}$/.test(txn);
+
+    case 'RTGS':
+    case 'NEFT':
+      return /^[A-Za-z0-9]{12,22}$/.test(txn);
+
+    case 'UPI':
+      return /^[\w.-]+@[\w.-]+$/.test(txn);
+
+    default:
+      return false;
+  }
+}
+
+getTxnPlaceholder(mode: string): string {
+  switch (mode) {
+    case 'CHEQUE':
+      return 'Enter 6 digit cheque number';
+    case 'RTGS':
+      return 'Enter RTGS reference (12-22 chars)';
+    case 'NEFT':
+      return 'Enter NEFT reference (12-22 chars)';
+    case 'UPI':
+      return 'example@upi';
+    default:
+      return 'Reference No';
+  }
+}
+
+getTxnError(mode: string): string {
+  switch (mode) {
+    case 'CHEQUE':
+      return 'Cheque number must be exactly 6 digits';
+    case 'RTGS':
+      return 'RTGS reference must be 12–22 alphanumeric characters';
+    case 'NEFT':
+      return 'NEFT reference must be 12–22 alphanumeric characters';
+    case 'UPI':
+      return 'UPI ID must contain @ (example@upi)';
+    default:
+      return 'Invalid reference number';
+  }
+}
+
+
+save(row: any) {
+  row.submitted = true;
+
+  if (!this.isRowValid(row)) {
+    this.showToast('Please fix validation errors', 'error');
+    return;
+  }
+
+  const payload = {
+    payment_mode: row.payment_mode,
+    amount: Number(row.amount),
+    transaction_id: row.transaction_id.trim(),
+    payment_date: row.payment_date
+  };
+
+  this.api.updatePayment('sdp', row.id, payload).subscribe({
+    next: () => {
+      row.isEdit = false;
+      row.submitted = false;
+      row.paid_status = true;
+      this.showToast('Payment updated successfully', 'success');
+    },
+    error: () => {
+      this.showToast('Failed to update payment', 'error');
     }
+  });
+}
 
-    const payload = {
-      payment_mode: row.payment_mode,
-      amount: Number(row.amount),
-      transaction_id: row.transaction_id.trim(),
-      payment_date: row.payment_date
-    };
-
-    this.api.updatePayment('sdp', row.id, payload).subscribe({
-      next: () => {
-        row.isEdit = false;
-        row.submitted = false;
-        row.paid_status = true;
-        this.showToast('Payment updated successfully', 'success');
-
-      },
-      error: (err) => {
-        console.error(err);
-        this.showToast('Failed to update payment', 'error');
-
-      }
-    });
-  }
 
   // Optional: visual feedback for different modes
   getModeClass(mode: string): string {
