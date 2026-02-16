@@ -388,3 +388,13 @@ h2 {
 @keyframes fadeOut {
   to { opacity: 0; transform: translateY(-20px); }
 }
+.input-error {
+  border: 1px solid #e74c3c !important;
+  background-color: #fff5f5;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}

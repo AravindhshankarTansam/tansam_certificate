@@ -86,15 +86,15 @@
             <ng-container *ngIf="!row.isEdit">
               {{ row.transaction_id || '—' }}
             </ng-container>
-            <input
-              *ngIf="row.isEdit"
-              [(ngModel)]="row.transaction_id"
-              class="form-input"
-              [placeholder]="row.payment_mode === 'CHEQUE' ? 'Cheque No' : 'Reference No'"
-              required
-              aria-required="true"
-              [attr.aria-invalid]="!row.transaction_id && row.submitted"
-            />
+        <input *ngIf="row.isEdit" [(ngModel)]="row.transaction_id" class="form-input"
+          [class.input-error]="row.submitted && !isTxnValid(row)" [placeholder]="getTxnPlaceholder(row.payment_mode)"
+          required />
+
+          
+          <div class="error-text" *ngIf="row.submitted && !isTxnValid(row)">
+            {{ getTxnError(row.payment_mode) }}
+          </div>
+
           </td>
 
           <!-- Date -->
@@ -122,7 +122,7 @@
             </ng-container>
 
             <ng-container *ngIf="row.isEdit">
-              <button class="btn btn-save" (click)="save(row)" [disabled]="!isRowValid(row)" aria-label="Save changes">
+              <button class="btn btn-save" (click)="save(row)" aria-label="Save changes">
                 <i class="fa-solid fa-check"></i> Save
               </button>
               <button class="btn btn-cancel" (click)="cancel(row)" aria-label="Cancel editing">
