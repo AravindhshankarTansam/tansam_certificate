@@ -77,6 +77,14 @@ TEAM_LEAD: [
       { label: 'Industry', route: '/dashboard/teamlead/industry' }
     ]
   },
+   {
+    label: 'Academia',
+    children: [
+      { label: 'SDP Bulk Upload', route: '/dashboard/teamlead/sdp-bulk-upload' },
+      { label: 'FDP Bulk Upload', route: '/dashboard/teamlead/fdp-bulk-upload' },
+      { label: 'Industry Bulk Upload', route: '/dashboard/teamlead/industry-bulk-upload' }
+    ]
+  },
 
   {
     label: 'Reports',

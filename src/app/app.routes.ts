@@ -73,6 +73,9 @@ export const routes: Routes = [
       { path: 'teamlead/fdp', component: TlFdpComponent },
       { path: 'teamlead/industry', component: TlIndustryComponent },
       { path: 'teamlead/not-eligible', component: TlNotEligibleComponent },
+      {path: 'teamlead/sdp-bulk-upload', loadComponent: () => import('./dashboard/team-lead/attendance/tl-sdpbulkupload/tl-sdpbulkupload.component').then(m => m.TlSdpBulkUploadComponent)},
+      {path: 'teamlead/fdp-bulk-upload', loadComponent: () => import('./dashboard/team-lead/attendance/tl-fdpbulkupload/tl-fdpbulkupload.component').then(m => m.TlFdpBulkUploadComponent)},
+      {path: 'teamlead/industry-bulk-upload', loadComponent: () => import('./dashboard/team-lead/attendance/tl-industryupload/tl-industryupload.component').then(m => m.TlIndustryUploadComponent)},
 
       // Finance Routes
       { path: 'finance/dashboard', component: FinanceDashboardComponent },
