@@ -11,9 +11,6 @@ const { generateIVCertNo } = require('../../utils/certNo.helper');
 const { generateAccessToken } = require('../../utils/token.helper');
 const { sendCertificateMail } = require('../../services/mail.service');
 const { checkAndGenerateCertificate } = require('../../utils/certificateTrigger.helper');
-const { tryGenerateCertificate } =
-  require('../../utils/certificate.trigger');
-
 
 
 /* =====================================================
@@ -164,11 +161,6 @@ await checkAndGenerateCertificate(table, id);
       `,
       [certNo, id]
     );
-     8️⃣ 🔥 CENTRALIZED CERTIFICATE TRIGGER
-     (NO LOGIC HERE)
-  ===================================================== */
-  await tryGenerateCertificate(table, updatedRow, db);
-}
 
     /* TOKEN */
     const token = generateAccessToken();
