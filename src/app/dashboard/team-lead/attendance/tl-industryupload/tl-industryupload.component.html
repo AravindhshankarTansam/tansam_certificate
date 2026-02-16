@@ -1,1 +1,166 @@
-<h1>Work in Progress</h1>
+<div class="tl-sdp-page">
+
+  <!-- ================= HEADER ================= -->
+  <div class="tl-header">
+    <h2>Industry Bulk Upload Records</h2>
+  </div>
+
+
+  <!-- ================= BATCH TABLE ================= -->
+  <div class="tl-table-card" *ngIf="batches.length; else emptyState">
+
+    <table class="tl-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Industry</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Total Staff</th>
+          <th>View</th>
+          <th>Download All</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let batch of batches; let i = index">
+
+          <td>{{ i + 1 }}</td>
+          <td>{{ batch.industry_name }}</td>
+          <td>{{ batch.from_date | date:'dd-MM-yyyy' }}</td>
+          <td>{{ batch.to_date | date:'dd-MM-yyyy' }}</td>
+          <td>{{ batch.staffs.length }}</td>
+
+          <td>
+            <button class="btn-view"
+                    (click)="openStaff(batch)">
+              <mat-icon>visibility</mat-icon> View
+            </button>
+          </td>
+
+          <td>
+            <button class="btn-download"
+                    (click)="downloadBatch(batch)">
+    <mat-icon>download</mat-icon> Download All
+            </button>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+
+  <!-- ================= EMPTY ================= -->
+  <ng-template #emptyState>
+    <div class="tl-empty">
+      <h3>No Industry Bulk Uploads Yet</h3>
+      <p>Uploaded records will appear here.</p>
+    </div>
+  </ng-template>
+
+</div>
+
+
+<!-- ================= STAFF MODAL ================= -->
+
+<div class="tl-modal-backdrop" *ngIf="showStaffModal">
+
+  <div class="tl-modal large">
+
+    <div class="tl-modal-header">
+      <h3>
+        {{ selectedBatch?.industry_name }}
+        ({{ selectedBatch?.staffs.length }} Staff)
+      </h3>
+      <button (click)="closeStaff()">✕</button>
+    </div>
+
+    <div class="tl-modal-body">
+
+      <table class="tl-student-table">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>ID</th>
+            <th>Designation</th>
+            <th>Attendance</th>
+            <th>Download</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let s of selectedBatch?.staffs; let i = index">
+
+            <td>{{ i + 1 }}</td>
+            <td>{{ s.industry_staff_name }}</td>
+            <td>{{ s.industry_staff_id }}</td>
+            <td>{{ s.designation_name }}</td>
+
+            <td>
+              <button class="btn-primary"
+                      (click)="openCalendar(s)">
+               <mat-icon>event</mat-icon> Attendance
+              </button>
+            </td>
+
+            <td>
+              <button class="btn-download"
+                      (click)="downloadStaff(s)">
+              <mat-icon>download</mat-icon> Download 
+              </button>
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ================= ATTENDANCE MODAL ================= -->
+
+<div class="tl-modal-backdrop" *ngIf="showCalendar">
+
+  <div class="tl-modal">
+
+    <div class="tl-modal-header">
+      <h3>{{ selectedStaff?.industry_staff_name }}</h3>
+      <button (click)="closeCalendar()">✕</button>
+    </div>
+
+    <div class="calendar-grid">
+
+      <div
+        *ngFor="let d of calendarDays"
+        class="day"
+        [class.present]="isPresent(d)"
+        [class.holiday]="isHoliday(d)">
+
+        {{ d.split('-')[2] }}
+
+      </div>
+
+    </div>
+
+    <div class="calendar-summary">
+      Present:
+      {{ selectedStaff?.present_dates?.length || 0 }}
+      /
+      {{ calendarDays.length }}
+    </div>
+
+  </div>
+
+</div>
