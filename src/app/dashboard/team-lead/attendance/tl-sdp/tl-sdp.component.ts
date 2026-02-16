@@ -39,13 +39,15 @@ export class TlSdpComponent implements OnInit {
 
 
   /* ================= OPEN CALENDAR ================= */
-  openCalendar(student: any) {
-    this.selectedStudent = student;
-    this.showCalendar = true;
+openCalendar(student: any) {
+  console.log("🧑 Student:", student); // 👈 ADD THIS
+  this.selectedStudent = student;
+  this.showCalendar = true;
 
-    this.generateDates(student.from_date, student.to_date);
-    this.loadHolidays();
-  }
+  this.generateDates(student.from_date, student.to_date);
+  this.loadHolidays();
+}
+
 
   closeCalendar() {
     this.showCalendar = false;
@@ -53,19 +55,28 @@ export class TlSdpComponent implements OnInit {
 
 
   /* ================= GENERATE DATE LIST ================= */
-  generateDates(from: string, to: string) {
-    const dates: string[] = [];
+generateDates(from: string, to: string) {
+  const dates: string[] = [];
 
-    const start = new Date(from);
-    const end = new Date(to);
+  let start = new Date(from);
+  const end = new Date(to);
 
-    while (start <= end) {
-      dates.push(start.toISOString().slice(0, 10));
-      start.setDate(start.getDate() + 1);
-    }
+  while (start <= end) {
 
-    this.calendarDays = dates;
+    const year = start.getFullYear();
+    const month = String(start.getMonth() + 1).padStart(2, '0');
+    const day = String(start.getDate()).padStart(2, '0');
+
+    dates.push(`${year}-${month}-${day}`);
+
+    start.setDate(start.getDate() + 1);
   }
+
+  this.calendarDays = dates;
+
+  console.log('📅 Generated Days:', this.calendarDays);
+}
+
 
 
 /* ================= LOAD HOLIDAYS (TEAM LEAD) ================= */
@@ -83,6 +94,11 @@ loadHolidays() {
     next: (res: any[]) => {
       this.holidays = res.map(h => h.holiday_date);
       console.log('🟥 Year Holidays:', this.holidays);
+
+      // ✅ PRINT ATTENDANCE IN CONSOLE
+      console.log('✅ Present Days:', this.getPresentCount());
+      console.log('📆 Total Working Days:', this.getTotalDays());
+      console.log('📊 Attendance %:', this.getPercentage() + '%');
     },
 
     error: (err: any) => {
@@ -94,22 +110,27 @@ loadHolidays() {
 
 
 
+
   /* ================= TOGGLE DATE ================= */
-  toggleDate(date: string) {
+toggleDate(date: string) {
 
-    if (this.holidays.includes(date) || !this.isEditable(date)) return;
+  if (this.holidays.includes(date) || !this.isEditable(date)) return;
 
-    const list = this.selectedStudent.present_dates || [];
+  const list = this.selectedStudent.present_dates || [];
 
-    if (list.includes(date)) {
-      this.selectedStudent.present_dates =
-        list.filter((d: string) => d !== date);
-    } else {
-      list.push(date);
-    }
-
-    this.api.markTlSDPDate(this.selectedStudent.id, date).subscribe();
+  if (list.includes(date)) {
+    this.selectedStudent.present_dates =
+      list.filter((d: string) => d !== date);
+  } else {
+    list.push(date);
   }
+
+  this.api.markTlSDPDate(this.selectedStudent.id, date).subscribe();
+
+  // ✅ LIVE CONSOLE LOG
+  console.log('📊 Updated Attendance %:', this.getPercentage() + '%');
+}
+
 
 
   /* ================= STYLES ================= */
@@ -123,9 +144,24 @@ loadHolidays() {
 
 
   /* ================= SUMMARY ================= */
-  getPresentCount() {
-    return this.selectedStudent?.present_dates?.length || 0;
+getPresentCount() {
+
+  const dates = this.selectedStudent?.present_dates;
+
+  if (!dates) return 0;
+
+  // Fix if backend sends string
+  if (typeof dates === 'string') {
+    try {
+      return JSON.parse(dates).length;
+    } catch {
+      return 0;
+    }
   }
+
+  return dates.length;
+}
+
 
   getTotalDays() {
     return this.calendarDays.filter(d => !this.holidays.includes(d)).length;

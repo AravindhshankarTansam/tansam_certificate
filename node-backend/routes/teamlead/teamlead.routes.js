@@ -194,9 +194,18 @@ router.get('/sdp/get', isAuth, isTeamLead, async (req, res) => {
       ORDER BY id DESC
     `, [labId]);
 
-    rows.forEach(r => {
-      if (!r.present_dates) r.present_dates = [];
-    });
+rows.forEach(r => {
+  if (!r.present_dates) {
+    r.present_dates = [];
+  } else if (typeof r.present_dates === 'string') {
+    try {
+      r.present_dates = JSON.parse(r.present_dates);
+    } catch {
+      r.present_dates = [];
+    }
+  }
+});
+
 
     res.json(rows);
 
