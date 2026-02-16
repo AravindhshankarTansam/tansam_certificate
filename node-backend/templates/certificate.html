@@ -10,6 +10,7 @@
 
 <div class="certificate">
 
+
   <div class="corner left-top1"></div>
   <div class="corner left-top"></div>
   <div class="middle-shape"></div>
@@ -17,15 +18,16 @@
   <div class="corner right-top"></div>
 
   <!-- LOGOS -->
-  <div class="top-left-logo">
-    <img src="{{logoPath}}">
-  </div>
+<div class="top-left-logo">
+  <img src="../public/images/logo.png">
+</div>
 
-  <div class="top-center-logos">
-    <img src="{{tidcoLogo}}">
-    <img src="{{tansamLogo}}">
-    <img src="{{siemensLogo}}">
-  </div>
+<div class="top-center-logos">
+  <img src="../public/images/tidco.png">
+  <img src="../public/images/tansam.png">
+  <img src="../public/images/siemens1.png">
+</div>
+
 
   <h1>Internship Completion Certificate</h1>
   <p class="presented">Presented to</p>
@@ -42,9 +44,13 @@
     <b class="date">{{startDate}} – {{endDate}}</b>.
   </p>
 
-<div class="signature-section">
+  <div class="certificate-number">
+    Certificate Number – <b>{{certificateNo}}</b>
+  </div>
 
-  <img src="{{signatureImage}}" style="height:70px;margin-bottom:8px">
+  <div class="signature-section">
+
+ <img src="../public/images/tansam.png" style="height:70px;margin-bottom:8px">
 
   <div class="signature-line"></div>
 
@@ -54,16 +60,12 @@
 </div>
 
 
-  <div class="certificate-number">
-    Certificate Number – <b>{{certificateNo}}</b>
-  </div>
+
 
   <!-- QR -->
-  <div class="qr-code" style="position:absolute;bottom:60px;left:90px;z-index:5;">
-
-    <img src="{{qrCode}}" class="qr-img">
-
-  </div>
+<div class="qr-code">
+  <img src="../public/images/download1.png" class="qr-img">
+</div>
 
 </div>
 

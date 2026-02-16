@@ -3,9 +3,11 @@ const nodemailer = require('nodemailer');
 let transporter;
 
 /* =====================================================
-   CREATE SMTP
+   INITIALIZE MAILER
 ===================================================== */
-async function initMailer() {
+async function getTransporter() {
+
+  if (transporter) return transporter;
 
   /* =========================
      PRODUCTION → HOSTINGER
@@ -43,9 +45,9 @@ async function initMailer() {
 
     console.log('✅ Ethereal test mail ready');
   }
-}
 
-initMailer();
+  return transporter;
+}
 
 
 /* =====================================================
@@ -53,24 +55,54 @@ initMailer();
 ===================================================== */
 exports.sendCertificateMail = async (email, token) => {
 
+  const transporter = await getTransporter();
+
   const link = `${process.env.FRONTEND_URL}/certificate-access/${token}`;
 
   const info = await transporter.sendMail({
-    from: `"Certificate Team" <${process.env.MAIL_USER || 'test@test.com'}>`,
+    from: `"TANSAM Certificates - Do Not Reply" <${process.env.MAIL_USER || 'noreply@test.com'}>`,
     to: email,
     subject: 'Your Certificate is Ready',
     html: `
-      <h2>Your Certificate is Ready 🎉</h2>
-      <p>Click below to access:</p>
-      <a href="${link}">${link}</a>
+      <div style="font-family: Arial, sans-serif;">
+        <h2>Your Certificate is Ready</h2>
+
+        <p>
+          Congratulations! Your certificate has been generated successfully.
+        </p>
+
+        <p>
+          Click the secure button below to access your certificate.
+        </p>
+
+        <p>
+          <a href="${link}"
+             style="background:#2563eb;color:white;
+             padding:12px 20px;text-decoration:none;
+             border-radius:6px;">
+             Access Certificate
+          </a>
+        </p>
+
+        <p>
+          This link requires OTP verification for security.
+        </p>
+
+        <hr/>
+
+        <p style="font-size:12px;color:#666;">
+          This is an automated email. Please do not reply to this message.
+          If you need assistance, contact the TANSAM support team.
+        </p>
+      </div>
     `
   });
 
-  /* Show preview in local */
   if (process.env.NODE_ENV !== 'production') {
     console.log('📨 Mail Preview:', nodemailer.getTestMessageUrl(info));
   }
 };
+
 
 
 /* =====================================================
@@ -78,11 +110,27 @@ exports.sendCertificateMail = async (email, token) => {
 ===================================================== */
 exports.sendOtpMail = async (email, otp) => {
 
+  const transporter = await getTransporter();
+
   const info = await transporter.sendMail({
-    from: `"Certificate Team" <${process.env.MAIL_USER || 'test@test.com'}>`,
+    from: `"TANSAM OTP Service - Do Not Reply" <${process.env.MAIL_USER || 'noreply@test.com'}>`,
     to: email,
-    subject: 'OTP Verification',
-    html: `<h2>Your OTP: ${otp}</h2>`
+    subject: 'OTP Verification Code',
+    html: `
+      <div style="font-family: Arial, sans-serif;">
+        <h2>Your OTP Code</h2>
+
+        <h1 style="letter-spacing:4px;">${otp}</h1>
+
+        <p>This OTP is valid for 5 minutes.</p>
+
+        <hr/>
+
+        <p style="font-size:12px;color:#666;">
+          This is an automated message. Please do not reply.
+        </p>
+      </div>
+    `
   });
 
   if (process.env.NODE_ENV !== 'production') {

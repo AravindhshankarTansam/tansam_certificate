@@ -114,5 +114,7 @@ exports.downloadCertificate = async (req, res) => {
     return res.status(403).send('Unauthorized');
   }
 
-  res.redirect(`/generate/${access.type}/${access.user_id}`);
+  // res.redirect(`/generate/${access.type}/${access.user_id}`);
+  res.redirect(`/api/certificate/generate/${access.type}/${access.user_id}`);
+
 };

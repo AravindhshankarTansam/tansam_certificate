@@ -501,5 +501,35 @@ bulkDownloadIVCertificates(visitId: number) {
   );
 }
 
+verifyId(token: string, idValue: string) {
+  return this.http.post(
+    `${this.BASE_URL}/certificate-access/verify-id`,
+    { token, idValue }
+  );
+}
+
+verifyOtp(token: string, otp: string) {
+  return this.http.post(
+    `${this.BASE_URL}/certificate-access/verify-otp`,
+    { token, otp }
+  );
+}
+
+
+/* ================= CERTIFICATE ACCESS ================= */
+
+getCertificateProfile(token: string) {
+  return this.http.get(
+    `${this.BASE_URL}/certificate-access/profile/${token}`
+  );
+}
+
+downloadCertificate(token: string) {
+  return this.http.get(
+    `${this.BASE_URL}/certificate-access/download/${token}`,
+    { responseType: 'blob' }
+  );
+}
+
 
 }

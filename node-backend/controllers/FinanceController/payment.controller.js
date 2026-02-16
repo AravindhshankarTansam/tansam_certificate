@@ -1,4 +1,5 @@
 const db = require('../../db');
+const { checkAndGenerateCertificate } = require('../../utils/certificateTrigger.helper');
 
 /* =====================================================
    SDP PAYMENT
@@ -18,7 +19,7 @@ exports.updateSDP = async (req, res) => {
           paid_status=TRUE
       WHERE id=?
     `, [payment_mode, amount, transaction_id, payment_date, id]);
-
+await checkAndGenerateCertificate('sdp_students', id);
     res.json({ message: 'SDP payment updated' });
 
   } catch (err) {
@@ -45,7 +46,7 @@ exports.updateFDP = async (req, res) => {
           paid_status=TRUE
       WHERE id=?
     `, [payment_mode, amount, transaction_id, payment_date, id]);
-
+await checkAndGenerateCertificate('fdp_staff', id);
     res.json({ message: 'FDP payment updated' });
 
   } catch (err) {
@@ -72,7 +73,7 @@ exports.updateIndustry = async (req, res) => {
           paid_status=TRUE
       WHERE id=?
     `, [payment_mode, amount, transaction_id, payment_date, id]);
-
+await checkAndGenerateCertificate('industry_staff', id);
     res.json({ message: 'Industry payment updated' });
 
   } catch (err) {

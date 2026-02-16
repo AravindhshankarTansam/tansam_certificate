@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poiret+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Beau+Rivage&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
 
 @page {
   size: A4 landscape;
@@ -32,11 +35,11 @@ body {
   margin: 0;
   padding: 25mm 25mm 30mm;
   background: #ffffff;
+  font-family: "Times New Roman", serif;
   overflow: hidden;
   box-sizing: border-box;
   border: 10px solid #aaf2f400;
   -webkit-font-smoothing: antialiased;
-  font-family: "DM Sans", sans-serif;
 }
 
 
@@ -47,7 +50,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("{{watermark}}") no-repeat center;
+  background: url("../public/images/watermark.png") no-repeat center;
   background-size: 600px;
   opacity: 0.18;
   z-index: 2;
@@ -57,6 +60,28 @@ body {
 /* =========================
    LEFT BIG DIAGONAL STRIP
 ========================= */
+
+.certificate::before {
+  content: "";
+  position: absolute;
+  right: 50px;
+  bottom: 50px;
+  width: 800px;
+  height: 470px;
+
+  border-right: 4px solid;
+  border-bottom: 4px solid;
+
+  border-image: linear-gradient(
+    135deg,
+    #92e8eb67 0%,
+    #80dde167 75%,
+    #108387 100%
+  ) 1;
+
+  box-sizing: border-box;
+}
+
 
 
 /* =========================
@@ -103,45 +128,33 @@ body {
 /* =========================
    TOP RIGHT FOLD
 ========================= */
-
 .corner.right-top::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  right: 40px;     /* moved slightly left */
-  width: 300px;    /* increased width */
-  height: 220px;   /* increased height */
-  background:linear-gradient(135deg, #2fbcc0, #0b8f94);
-  clip-path: polygon(
-    100% 100%,  /* bottom-right */
-    88% 100%,   /* bottom-right inner */
-    88% 16%,    /* vertical leg */
-    22% 16%,    /* horizontal leg */
-    22% 0,      /* top-left inner */
-    100% 0      /* top-right corner */
-  );
-  z-index: 1;
-  border-radius: 8px;
+    content: "";
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    width: 300px;
+    height: 220px;
+    background: linear-gradient(135deg, #066a6e, #aaf1f4);
+    clip-path: polygon(100% 100%, 88% 100%, 88% 16%, 22% 16%, 22% 0, 100% 0);
+    z-index: 1;
+    border-radius: 8px;
 }
+
 .corner.right-top::after {
-  content: "";
-  position: absolute;
-  top: 80px;       /* inside the big L */
-  right: 100px;     /* adjust to fit */
-  width: 120px;    /* smaller width */
-  height: 80px;    /* smaller height */
-  background: linear-gradient(135deg, #67e1e5, #04878b); /* slightly different shade */
-  clip-path: polygon(
-    100% 100%,
-    88% 100%,
-    88% 16%,
-    22% 16%,
-    22% 0,
-    100% 0
-  );
-  z-index: 2;
-  border-radius: 8px;
+    content: "";
+    position: absolute;
+    top: 80px;
+    right: 100px;
+    width: 120px;
+    height: 80px;
+    background: linear-gradient(135deg, #066a6e, #aaf1f4);
+    clip-path: polygon(100% 100%, 88% 100%, 88% 16%, 22% 16%, 22% 0, 100% 0);
+    z-index: 2;
+    border-radius: 8px;
 }
+
+
 /* =========================
    BOTTOM LEFT SHAPE
 ========================= */
@@ -159,45 +172,31 @@ body {
 }
 
 .corner.left-bottom::before {
-  content: "";
-  position: absolute;
-  bottom: 70px;
-  left: 80px;
-  width: 260px;
-  height: 180px;
-  background: #aaf1f4;
-  clip-path: polygon(
-    0 0,
-    12% 0,
-    12% 84%,
-    78% 84%,
-    78% 100%,
-    0 100%
-  );
-  z-index: 1;
-  border-radius: 8px;
+    content: "";
+    position: absolute;
+    bottom: 70px;
+    left: 80px;
+    width: 260px;
+    height: 180px;
+    background: linear-gradient(135deg, #aaf1f4, #066a6e);
+    clip-path: polygon(0 0, 12% 0, 12% 84%, 78% 84%, 78% 100%, 0 100%);
+    z-index: 1;
+    border-radius: 8px;
 }
+
+
 
 .corner.left-bottom::after {
-  content: "";
-  position: absolute;
-  bottom: 110px;   /* increased spacing from bottom */
-  left: 120px;    /* increased spacing from left */
-  width: 160px;   /* slightly smaller than before */
-  height: 116px;  /* 180 - 2*(22+10) */
-  background: #6fdde1;
-  clip-path: polygon(
-    0 0,
-    12% 0,
-    12% 84%,
-    78% 84%,
-    78% 100%,
-    0 100%
-  );
-  z-index: 2;
+    content: "";
+    position: absolute;
+    bottom: 110px;
+    left: 120px;
+    width: 160px;
+    height: 116px;
+    background: linear-gradient(135deg, #aaf1f4, #0b8f94);
+    clip-path: polygon(0 0, 12% 0, 12% 84%, 78% 84%, 78% 100%, 0 100%);
+    z-index: 2;
 }
-
-
 
 /* =========================
    CONTENT LAYER
@@ -248,16 +247,20 @@ h1 {
   font-size: 45px;
   margin-top: 80px;
   color: #1e7e7e;
-  font-weight: bolder;
-  text-transform: uppercase;
-  font-family: "DM Sans", sans-serif;
+  font-weight: bold;
+  font-family: "Georgia", serif;
+  /* letter-spacing: 2px; better than 0.05cm */
 }
+
 
 .presented {
   text-align: center;
   margin-top: 25px;
-  font-size: 30px;
+  font-family: "Times New Roman", serif;
+  font-weight: 600;      /* slightly softer than bold */
+  font-size: 24px;       /* better proportion */
   color: #1e7e7e;
+  letter-spacing: 1px;   /* subtle elegance */
 }
 
 /* =========================
@@ -285,7 +288,7 @@ h1 {
   text-align: justify;
   padding-left: 120px;      /* prevents left band overlap */
   padding-right: 60px;
-  font-family: "DM Sans", sans-serif;
+  font-family: "Beau Rivage", cursive;
 }
 
 .content b{
@@ -362,18 +365,25 @@ h1 {
 ========================= */
 .certificate-number {
   position: absolute;
-  bottom: 40px;
-  right: 80px;
+  bottom: 30px;       /* adjust vertical spacing */
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 14px;
+  text-align: center;
+  margin-bottom: 55px;
 }
+
 .qr-code {
   position: absolute;
-  bottom: 60px;
-  left: 90px;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 5;
 }
 
 .qr-img {
-  width: 180px;
-  height: 180px;
+    width: 130px;
+    height: 130px;
+  display: block;
+  margin-bottom: 60px;
 }
