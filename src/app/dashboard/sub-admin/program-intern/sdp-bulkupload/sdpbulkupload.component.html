@@ -1,0 +1,151 @@
+<div class="sdp-bulk-page">
+
+  <!-- HERO -->
+  <div class="sdp-hero">
+    <div class="sdp-hero-content">
+      <h1>SDP – Bulk Upload</h1>
+      <p>Upload SDP student list using Excel file</p>
+    </div>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="sdp-upload-card">
+
+    <div class="sdp-card-header">
+      <h2>New SDP Record</h2>
+      <p class="sdp-subtitle">Enter college details to start upload</p>
+    </div>
+
+ <!-- FORM ROW -->
+<div class="sdp-form-row">
+
+  <!-- College Name -->
+  <div class="sdp-input-group">
+    <input type="text"
+           placeholder=" "
+           [(ngModel)]="collegeName">
+    <label>College Full Name</label>
+  </div>
+
+  <!-- Short Code -->
+  <div class="sdp-input-group">
+    <input type="text"
+           placeholder=" "
+           [(ngModel)]="collegeShortName"
+           maxlength="10">
+    <label>College Short Code</label>
+  </div>
+
+  <!-- Visit Date -->
+  <div class="sdp-input-group">
+    <input type="date"
+           [(ngModel)]="fromDate">
+    <label>From Date</label>
+  </div>
+
+  <!-- To Date -->
+  <div class="sdp-input-group">
+    <input type="date"
+           [(ngModel)]="toDate">
+    <label>To Date</label>
+  </div>
+
+</div>
+
+
+    <!-- DROPZONE -->
+    <div class="sdp-dropzone"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onDrop($event)"
+         [class.active]="isDragActive"
+         (click)="fileInput.click()">
+
+      <div class="sdp-icon-circle">
+        <i class="fa-solid fa-cloud-arrow-up fa-3x"></i>
+      </div>
+
+      <p>Drag & Drop SDP Excel file here</p>
+      <p>or</p>
+      <p><strong>Click to Browse File</strong></p>
+
+      <input #fileInput
+             type="file"
+             accept=".xlsx,.xls"
+             hidden
+             (change)="onFileSelected($event)">
+    </div>
+
+    <!-- FILE NAME -->
+    <div class="sdp-file-status" *ngIf="fileName">
+      Selected: <strong>{{ fileName }}</strong>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="sdp-action-bar">
+
+      <button class="sdp-btn-outline"
+              (click)="downloadTemplate()">
+        <i class="fa-solid fa-file-arrow-down"></i>
+        Download Template
+      </button>
+
+      <button class="sdp-btn-primary"
+              [disabled]="!collegeName ||  !fromDate || !toDate || !selectedFile"
+              (click)="uploadFile()">
+        <i class="fa-solid fa-upload"></i>
+        Upload Excel
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- PREVIEW MODAL -->
+  <div class="sdp-modal-backdrop" *ngIf="showPreviewModal">
+    <div class="sdp-modal">
+
+      <div class="sdp-modal-header">
+        <h2>SDP Preview</h2>
+        <button (click)="closePreview()">✕</button>
+      </div>
+
+      <div class="sdp-modal-info">
+        Total Records: <strong>{{ uploadedData.length }}</strong>
+      </div>
+
+      <div class="sdp-preview-wrapper">
+        <table class="sdp-preview-table">
+          <thead>
+            <tr>
+              <th *ngFor="let h of tableHeaders">
+                {{ h | titlecase }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of uploadedData">
+              <td *ngFor="let h of tableHeaders">
+                {{ row[h] || '—' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sdp-modal-footer">
+        <button class="sdp-btn-outline"
+                (click)="closePreview()">
+          Close
+        </button>
+
+        <button class="sdp-btn-primary"
+                (click)="confirmUpload()">
+          Confirm Upload
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

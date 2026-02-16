@@ -40,13 +40,24 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
       label: 'Program Intern',
       children: [
         {
-          label: 'Academic',
+          label: 'General',
           children: [
             { label: 'SDP', route: '/dashboard/sub-admin/sdp' },
-            { label: 'FDP', route: '/dashboard/sub-admin/fdp' }
+            { label: 'FDP', route: '/dashboard/sub-admin/fdp' },
+            { label: 'Industry', route: '/dashboard/sub-admin/industry' }
           ]
         },
-        { label: 'Industry', route: '/dashboard/sub-admin/industry' }
+        // { label: 'Industry', route: '/dashboard/sub-admin/industry' }
+          // ===== ACADEMIA (NEW) =====
+      {
+        label: 'Academia',
+        children: [
+          { label: 'SDP Bulk Upload', route: '/dashboard/sub-admin/sdp-bulk-upload' },
+          { label: 'FDP Bulk Upload', route: '/dashboard/sub-admin/fdp-bulk-upload' },
+          { label: 'Industry Bulk Upload', route: '/dashboard/sub-admin/industry-bulk-upload' }
+        ]
+      }
+
       ]
     },
 
@@ -64,6 +75,14 @@ TEAM_LEAD: [
       { label: 'SDP', route: '/dashboard/teamlead/sdp' },
       { label: 'FDP', route: '/dashboard/teamlead/fdp' },
       { label: 'Industry', route: '/dashboard/teamlead/industry' }
+    ]
+  },
+   {
+    label: 'Academia',
+    children: [
+      { label: 'SDP Bulk Upload', route: '/dashboard/teamlead/sdp-bulk-upload' },
+      { label: 'FDP Bulk Upload', route: '/dashboard/teamlead/fdp-bulk-upload' },
+      { label: 'Industry Bulk Upload', route: '/dashboard/teamlead/industry-bulk-upload' }
     ]
   },
 

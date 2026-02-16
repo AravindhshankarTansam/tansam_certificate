@@ -221,3 +221,23 @@
     padding-left: 60px; /* space for sidebar hamburger */
   }
 }
+
+.navbar-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #009999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.divider {
+  color: #999;
+  font-weight: 400;
+}
+
+.role-text {
+  color: #009999;
+  font-weight: 700;
+  letter-spacing: 1px;
+}

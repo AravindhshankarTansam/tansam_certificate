@@ -65,12 +65,18 @@ export const routes: Routes = [
       { path: 'sub-admin/industry', component: IndustryComponent },
       { path: 'sub-admin/bulk-upload', component: BulkUploadComponent },
       { path: 'sub-admin/reports', component: ReportsComponent },
+      {path: 'sub-admin/sdp-bulk-upload', loadComponent: () => import('./dashboard/sub-admin/program-intern/sdp-bulkupload/sdpbulkupload.component').then(m => m.SdpBulkUploadComponent)},
+      {path: 'sub-admin/fdp-bulk-upload', loadComponent: () => import('./dashboard/sub-admin/program-intern/fdp-bulkupload/fdpbulkupload.component').then(m => m.FdpBulkUploadComponent)},
+      {path: 'sub-admin/industry-bulk-upload', loadComponent: () => import('./dashboard/sub-admin/program-intern/industry-bulkupload/industrybulkupload.component').then(m => m.IndustryBulkUploadComponent)},
       // Team Lead Routes
       { path: 'teamlead/dashboard', component: TeamLeadDashboardComponent },
       { path: 'teamlead/sdp', component: TlSdpComponent },
       { path: 'teamlead/fdp', component: TlFdpComponent },
       { path: 'teamlead/industry', component: TlIndustryComponent },
       { path: 'teamlead/not-eligible', component: TlNotEligibleComponent },
+      {path: 'teamlead/sdp-bulk-upload', loadComponent: () => import('./dashboard/team-lead/attendance/tl-sdpbulkupload/tl-sdpbulkupload.component').then(m => m.TlSdpBulkUploadComponent)},
+      {path: 'teamlead/fdp-bulk-upload', loadComponent: () => import('./dashboard/team-lead/attendance/tl-fdpbulkupload/tl-fdpbulkupload.component').then(m => m.TlFdpBulkUploadComponent)},
+      {path: 'teamlead/industry-bulk-upload', loadComponent: () => import('./dashboard/team-lead/attendance/tl-industryupload/tl-industryupload.component').then(m => m.TlIndustryUploadComponent)},
 
       // Finance Routes
       { path: 'finance/dashboard', component: FinanceDashboardComponent },

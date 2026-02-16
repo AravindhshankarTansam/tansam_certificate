@@ -8,5 +8,11 @@ import { Component } from '@angular/core';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
+   role: string = '';
+
+  ngOnInit() {
+    const storedRole = localStorage.getItem('role');
+    this.role = storedRole ? storedRole.replace(/_/g, ' ') : '';
+  }
 
 }
