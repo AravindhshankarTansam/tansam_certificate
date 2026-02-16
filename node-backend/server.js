@@ -130,6 +130,11 @@ app.use('/api/teamlead', teamLeadRoutes);
 app.use('/api/teamlead/holidays', holidayRoutes);
 
 app.use('/api/certificate', require('./routes/certificate.routes'));
+app.use(
+  '/api/program',
+  require('./routes/subadmin/programBatch.routes')
+);
+
 
 app.use('/api/iv', ivRoutes);
 console.log('ivRoutes:', typeof ivRoutes);

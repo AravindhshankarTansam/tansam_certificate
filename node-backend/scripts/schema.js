@@ -349,9 +349,41 @@ CREATE TABLE IF NOT EXISTS iv_students (
 
   FOREIGN KEY (visit_id) REFERENCES iv_visits(id) ON DELETE CASCADE
 );
+
 `);
 
 
+await db.query(`
+  CREATE TABLE program_batches (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+
+  program_type ENUM('SDP','FDP','INDUSTRY') NOT NULL,
+  batch_name VARCHAR(100),              -- optional (UI friendly)
+  organization_name VARCHAR(255),       -- college / company
+  organization_short VARCHAR(50),
+
+  from_date DATE,
+  to_date DATE,
+
+  excel_file VARCHAR(255),
+
+  payment_mode VARCHAR(50),
+  amount DECIMAL(10,2),
+  transaction_id VARCHAR(100),
+  payment_date DATE,
+  paid_status BOOLEAN DEFAULT 0,
+  received_by VARCHAR(100),
+
+  total_count INT DEFAULT 0,
+  generated_count INT DEFAULT 0,
+  certificate_generated BOOLEAN DEFAULT 0,
+
+  created_by INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+`);
 
     console.log('✅ All tables created successfully');
     process.exit();
