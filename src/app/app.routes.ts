@@ -32,6 +32,7 @@ import { CertificateSdpComponent } from './dashboard/admin/certificates/certific
 import { CertificateFdpComponent } from './dashboard/admin/certificates/certificate-fdp/certificate-fdp.component';
 import { CertificateIndustryComponent } from './dashboard/admin/certificates/certificate-industry/certificate-industry.component';
 import { CertificateIndustrialVisitsComponent } from './dashboard/admin/certificates/certificate-industrial-visits/certificate-industrial-visits.component';
+import { CertificateAccessComponent } from './certificate/certificate-access/certificate-access.component';
 
 
 
@@ -40,7 +41,7 @@ export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'verify/:certNo', component: VerifyComponent },
-
+  { path: 'certificate-access/:token', component: CertificateAccessComponent},
   {
     path: 'dashboard',
     component: LayoutComponent,

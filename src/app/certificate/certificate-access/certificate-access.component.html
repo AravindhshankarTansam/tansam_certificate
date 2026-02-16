@@ -1,0 +1,84 @@
+<div class="certificate-container">
+
+  <div class="certificate-card">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h2 class="title">Certificate Access</h2>
+      <small class="subtitle">Enter your details to download your certificate</small><br />
+
+      <!-- LOGO -->
+      <img
+        src="assets/images/tansam-logo.png"
+        alt="Organization Logo"
+        class="logo"
+      />
+    </div>
+
+    <!-- STEP 1 -->
+    <div *ngIf="step === 1" class="step">
+
+      <label>Register / Staff ID</label>
+
+      <input
+        [(ngModel)]="idValue"
+        placeholder="Enter your ID"
+        class="input"
+      />
+
+      <button class="btn primary" (click)="verifyId()">
+        Verify ID
+      </button>
+
+    </div>
+
+    <!-- STEP 2 -->
+    <div *ngIf="step === 2" class="step">
+
+      <label>Enter OTP</label>
+
+      <input
+        [(ngModel)]="otp"
+        placeholder="Enter OTP"
+        class="input"
+      />
+
+      <button class="btn primary" (click)="verifyOtp()">
+        Verify OTP
+      </button>
+
+    </div>
+
+    <!-- STEP 3 -->
+    <div *ngIf="step === 3 && profile" class="profile">
+
+      <h3>Profile Details</h3>
+
+      <div class="profile-box">
+
+        <p>
+          <span>Name</span>
+          {{ profile.student_name || profile.staff_name || profile.industry_staff_name }}
+        </p>
+
+        <p>
+          <span>Institution</span>
+          {{ profile.college_name || profile.industry_name }}
+        </p>
+
+        <p>
+          <span>Programme</span>
+          {{ profile.department || profile.designation_name }}
+        </p>
+
+      </div>
+
+      <button class="btn download" (click)="download()">
+        Download Certificate
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

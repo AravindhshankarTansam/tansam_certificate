@@ -1,4 +1,6 @@
 const db = require('../../db');
+const { checkAndGenerateCertificate } = require('../../utils/certificateTrigger.helper');
+
 const { tryGenerateCertificate } = require('../../utils/certificate.trigger');
 /* =====================================================
    SDP PAYMENT
@@ -18,6 +20,8 @@ exports.updateSDP = async (req, res) => {
         payment_date=?,
         paid_status=1
       WHERE id=?
+    `, [payment_mode, amount, transaction_id, payment_date, id]);
+await checkAndGenerateCertificate('sdp_students', id);
       `,
       [payment_mode, amount, transaction_id, payment_date, id]
     );
@@ -59,6 +63,8 @@ exports.updateFDP = async (req, res) => {
         payment_date=?,
         paid_status=1
       WHERE id=?
+    `, [payment_mode, amount, transaction_id, payment_date, id]);
+await checkAndGenerateCertificate('fdp_staff', id);
       `,
       [payment_mode, amount, transaction_id, payment_date, id]
     );
@@ -98,6 +104,8 @@ exports.updateIndustry = async (req, res) => {
         payment_date=?,
         paid_status=1
       WHERE id=?
+    `, [payment_mode, amount, transaction_id, payment_date, id]);
+await checkAndGenerateCertificate('industry_staff', id);
       `,
       [payment_mode, amount, transaction_id, payment_date, id]
     );

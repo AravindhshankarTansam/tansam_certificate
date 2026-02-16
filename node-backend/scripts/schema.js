@@ -350,6 +350,48 @@ CREATE TABLE IF NOT EXISTS iv_students (
   FOREIGN KEY (visit_id) REFERENCES iv_visits(id) ON DELETE CASCADE
 );
 `);
+/* =========================
+   CERTIFICATE ACCESS (SECURE DOWNLOAD)
+========================= */
+await db.query(`
+  CREATE TABLE IF NOT EXISTS certificate_access (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+
+    /* PROGRAM TYPE */
+    type ENUM('sdp','fdp','industry','iv') NOT NULL,
+
+    /* USER RECORD */
+    user_id INT NOT NULL,
+
+    /* TOKEN */
+    access_token VARCHAR(255) UNIQUE NOT NULL,
+
+    /* OTP */
+    otp VARCHAR(10) NULL,
+    otp_attempts INT DEFAULT 0,
+    otp_expiry DATETIME NULL,
+
+    /* STATUS */
+    verified BOOLEAN DEFAULT FALSE,
+    is_used BOOLEAN DEFAULT FALSE,
+
+    /* SECURITY */
+    ip_address VARCHAR(50) NULL,
+    user_agent TEXT NULL,
+
+    /* EXPIRY */
+    expires_at DATETIME NULL,
+
+    /* AUDIT */
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      ON UPDATE CURRENT_TIMESTAMP,
+
+    INDEX idx_token (access_token),
+    INDEX idx_user (user_id),
+    INDEX idx_type (type)
+  );
+`);
 
 
 

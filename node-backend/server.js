@@ -109,6 +109,7 @@ const financePaymentRoutes = require('./routes/finance/payment.routes');
 const financeListRoutes = require('./routes/finance/list.routes');
 
 const teamLeadRoutes = require('./routes/teamlead/teamlead.routes');
+const certificateAccessRoutes = require('./routes/certificateAccess.routes');
 
 app.use('/api/auth', authRoutes);
 
@@ -132,6 +133,9 @@ app.use('/api/teamlead/holidays', holidayRoutes);
 app.use('/api/certificate', require('./routes/certificate.routes'));
 
 app.use('/api/iv', ivRoutes);
+
+app.use('/api/certificate-access', certificateAccessRoutes)
+
 console.log('ivRoutes:', typeof ivRoutes);
 console.log('holidayRoutes:', typeof holidayRoutes);
 console.log('sdpRoutes:', typeof sdpRoutes);

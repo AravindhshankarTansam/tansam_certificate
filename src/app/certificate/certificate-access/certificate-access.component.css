@@ -1,0 +1,129 @@
+/* ===== HEADER ===== */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin-bottom: 10px;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  width: 140px;
+  height: auto;
+  margin-top: 5px;
+}
+
+/* ===== BACKGROUND ===== */
+.certificate-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== CARD ===== */
+.certificate-card {
+  width: 420px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* ===== TITLE ===== */
+.title {
+  margin-bottom: 20px;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* ===== INPUT ===== */
+.input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  margin-bottom: 15px;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* ===== BUTTON ===== */
+.btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.primary {
+  background: #2563eb;
+  color: #fff;
+}
+
+.primary:hover {
+  background: #1d4ed8;
+}
+
+/* ===== DOWNLOAD BUTTON ===== */
+.download {
+  background: #059669;
+  color: white;
+  margin-top: 15px;
+}
+
+.download:hover {
+  background: #047857;
+}
+
+/* ===== PROFILE ===== */
+.profile-box {
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: left;
+}
+
+.profile-box p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.profile-box span {
+  font-weight: 600;
+  display: inline-block;
+  width: 110px;
+  color: #334155;
+}
+
+/* ===== LABEL ===== */
+label {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #475569;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 500px) {
+  .certificate-card {
+    width: 90%;
+  }
+}
