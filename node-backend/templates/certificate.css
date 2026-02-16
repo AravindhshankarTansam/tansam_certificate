@@ -64,18 +64,21 @@ body {
 .certificate::before {
   content: "";
   position: absolute;
-
   right: 50px;
   bottom: 50px;
+  width: 800px;
+  height: 470px;
 
-    width: 800px;
-    height: 470px;
+  border-right: 4px solid;
+  border-bottom: 4px solid;
 
-  border-right: 4px solid #0b8f94;
-  border-bottom: 4px solid #0b8f94;
+  border-image: linear-gradient(
+    135deg,
+    #92e8eb67 0%,
+    #80dde167 75%,
+    #108387 100%
+  ) 1;
 
-  z-index: 2;
-  pointer-events: none;
   box-sizing: border-box;
 }
 
@@ -126,40 +129,29 @@ body {
    TOP RIGHT FOLD
 ========================= */
 .corner.right-top::before {
-  content: "";
-  position: absolute;
-  top: 20px;
-  right: 40px;
-  width: 300px;
-  height: 220px;
-
-  background: linear-gradient(135deg, #2fbcc0, #0b8f94);
-
-  /* ✅ SAME exact curve as ::after */
-  clip-path: polygon(100% 100%, 88% 100%, 88% 16%, 22% 16%, 22% 0, 100% 0);
-
-  z-index: 1;
-  border-radius: 8px;
+    content: "";
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    width: 300px;
+    height: 220px;
+    background: linear-gradient(135deg, #066a6e, #aaf1f4);
+    clip-path: polygon(100% 100%, 88% 100%, 88% 16%, 22% 16%, 22% 0, 100% 0);
+    z-index: 1;
+    border-radius: 8px;
 }
 
 .corner.right-top::after {
-  content: "";
-  position: absolute;
-  top: 80px;       /* inside the big L */
-  right: 100px;     /* adjust to fit */
-  width: 120px;    /* smaller width */
-  height: 80px;    /* smaller height */
-  background: linear-gradient(135deg, #67e1e5, #04878b); /* slightly different shade */
-  clip-path: polygon(
-    100% 100%,
-    88% 100%,
-    88% 16%,
-    22% 16%,
-    22% 0,
-    100% 0
-  );
-  z-index: 2;
-  border-radius: 8px;
+    content: "";
+    position: absolute;
+    top: 80px;
+    right: 100px;
+    width: 120px;
+    height: 80px;
+    background: linear-gradient(135deg, #066a6e, #aaf1f4);
+    clip-path: polygon(100% 100%, 88% 100%, 88% 16%, 22% 16%, 22% 0, 100% 0);
+    z-index: 2;
+    border-radius: 8px;
 }
 
 
@@ -180,45 +172,31 @@ body {
 }
 
 .corner.left-bottom::before {
-  content: "";
-  position: absolute;
-  bottom: 70px;
-  left: 80px;
-  width: 260px;
-  height: 180px;
-  background: #aaf1f4;
-  clip-path: polygon(
-    0 0,
-    12% 0,
-    12% 84%,
-    78% 84%,
-    78% 100%,
-    0 100%
-  );
-  z-index: 1;
-  border-radius: 8px;
+    content: "";
+    position: absolute;
+    bottom: 70px;
+    left: 80px;
+    width: 260px;
+    height: 180px;
+    background: linear-gradient(135deg, #aaf1f4, #066a6e);
+    clip-path: polygon(0 0, 12% 0, 12% 84%, 78% 84%, 78% 100%, 0 100%);
+    z-index: 1;
+    border-radius: 8px;
 }
+
+
 
 .corner.left-bottom::after {
-  content: "";
-  position: absolute;
-  bottom: 110px;   /* increased spacing from bottom */
-  left: 120px;    /* increased spacing from left */
-  width: 160px;   /* slightly smaller than before */
-  height: 116px;  /* 180 - 2*(22+10) */
-  background: #6fdde1;
-  clip-path: polygon(
-    0 0,
-    12% 0,
-    12% 84%,
-    78% 84%,
-    78% 100%,
-    0 100%
-  );
-  z-index: 2;
+    content: "";
+    position: absolute;
+    bottom: 110px;
+    left: 120px;
+    width: 160px;
+    height: 116px;
+    background: linear-gradient(135deg, #aaf1f4, #0b8f94);
+    clip-path: polygon(0 0, 12% 0, 12% 84%, 78% 84%, 78% 100%, 0 100%);
+    z-index: 2;
 }
-
-
 
 /* =========================
    CONTENT LAYER
