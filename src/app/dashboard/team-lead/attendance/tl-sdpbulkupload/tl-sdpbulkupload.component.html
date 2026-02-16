@@ -5,7 +5,6 @@
     <h2>SDP Bulk Upload Records</h2>
   </div>
 
-
   <!-- ================= BATCH TABLE ================= -->
   <div class="tl-table-card" *ngIf="batches.length; else emptyState">
 
@@ -35,7 +34,7 @@
           <td>
             <button class="tl-btn-view"
                     (click)="openStudents(batch)">
-              👁 View
+              <mat-icon>visibility</mat-icon> View
             </button>
           </td>
 
@@ -43,7 +42,7 @@
           <td>
             <button class="tl-btn-download"
                     (click)="downloadBatch(batch)">
-              📥 Download All
+              <mat-icon>download</mat-icon> Download All
             </button>
           </td>
 
@@ -52,7 +51,6 @@
     </table>
 
   </div>
-
 
   <!-- ================= EMPTY STATE ================= -->
   <ng-template #emptyState>
@@ -63,8 +61,6 @@
   </ng-template>
 
 </div>
-
-
 
 <!-- ================= STUDENT MODAL ================= -->
 
@@ -77,7 +73,9 @@
         {{ selectedBatch?.college_name }}
         ({{ selectedBatch?.students.length }} Students)
       </h3>
-      <button (click)="closeStudents()">✕</button>
+      <button (click)="closeStudents()">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
 
     <div class="tl-modal-body">
@@ -108,7 +106,7 @@
             <td>
               <button class="tl-btn-view"
                       (click)="openCalendar(s)">
-                📅 Attendance
+                <mat-icon>event</mat-icon> Attendance
               </button>
             </td>
 
@@ -116,7 +114,7 @@
             <td>
               <button class="tl-btn-single"
                       (click)="downloadStudent(s)">
-                📄 Download
+                <mat-icon>picture_as_pdf</mat-icon> Download
               </button>
             </td>
 
@@ -132,8 +130,6 @@
 
 </div>
 
-
-
 <!-- ================= ATTENDANCE MODAL ================= -->
 
 <div class="tl-modal-backdrop" *ngIf="showCalendar">
@@ -142,7 +138,9 @@
 
     <div class="tl-modal-header">
       <h3>{{ selectedStudent?.student_name }}</h3>
-      <button (click)="closeCalendar()">✕</button>
+      <button (click)="closeCalendar()">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
 
     <div class="calendar-grid">

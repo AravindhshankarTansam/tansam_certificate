@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ApiService } from "../../../../services/api.service";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: "app-tl-sdp-bulk-upload",
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,MatIconModule],
   templateUrl: "./tl-sdpbulkupload.component.html",
   styleUrls: ["./tl-sdpbulkupload.component.css"]
 })
