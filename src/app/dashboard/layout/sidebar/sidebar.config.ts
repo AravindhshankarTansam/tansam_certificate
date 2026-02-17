@@ -111,6 +111,14 @@ TEAM_LEAD: [
             { label:'Industrial Visits', route: '/dashboard/finance/transactions/industrial-visits' }
           ]
         },
+          {
+        label: 'Academia',
+        children: [
+          { label: 'SDP Bulk Upload', route: '/dashboard/finance/transactions/sdp-bulk-upload' },
+          { label: 'FDP Bulk Upload', route: '/dashboard/finance/transactions/fdp-bulk-upload' },
+          { label: 'Industry Bulk Upload', route: '/dashboard/finance/transactions/industry-bulk-upload' }
+        ]
+      },
 
         { label: 'Reports', route: '/dashboard/finance/reports' }
       ]
