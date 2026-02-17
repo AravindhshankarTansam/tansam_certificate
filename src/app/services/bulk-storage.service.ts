@@ -16,5 +16,16 @@ export class BulkStorageService {
   getSdpBatches() {
     return this.sdpBatches;
   }
+  
+  /* ================= FDP ================= */
+  private fdpBatches: any[] = [];
+
+  addFdpBatch(batch: any) {
+    this.fdpBatches.push(batch);
+  }
+
+  getFdpBatches() {
+    return this.fdpBatches;
+  }
 
 }

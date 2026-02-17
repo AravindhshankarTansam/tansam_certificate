@@ -1,77 +1,39 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
-import { ApiService } from "../../../../services/api.service";
+import { BulkStorageService } from '../../../../services/bulk-storage.service';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-    selector:'  app-tl-fdp-bulk-upload',
-    standalone:true,
-    imports:[CommonModule,MatIconModule],
-    templateUrl: './tl-fdpbulkupload.component.html',
-    styleUrls: ['./tl-fdpbulkupload.component.css']
+  selector: 'app-tl-fdp-bulk-upload',
+  standalone: true,
+  imports: [CommonModule, MatIconModule],
+  templateUrl: './tl-fdpbulkupload.component.html',
+  styleUrls: ['./tl-fdpbulkupload.component.css']
 })
-export class TlFdpBulkUploadComponent implements OnInit{
-   
+export class TlFdpBulkUploadComponent implements OnInit {
+
   batches: any[] = [];
 
   showFacultyModal = false;
   selectedBatch: any = null;
-    showStudentsModal = false;
-
 
   showCalendar = false;
   selectedStudent: any = null;
 
   calendarDays: string[] = [];
 
+  constructor(private bulkStorage: BulkStorageService) {}
 
-  constructor(private api: ApiService) {}
-
-  ngOnInit() {
-    this.loadFaculties();
+  ngOnInit(): void {
+    this.loadBatches();
   }
 
-  /* ================= LOAD FROM DATABASE ================= */
-
-  loadFaculties() {
-
-    this.api.getTlFDP().subscribe((res: any[]) => {
-
-      console.log('🔥 FDP Raw Data =>', res);
-
-      this.batches = this.groupByBatch(res);
-
-      console.log('📦 Grouped Batches =>', this.batches);
-    });
+  /* LOAD FROM SHARED STORAGE */
+  loadBatches() {
+    this.batches = this.bulkStorage.getFdpBatches();
   }
 
-  /* ================= GROUP BY COLLEGE + DATE ================= */
-
-  groupByBatch(data: any[]) {
-
-    const grouped: any = {};
-
-    data.forEach(f => {
-
-      const key = `${f.college_name}_${f.from_date}_${f.to_date}`;
-
-      if (!grouped[key]) {
-        grouped[key] = {
-          college_name: f.college_name,
-          from_date: f.from_date,
-          to_date: f.to_date,
-          faculties: []
-        };
-      }
-
-      grouped[key].faculties.push(f);
-    });
-
-    return Object.values(grouped);
-  }
-
-  /* ================= VIEW ================= */
-
+  /* OPEN MODAL */
   openFaculties(batch: any) {
     this.selectedBatch = batch;
     this.showFacultyModal = true;
@@ -79,89 +41,61 @@ export class TlFdpBulkUploadComponent implements OnInit{
 
   closeFaculties() {
     this.showFacultyModal = false;
+    this.selectedBatch = null;
   }
 
-  /* ================= DOWNLOAD ================= */
-
+  /* DOWNLOAD */
   downloadBatch(batch: any) {
-    batch.faculties.forEach((f: any) => {
-      window.open(`http://localhost:5055/api/certificate/generate/fdp/${f.id}`);
-    });
+    alert("Download all FDP certificates (frontend demo)");
   }
 
   downloadFaculty(f: any) {
-    window.open(`http://localhost:5055/api/certificate/generate/fdp/${f.id}`);
-  }
-   /* ================= ATTENDANCE ================= */
-
-openCalendar(faculty: any) {
-
-  this.selectedStudent = faculty;
-  this.showCalendar = true;
-
-  this.generateDates(faculty.from_date, faculty.to_date);
-  this.loadHolidays();
-}
-
-closeCalendar() {
-  this.showCalendar = false;
-  this.selectedStudent = null;
-}
-
-
-/* ================= GENERATE DATE RANGE ================= */
-
-generateDates(from: string, to: string) {
-
-  const dates: string[] = [];
-
-  const start = new Date(from);
-  const end = new Date(to);
-
-  while (start <= end) {
-
-    const yyyy = start.getFullYear();
-    const mm = String(start.getMonth() + 1).padStart(2, '0');
-    const dd = String(start.getDate()).padStart(2, '0');
-
-    dates.push(`${yyyy}-${mm}-${dd}`);
-
-    start.setDate(start.getDate() + 1);
+    alert("Download certificate for: " + f.staff_name);
   }
 
-  this.calendarDays = dates;
-}
+  /* ATTENDANCE */
+  openCalendar(faculty: any) {
+    this.selectedStudent = faculty;
+    this.showCalendar = true;
+    this.generateDates(faculty.from_date, faculty.to_date);
+  }
 
+  closeCalendar() {
+    this.showCalendar = false;
+    this.selectedStudent = null;
+  }
 
-/* ================= LOAD HOLIDAYS ================= */
+  generateDates(from: string, to: string) {
+    const dates: string[] = [];
+    const start = new Date(from);
+    const end = new Date(to);
 
-loadHolidays() {
+    while (start <= end) {
+      dates.push(start.toISOString().slice(0, 10));
+      start.setDate(start.getDate() + 1);
+    }
 
-  if (!this.selectedStudent) return;
+    this.calendarDays = dates;
+  }
 
-  const year = new Date(this.selectedStudent.from_date).getFullYear();
+  isPresent(date: string) {
+    return this.selectedStudent?.present_dates?.includes(date);
+  }
 
-  this.api.getTlHolidays(year).subscribe({
-    next: (res: any[]) => {
-      this.holidays = res.map(h => h.holiday_date);
-    },
-    error: (err) => console.error(err)
-  });
-}
+  toggleDate(date: string) {
+    if (!this.selectedStudent) return;
 
+    if (!this.selectedStudent.present_dates) {
+      this.selectedStudent.present_dates = [];
+    }
 
-/* ================= UI HELPERS ================= */
+    const list = this.selectedStudent.present_dates;
 
-holidays: string[] = [];
-
-isPresent(date: string) {
-  return this.selectedStudent?.present_dates?.includes(date);
-}
-
-isHoliday(date: string) {
-  return this.holidays.includes(date);
-}
-
-
-
+    if (list.includes(date)) {
+      this.selectedStudent.present_dates =
+        list.filter((d: string) => d !== date);
+    } else {
+      list.push(date);
+    }
+  }
 }

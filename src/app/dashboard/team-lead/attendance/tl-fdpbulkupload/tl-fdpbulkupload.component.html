@@ -1,19 +1,16 @@
 <div class="tl-sdp-page">
 
-  <!-- ================= HEADER ================= -->
   <div class="tl-header">
     <h2>FDP Bulk Upload Records</h2>
   </div>
 
-
-  <!-- ================= BATCH TABLE ================= -->
   <div class="tl-table-card" *ngIf="batches.length; else emptyState">
 
     <table class="tl-table">
       <thead>
         <tr>
           <th>#</th>
-          <th>College</th>
+          <th>Institution</th>
           <th>From</th>
           <th>To</th>
           <th>Total Faculty</th>
@@ -26,24 +23,22 @@
         <tr *ngFor="let batch of batches; let i = index">
 
           <td>{{ i + 1 }}</td>
-          <td>{{ batch.college_name }}</td>
+          <td>{{ batch.institution_name }}</td>
           <td>{{ batch.from_date | date:'dd-MM-yyyy' }}</td>
           <td>{{ batch.to_date | date:'dd-MM-yyyy' }}</td>
-          <td>{{ batch.faculties.length }}</td>
+          <td>{{ batch.participants.length }}</td>
 
-          <!-- VIEW FACULTIES -->
           <td>
             <button class="btn-view"
                     (click)="openFaculties(batch)">
-                  <mat-icon>visibility</mat-icon> View
+              <mat-icon>visibility</mat-icon> View
             </button>
           </td>
 
-          <!-- DOWNLOAD FULL BATCH -->
           <td>
             <button class="btn-download"
                     (click)="downloadBatch(batch)">
-          <mat-icon>download</mat-icon> Download All
+              <mat-icon>download</mat-icon> Download All
             </button>
           </td>
 
@@ -53,8 +48,6 @@
 
   </div>
 
-
-  <!-- ================= EMPTY STATE ================= -->
   <ng-template #emptyState>
     <div class="tl-empty">
       <h3>No FDP Bulk Uploads Yet</h3>
@@ -65,8 +58,7 @@
 </div>
 
 
-
-<!-- ================= FACULTY MODAL ================= -->
+<!-- FACULTY MODAL -->
 
 <div class="tl-modal-backdrop" *ngIf="showFacultyModal">
 
@@ -74,8 +66,8 @@
 
     <div class="tl-modal-header">
       <h3>
-        {{ selectedBatch?.college_name }}
-        ({{ selectedBatch?.faculties.length }} Faculty)
+        {{ selectedBatch?.institution_name }}
+        ({{ selectedBatch?.participants.length }} Faculty)
       </h3>
       <button (click)="closeFaculties()">✕</button>
     </div>
@@ -88,7 +80,6 @@
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Faculty ID</th>
             <th>Department</th>
             <th>Attendance</th>
             <th>Download</th>
@@ -98,34 +89,30 @@
 
         <tbody>
 
-          <tr *ngFor="let f of selectedBatch?.faculties; let i = index">
+          <tr *ngFor="let f of selectedBatch?.participants; let i = index">
 
             <td>{{ i + 1 }}</td>
             <td>{{ f.staff_name }}</td>
-            <td>{{ f.staff_id_no }}</td>
             <td>{{ f.department }}</td>
 
-            <!-- ATTENDANCE -->
             <td>
               <button class="btn-primary"
                       (click)="openCalendar(f)">
-             <mat-icon>event</mat-icon> Attendance
+                <mat-icon>event</mat-icon> Attendance
               </button>
             </td>
 
-            <!-- DOWNLOAD -->
             <td>
               <button class="btn-download"
                       (click)="downloadFaculty(f)">
-                          <mat-icon>download</mat-icon> Download 
+                <mat-icon>download</mat-icon> Download
               </button>
             </td>
 
-            <!-- VIEW CERT -->
             <td>
               <button class="btn-view"
                       (click)="downloadFaculty(f)">
-           <mat-icon>visibility</mat-icon> View
+                <mat-icon>visibility</mat-icon> View
               </button>
             </td>
 
@@ -141,7 +128,8 @@
 
 </div>
 
-<!-- ================= ATTENDANCE MODAL ================= -->
+
+<!-- ATTENDANCE MODAL -->
 
 <div class="tl-modal-backdrop" *ngIf="showCalendar">
 
@@ -158,7 +146,7 @@
         *ngFor="let d of calendarDays"
         class="day"
         [class.present]="isPresent(d)"
-        [class.holiday]="isHoliday(d)">
+        (click)="toggleDate(d)">
 
         {{ d.split('-')[2] }}
 
@@ -176,4 +164,3 @@
   </div>
 
 </div>
-
