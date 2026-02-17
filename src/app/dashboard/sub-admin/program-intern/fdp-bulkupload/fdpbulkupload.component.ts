@@ -20,6 +20,9 @@ export class FdpBulkUploadComponent {
   showPreviewModal = false;
   uploadedData: any[] = [];
   tableHeaders: string[] = [];
+    batches: any[] = [];
+  selectedBatch: any = null;
+  showBatchDetails = false;
 
   selectedFile: File | null = null;
   fileName = '';
@@ -46,10 +49,42 @@ export class FdpBulkUploadComponent {
     this.fileName = file.name;
   }
 
-  uploadFile() {
-    if (!this.selectedFile) return;
-    this.readExcel(this.selectedFile);
-  }
+uploadFile() {
+  if (!this.selectedFile) return;
+
+  const reader = new FileReader();
+
+  reader.onload = (e: any) => {
+
+    const workbook = XLSX.read(e.target.result, { type: 'binary' });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const data = XLSX.utils.sheet_to_json<any>(sheet, { defval: '' });
+
+    if (!data.length) {
+      alert('Excel sheet is empty');
+      return;
+    }
+
+    const headers = Object.keys(data[0]);
+    const missing = this.requiredHeaders.filter(h => !headers.includes(h));
+
+    if (missing.length) {
+      alert('Missing columns: ' + missing.join(', '));
+      return;
+    }
+
+    // Attach form values
+    this.uploadedData = data.map(row => ({
+      ...row,
+      from_date: this.fromDate,
+      to_date: this.toDate
+    }));
+
+  };
+
+  reader.readAsBinaryString(this.selectedFile);
+}
+
 
   /* DRAG EVENTS */
   onDragOver(event: DragEvent) {
@@ -109,13 +144,47 @@ export class FdpBulkUploadComponent {
   }
 
   /* CONFIRM */
-  confirmUpload() {
-    console.log('FDP Bulk Data:', this.uploadedData);
-    alert('Backend not connected yet');
-    this.showPreviewModal = false;
-  }
+confirmUpload() {
+
+  if (!this.uploadedData.length) return;
+
+  const newBatch = {
+    institution_name: this.institutionName,
+    institution_short_name: this.institutionShortName,
+    from_date: this.fromDate,
+    to_date: this.toDate,
+    total_participants: this.uploadedData.length,
+    participants: [...this.uploadedData]
+  };
+
+  // Store as single batch row
+  this.batches.push(newBatch);
+
+  // Clear preview
+  this.uploadedData = [];
+
+  // Reset file
+  this.selectedFile = null;
+  this.fileName = '';
+
+  // Reset form (optional)
+  this.institutionName = '';
+  this.institutionShortName = '';
+  this.fromDate = '';
+  this.toDate = '';
+}
+
 
   closePreview() {
     this.showPreviewModal = false;
+  }
+    viewBatch(batch: any) {
+    this.selectedBatch = batch;
+    this.showBatchDetails = true;
+  }
+
+  closeBatchDetails() {
+    this.showBatchDetails = false;
+    this.selectedBatch = null;
   }
 }

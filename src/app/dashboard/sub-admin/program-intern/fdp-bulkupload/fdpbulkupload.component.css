@@ -71,45 +71,64 @@
   margin-bottom: 2rem;
   align-items: flex-end;
 }
-
-/* Floating Input */
 .fdp-input-group {
   position: relative;
 }
 
+/* INPUT */
 .fdp-input-group input {
   width: 100%;
-  padding: 1.4rem 1rem 0.6rem;
+  height: 56px;
+  padding: 1.6rem 1rem 0.6rem;
   border-radius: 10px;
   border: 1.5px solid #cbd5e1;
   font-size: 0.95rem;
-  transition: 0.2s;
+  background: #fff;
   box-sizing: border-box;
+  transition: all 0.2s ease;
 }
 
+/* FOCUS */
 .fdp-input-group input:focus {
   border-color: #009999;
   box-shadow: 0 0 0 4px rgba(0,153,153,0.12);
   outline: none;
 }
 
+/* LABEL DEFAULT (CENTERED) */
 .fdp-input-group label {
   position: absolute;
-  top: 1.1rem;
   left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 0.95rem;
   color: #94a3b8;
   pointer-events: none;
-  transition: 0.2s;
+  transition: all 0.2s ease;
+  background: #fff;
+  padding: 0 4px;
 }
 
-.fdp-input-group input:focus + label,
-.fdp-input-group input:not(:placeholder-shown) + label {
-  top: 0.4rem;
+/* FLOAT LABEL ON FOCUS */
+.fdp-input-group input:focus + label {
+  top: 6px;
+  transform: none;
   font-size: 0.75rem;
   color: #009999;
-  background: white;
-  padding: 0 6px;
+}
+
+/* FLOAT LABEL WHEN INPUT HAS VALUE */
+.fdp-input-group input:not(:placeholder-shown),
+.fdp-input-group input:not([value=""]) {
+  padding-top: 1.6rem;
+}
+
+.fdp-input-group input:not(:placeholder-shown) + label,
+.fdp-input-group input:not([value=""]) + label {
+  top: 6px;
+  transform: none;
+  font-size: 0.75rem;
+  color: #009999;
 }
 
 /* =====================================================
@@ -290,4 +309,131 @@
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
+}
+/* DATE INPUT FIX */
+.fdp-input-group input[type="date"] {
+  padding: 1.4rem 1rem 0.6rem;
+}
+
+.fdp-input-group input[type="date"] + label {
+  top: 4px;
+  transform: none;
+  font-size: 0.75rem;
+  color: #009999;
+}
+/* =====================================================
+   PREVIEW & BATCH SECTION CARD
+===================================================== */
+.fdp-uploaded-section {
+  margin-top: 2.5rem;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+.fdp-uploaded-section h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f766e;
+  margin-bottom: 1.5rem;
+}
+
+/* =====================================================
+   TABLE WRAPPER
+===================================================== */
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+/* =====================================================
+   TABLE DESIGN
+===================================================== */
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* HEADER */
+.table-wrapper thead {
+  background: linear-gradient(135deg, #006666, #009999);
+  color: #ffffff;
+}
+
+.table-wrapper th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* BODY */
+.table-wrapper td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #334155;
+}
+
+/* Zebra rows */
+.table-wrapper tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Hover effect */
+.table-wrapper tbody tr:hover {
+  background: #ecfdf5;
+  transition: 0.2s ease;
+}
+
+/* =====================================================
+   CONFIRM BUTTON
+===================================================== */
+.modal-actions {
+  margin-top: 1.8rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.fdp-btn-primary {
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: #009999;
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.fdp-btn-primary:hover {
+  background: #007f7f;
+  transform: translateY(-2px);
+}
+
+/* =====================================================
+   BATCH VIEW BUTTON
+===================================================== */
+.table-wrapper button {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #0f766e;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.table-wrapper button:hover {
+  background: #065f5b;
+  transform: translateY(-1px);
 }
