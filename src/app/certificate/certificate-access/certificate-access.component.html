@@ -2,80 +2,85 @@
 
   <div class="certificate-card">
 
+    <!-- Decorative Glow -->
+    <div class="glow-circle"></div>
+
     <!-- HEADER -->
     <div class="header">
-      <h2 class="title">Certificate Access</h2>
-      <small class="subtitle">Enter your details to download your certificate</small><br />
-
-      <!-- LOGO -->
       <img
         src="assets/images/tansam-logo.png"
         alt="Organization Logo"
         class="logo"
       />
+      <h2 class="title">Certificate Access</h2>
+      <p class="subtitle">
+        Securely verify your identity to download your certificate
+      </p>
     </div>
 
     <!-- STEP 1 -->
     <div *ngIf="step === 1" class="step">
 
-      <label>Register / Staff ID</label>
-
-      <input
-        [(ngModel)]="idValue"
-        placeholder="Enter your ID"
-        class="input"
-      />
+      <div class="input-group">
+        <input
+          [(ngModel)]="idValue"
+          required
+          placeholder=" "
+        />
+        <label>Register / Staff ID</label>
+      </div>
 
       <button class="btn primary" (click)="verifyId()">
-        Verify ID
+        Continue
       </button>
 
     </div>
 
-    <!-- STEP 2 -->
-<!-- STEP 2 -->
-<div *ngIf="step === 2" class="step otp-step">
+    <!-- STEP 2 OTP -->
+    <div *ngIf="step === 2" class="step otp-step">
 
-  <label class="otp-label">Enter OTP</label>
+      <h3 class="otp-title">Enter Verification Code</h3>
+      <p class="otp-sub">
+        We sent a 6-digit verification code
+      </p>
 
-  <div class="otp-container">
-    <input maxlength="1" class="otp-input" #otp1 (input)="moveNext($event, otp2)" />
-    <input maxlength="1" class="otp-input" #otp2 (input)="moveNext($event, otp3)" (keydown)="movePrev($event, otp1)" />
-    <input maxlength="1" class="otp-input" #otp3 (input)="moveNext($event, otp4)" (keydown)="movePrev($event, otp2)" />
-    <input maxlength="1" class="otp-input" #otp4 (input)="moveNext($event, otp5)" (keydown)="movePrev($event, otp3)" />
-    <input maxlength="1" class="otp-input" #otp5 (input)="moveNext($event, otp6)" (keydown)="movePrev($event, otp4)" />
-    <input maxlength="1" class="otp-input" #otp6 (keydown)="movePrev($event, otp5)" />
-  </div>
+      <div class="otp-container">
+        <input maxlength="1" class="otp-input" #otp1 (input)="moveNext($event, otp2)" />
+        <input maxlength="1" class="otp-input" #otp2 (input)="moveNext($event, otp3)" (keydown)="movePrev($event, otp1)" />
+        <input maxlength="1" class="otp-input" #otp3 (input)="moveNext($event, otp4)" (keydown)="movePrev($event, otp2)" />
+        <input maxlength="1" class="otp-input" #otp4 (input)="moveNext($event, otp5)" (keydown)="movePrev($event, otp3)" />
+        <input maxlength="1" class="otp-input" #otp5 (input)="moveNext($event, otp6)" (keydown)="movePrev($event, otp4)" />
+        <input maxlength="1" class="otp-input" #otp6 (keydown)="movePrev($event, otp5)" />
+      </div>
 
-  <button class="btn primary verify-btn" (click)="collectOtpAndVerify()">
-    Verify OTP
-  </button>
+      <button class="btn primary verify-btn" (click)="collectOtpAndVerify()">
+        Verify Code
+      </button>
 
-</div>
+    </div>
 
-
-    <!-- STEP 3 -->
+    <!-- STEP 3 PROFILE -->
     <div *ngIf="step === 3 && profile" class="profile">
 
-      <h3>Profile Details</h3>
+      <h3 class="success-title">
+        <mat-icon class="success-icon">verified</mat-icon>
+        Verified Successfully
+      </h3>
+
 
       <div class="profile-box">
-
         <p>
           <span>Name</span>
           {{ profile.student_name || profile.staff_name || profile.industry_staff_name }}
         </p>
-
         <p>
           <span>Institution</span>
           {{ profile.college_name || profile.industry_name }}
         </p>
-
         <p>
           <span>Programme</span>
           {{ profile.department || profile.designation_name }}
         </p>
-
       </div>
 
       <button class="btn download" (click)="download()">
