@@ -6,10 +6,10 @@ import { Component, HostListener } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.css',
 })
 export class HeaderComponent {
- role: string = '';
+  role: string = '';
   lab: string = '';
   showDropdown = false;
 
@@ -17,7 +17,7 @@ export class HeaderComponent {
     const storedRole = localStorage.getItem('role');
     const storedLab = localStorage.getItem('lab_name');
 
-    this.role = storedRole ? storedRole.replace(/_/g, ' ') : '';
+    this.role = storedRole ? storedRole.replace(/_/g, ' ').toLowerCase() : '';
     this.lab = storedLab ? storedLab : '';
   }
 
