@@ -121,6 +121,19 @@
   font-size: 0.75rem;
   color: #009999;
 }
+.floating-label input[type="date"] + label {
+  top: 4px !important;
+  transform: none !important;
+  font-size: 0.75rem !important;
+  color: #009999;
+  background: #fff;
+  padding: 0 4px;
+}
+
+/* Remove center alignment logic for date */
+.floating-label input[type="date"] {
+  height: 56px;
+}
 
 
 
