@@ -33,21 +33,26 @@
     </div>
 
     <!-- STEP 2 -->
-    <div *ngIf="step === 2" class="step">
+<!-- STEP 2 -->
+<div *ngIf="step === 2" class="step otp-step">
 
-      <label>Enter OTP</label>
+  <label class="otp-label">Enter OTP</label>
 
-      <input
-        [(ngModel)]="otp"
-        placeholder="Enter OTP"
-        class="input"
-      />
+  <div class="otp-container">
+    <input maxlength="1" class="otp-input" #otp1 (input)="moveNext($event, otp2)" />
+    <input maxlength="1" class="otp-input" #otp2 (input)="moveNext($event, otp3)" (keydown)="movePrev($event, otp1)" />
+    <input maxlength="1" class="otp-input" #otp3 (input)="moveNext($event, otp4)" (keydown)="movePrev($event, otp2)" />
+    <input maxlength="1" class="otp-input" #otp4 (input)="moveNext($event, otp5)" (keydown)="movePrev($event, otp3)" />
+    <input maxlength="1" class="otp-input" #otp5 (input)="moveNext($event, otp6)" (keydown)="movePrev($event, otp4)" />
+    <input maxlength="1" class="otp-input" #otp6 (keydown)="movePrev($event, otp5)" />
+  </div>
 
-      <button class="btn primary" (click)="verifyOtp()">
-        Verify OTP
-      </button>
+  <button class="btn primary verify-btn" (click)="collectOtpAndVerify()">
+    Verify OTP
+  </button>
 
-    </div>
+</div>
+
 
     <!-- STEP 3 -->
     <div *ngIf="step === 3 && profile" class="profile">

@@ -55,6 +55,30 @@ export class CertificateAccessComponent implements OnInit {
       error: () => alert('Invalid OTP')
     });
   }
+  moveNext(event: any, nextInput: any) {
+  if (event.target.value.length === 1 && nextInput) {
+    nextInput.focus();
+  }
+}
+
+movePrev(event: any, prevInput: any) {
+  if (event.key === 'Backspace' && !event.target.value && prevInput) {
+    prevInput.focus();
+  }
+}
+
+collectOtpAndVerify() {
+  const inputs = document.querySelectorAll('.otp-input');
+  let finalOtp = '';
+
+  inputs.forEach((input: any) => {
+    finalOtp += input.value;
+  });
+
+  this.otp = finalOtp;
+  this.verifyOtp();
+}
+
 
   /* ⭐ LOAD PROFILE */
   loadProfile() {
