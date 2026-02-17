@@ -19,6 +19,9 @@ import { FinancereportsComponent } from './dashboard/finance/financereports/fina
 import { TransactionsSdpComponent } from './dashboard/finance/transactions/transactions-sdp/transactions-sdp.component';
 import { TransactionsFdpComponent } from './dashboard/finance/transactions/transactions-fdp/transactions-fdp.component';
 import { TransactionsIndustryComponent } from './dashboard/finance/transactions/transactions-industry/transactions-industry.component';
+import { TransactionsFdpBulkUploadComponent } from './dashboard/finance/transactions/transactions-fdpbulkupload/transactions-fdpbulkupload.component';
+import { TransactionsIndustryBulkUploadComponent } from './dashboard/finance/transactions/transactions-industrybulkupload/transactions-industrybulkupload.component';
+import { TransactionsSdpBulkUploadComponent } from './dashboard/finance/transactions/transactions-sdpbulkupload/transactions-sdpbulkupload.component';
 import { HolidayComponent } from './dashboard/admin/master-table/holiday/holidays.component';
 // Team Lead
 import { TeamLeadDashboardComponent } from './dashboard/team-lead/team-lead-dashboard/team-lead-dashboard.component';
@@ -37,11 +40,10 @@ import { CertificateAccessComponent } from './certificate/certificate-access/cer
 
 
 export const routes: Routes = [
-
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'verify/:certNo', component: VerifyComponent },
-  { path: 'certificate-access/:token', component: CertificateAccessComponent},
+  { path: 'certificate-access/:token', component: CertificateAccessComponent },
   {
     path: 'dashboard',
     component: LayoutComponent,
@@ -56,8 +58,14 @@ export const routes: Routes = [
       // Admin Certificate Routes
       { path: 'admin/certificates/sdp', component: CertificateSdpComponent },
       { path: 'admin/certificates/fdp', component: CertificateFdpComponent },
-      { path: 'admin/certificates/industry', component: CertificateIndustryComponent },
-      { path: 'admin/certificates/industrial-visits', component: CertificateIndustrialVisitsComponent },
+      {
+        path: 'admin/certificates/industry',
+        component: CertificateIndustryComponent,
+      },
+      {
+        path: 'admin/certificates/industrial-visits',
+        component: CertificateIndustrialVisitsComponent,
+      },
       // Sub Admin Routes
       { path: 'sub-admin/dashboard', component: SubAdminComponent },
       { path: 'sub-admin/sdp', component: SdpComponent },
@@ -65,18 +73,54 @@ export const routes: Routes = [
       { path: 'sub-admin/industry', component: IndustryComponent },
       { path: 'sub-admin/bulk-upload', component: BulkUploadComponent },
       { path: 'sub-admin/reports', component: ReportsComponent },
-      {path: 'sub-admin/sdp-bulk-upload', loadComponent: () => import('./dashboard/sub-admin/program-intern/sdp-bulkupload/sdpbulkupload.component').then(m => m.SdpBulkUploadComponent)},
-      {path: 'sub-admin/fdp-bulk-upload', loadComponent: () => import('./dashboard/sub-admin/program-intern/fdp-bulkupload/fdpbulkupload.component').then(m => m.FdpBulkUploadComponent)},
-      {path: 'sub-admin/industry-bulk-upload', loadComponent: () => import('./dashboard/sub-admin/program-intern/industry-bulkupload/industrybulkupload.component').then(m => m.IndustryBulkUploadComponent)},
+      {
+        path: 'sub-admin/sdp-bulk-upload',
+        loadComponent: () =>
+          import('./dashboard/sub-admin/program-intern/sdp-bulkupload/sdpbulkupload.component').then(
+            (m) => m.SdpBulkUploadComponent,
+          ),
+      },
+      {
+        path: 'sub-admin/fdp-bulk-upload',
+        loadComponent: () =>
+          import('./dashboard/sub-admin/program-intern/fdp-bulkupload/fdpbulkupload.component').then(
+            (m) => m.FdpBulkUploadComponent,
+          ),
+      },
+      {
+        path: 'sub-admin/industry-bulk-upload',
+        loadComponent: () =>
+          import('./dashboard/sub-admin/program-intern/industry-bulkupload/industrybulkupload.component').then(
+            (m) => m.IndustryBulkUploadComponent,
+          ),
+      },
       // Team Lead Routes
       { path: 'teamlead/dashboard', component: TeamLeadDashboardComponent },
       { path: 'teamlead/sdp', component: TlSdpComponent },
       { path: 'teamlead/fdp', component: TlFdpComponent },
       { path: 'teamlead/industry', component: TlIndustryComponent },
       { path: 'teamlead/not-eligible', component: TlNotEligibleComponent },
-      {path: 'teamlead/sdp-bulk-upload', loadComponent: () => import('./dashboard/team-lead/attendance/tl-sdpbulkupload/tl-sdpbulkupload.component').then(m => m.TlSdpBulkUploadComponent)},
-      {path: 'teamlead/fdp-bulk-upload', loadComponent: () => import('./dashboard/team-lead/attendance/tl-fdpbulkupload/tl-fdpbulkupload.component').then(m => m.TlFdpBulkUploadComponent)},
-      {path: 'teamlead/industry-bulk-upload', loadComponent: () => import('./dashboard/team-lead/attendance/tl-industryupload/tl-industryupload.component').then(m => m.TlIndustryUploadComponent)},
+      {
+        path: 'teamlead/sdp-bulk-upload',
+        loadComponent: () =>
+          import('./dashboard/team-lead/attendance/tl-sdpbulkupload/tl-sdpbulkupload.component').then(
+            (m) => m.TlSdpBulkUploadComponent,
+          ),
+      },
+      {
+        path: 'teamlead/fdp-bulk-upload',
+        loadComponent: () =>
+          import('./dashboard/team-lead/attendance/tl-fdpbulkupload/tl-fdpbulkupload.component').then(
+            (m) => m.TlFdpBulkUploadComponent,
+          ),
+      },
+      {
+        path: 'teamlead/industry-bulk-upload',
+        loadComponent: () =>
+          import('./dashboard/team-lead/attendance/tl-industryupload/tl-industryupload.component').then(
+            (m) => m.TlIndustryUploadComponent,
+          ),
+      },
 
       // Finance Routes
       { path: 'finance/dashboard', component: FinanceDashboardComponent },
@@ -87,14 +131,28 @@ export const routes: Routes = [
           { path: 'sdp', component: TransactionsSdpComponent },
           { path: 'fdp', component: TransactionsFdpComponent },
           { path: 'industry', component: TransactionsIndustryComponent },
-          { path: 'industrial-visits', component: TransactionsIndustrialVisitsComponent },
-          { path: '', redirectTo: 'sdp', pathMatch: 'full' }
-        ]
+          {
+            path: 'industrial-visits',
+            component: TransactionsIndustrialVisitsComponent,
+          },
+          // Academia (Bulk Upload)
+          {
+            path: 'sdp-bulk-upload',
+            component: TransactionsSdpBulkUploadComponent,
+          },
+          {
+            path: 'fdp-bulk-upload',
+            component: TransactionsFdpBulkUploadComponent,
+          },
+          {
+            path: 'industry-bulk-upload',
+            component: TransactionsIndustryBulkUploadComponent,
+          },
+          { path: '', redirectTo: 'sdp', pathMatch: 'full' },
+        ],
       },
+
       { path: 'finance/reports', component: FinancereportsComponent },
-
-    ]
+    ],
   },
-
-
 ];

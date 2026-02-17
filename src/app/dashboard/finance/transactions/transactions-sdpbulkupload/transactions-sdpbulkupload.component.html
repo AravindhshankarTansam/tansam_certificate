@@ -1,0 +1,119 @@
+<div class="bulk-upload-page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>SDP Transactions – Bulk Upload</h1>
+    <p>Upload transaction details using Excel / CSV file</p>
+  </div>
+
+  <!-- Upload Card -->
+  <div class="modern-card">
+
+    <div class="card-header">
+      <h2>New SDP Transaction Upload</h2>
+      <p class="subtitle">Enter details and upload Excel file</p>
+    </div>
+
+    <!-- ================= FORM ROW ================= -->
+    <div class="form-row">
+
+      <!-- College Name -->
+      <div class="input-group floating-label college-wide">
+        <input type="text"
+               placeholder=" "
+               [(ngModel)]="collegeName" />
+      <label [class.active]="collegeName">College Name</label>
+      </div>
+
+      <!-- College Short Name -->
+      <div class="input-group floating-label short-input">
+        <input type="text"
+               placeholder=" "
+               [(ngModel)]="collegeShortName" />
+      <label [class.active]="collegeShortName">College Short Code</label>
+      </div>
+
+      <!-- From Date -->
+      <div class="input-group floating-label short-input">
+        <input type="date"
+               [(ngModel)]="fromDate" />
+    <label [class.active]="fromDate">From Date</label>
+      </div>
+
+      <!-- To Date -->
+      <div class="input-group floating-label short-input">
+        <input type="date"
+               [(ngModel)]="toDate" />
+        <label [class.active]="toDate">To Date</label>
+      </div>
+
+    </div>
+
+    <!-- ================= DROPZONE ================= -->
+    <div class="modern-dropzone"
+         (click)="fileInput.click()">
+
+      <div class="icon-circle">
+        <i class="fa-solid fa-cloud-arrow-up fa-2x"></i>
+      </div>
+
+      <p class="drop-text">Drag & drop your Excel file here</p>
+      <p class="or">or</p>
+      <p class="browse-text">Click to Browse File</p>
+
+      <input
+        #fileInput
+        type="file"
+        accept=".xlsx,.xls,.csv"
+        (change)="onFileSelected($event)"
+        hidden
+      />
+    </div>
+
+    <!-- Selected File -->
+    <div class="file-status" *ngIf="fileName">
+      Selected File: <strong>{{ fileName }}</strong>
+    </div>
+
+    <!-- Buttons -->
+    <div class="action-bar">
+
+      <button class="btn btn-outline"
+              (click)="downloadTemplate()">
+        Download Template
+      </button>
+
+      <button class="btn btn-primary"
+              [disabled]="!selectedFile || !collegeName || !fromDate || !toDate"
+              (click)="uploadFile()">
+        Upload Excel
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Uploaded Transactions -->
+  <div class="modern-section" *ngIf="rows.length">
+    <h3>Uploaded Transactions</h3>
+
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th *ngFor="let h of tableHeaders">
+            {{ h | titlecase }}
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let row of rows">
+          <td *ngFor="let h of tableHeaders">
+            {{ row[h] || '—' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

@@ -1,0 +1,206 @@
+<div class="bulk-upload-page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Industry Transactions – Bulk Upload</h1>
+    <p>Upload Industry staff transaction details using Excel / CSV file</p>
+  </div>
+
+  <!-- Upload Card -->
+  <div class="modern-card">
+
+    <div class="card-header">
+      <h2>New Industry Transaction Upload</h2>
+      <p class="subtitle">Enter details and upload Excel file</p>
+    </div>
+
+    <!-- Form Row -->
+    <div class="form-row">
+
+     <div class="input-group floating-label">
+  <input type="text"
+         [(ngModel)]="collegeName" />
+  <label [class.active]="collegeName">College Name</label>
+</div>
+
+<div class="input-group floating-label">
+  <input type="text"
+         [(ngModel)]="collegeShortCode" />
+  <label [class.active]="collegeShortCode">College Short Code</label>
+</div>
+
+<div class="input-group floating-label">
+  <input type="date"
+         [(ngModel)]="fromDate" />
+  <label [class.active]="fromDate">From Date</label>
+</div>
+
+<div class="input-group floating-label">
+  <input type="date"
+         [(ngModel)]="toDate" />
+  <label [class.active]="toDate">To Date</label>
+</div>
+
+
+    </div>
+
+    <!-- Dropzone -->
+    <div class="modern-dropzone"
+         (click)="fileInput.click()">
+
+      <div class="icon-circle">
+        <i class="fa-solid fa-cloud-arrow-up fa-2x"></i>
+      </div>
+
+      <p class="drop-text">Drag & drop your Excel file here</p>
+      <p class="or">or</p>
+      <p class="browse-text">Click to Browse File</p>
+
+      <input
+        #fileInput
+        type="file"
+        accept=".xlsx,.xls,.csv"
+        (change)="onFileSelected($event)"
+        hidden
+      />
+    </div>
+
+    <div class="file-status" *ngIf="fileName">
+      Selected File: <strong>{{ fileName }}</strong>
+    </div>
+
+    <div class="action-bar">
+
+      <button class="btn btn-outline"
+              (click)="downloadTemplate()">
+        <i class="fa-solid fa-file-arrow-down"></i>
+        Download Template
+      </button>
+
+      <button class="btn btn-primary"
+              [disabled]="!selectedFile"
+              (click)="uploadFile()">
+        <i class="fa-solid fa-upload"></i>
+        Upload Excel
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- ================= INLINE PREVIEW ================= -->
+  <div class="modern-section"
+       *ngIf="showPreview && uploadedData.length">
+
+    <h3>Industry Transactions – Preview (Inline)</h3>
+
+    <div class="modal-info">
+      <p><strong>College:</strong> {{ collegeName }}</p>
+      <p>
+        <strong>Date Range:</strong>
+        {{ fromDate | date:'dd-MM-yyyy' }} -
+        {{ toDate | date:'dd-MM-yyyy' }}
+      </p>
+      <p>Total Records:
+        <strong>{{ uploadedData.length }}</strong>
+      </p>
+    </div>
+
+    <div class="preview-table-wrapper">
+      <table class="preview-table">
+        <thead>
+          <tr>
+            <th *ngFor="let h of tableHeaders">
+              {{ h | titlecase }}
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of uploadedData">
+            <td *ngFor="let h of tableHeaders">
+              {{ row[h] || '—' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ================= UPLOADED TABLE ================= -->
+  <div class="modern-section" *ngIf="rows.length">
+
+    <h3>Uploaded Industry Transactions</h3>
+
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th *ngFor="let h of tableHeaders">
+            {{ h | titlecase }}
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let row of rows">
+          <td *ngFor="let h of tableHeaders">
+            {{ row[h] || '—' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- ================= FULLSCREEN MODAL ================= -->
+  <div class="modal-backdrop" *ngIf="showPreview">
+
+    <div class="modal fullscreen">
+
+      <div class="modal-header">
+        <h2>Industry Transactions – Preview</h2>
+      </div>
+
+      <div class="modal-info">
+        Total Records:
+        <strong>{{ uploadedData.length }}</strong>
+      </div>
+
+      <div class="preview-table-wrapper">
+        <table class="preview-table">
+
+          <thead>
+            <tr>
+              <th *ngFor="let h of tableHeaders">
+                {{ h | titlecase }}
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let row of uploadedData">
+              <td *ngFor="let h of tableHeaders">
+                {{ row[h] || '—' }}
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline"
+                (click)="showPreview = false">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary"
+                (click)="confirmUpload()">
+          Confirm Upload
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
