@@ -15,7 +15,7 @@ export class IndustryBulkUploadComponent {
   /* ================= BASIC INFO ================= */
   industryName = '';
   industryShortCode = '';
-   fromDate = '';
+  fromDate = '';
   toDate = '';
 
   /* ================= FILE ================= */
@@ -24,11 +24,14 @@ export class IndustryBulkUploadComponent {
   isDragActive = false;
 
   /* ================= PREVIEW ================= */
-  showPreviewModal = false;
   uploadedData: any[] = [];
   tableHeaders: string[] = [];
 
-  /* Required headers for Industry */
+  /* ================= FINAL STORAGE ================= */
+  batches: any[] = [];
+  selectedBatch: any = null;
+  showBatchDetails = false;
+
   requiredHeaders = [
     'participant_name',
     'designation',
@@ -42,7 +45,6 @@ export class IndustryBulkUploadComponent {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (!file) return;
-
     this.selectedFile = file;
     this.fileName = file.name;
   }
@@ -68,7 +70,7 @@ export class IndustryBulkUploadComponent {
     }
   }
 
-  /* ================= TEMPLATE DOWNLOAD ================= */
+  /* ================= TEMPLATE ================= */
 
   downloadTemplate() {
     const ws = XLSX.utils.aoa_to_sheet([this.requiredHeaders]);
@@ -95,7 +97,6 @@ export class IndustryBulkUploadComponent {
       }
 
       const headers = Object.keys(data[0]);
-
       const missing = this.requiredHeaders.filter(h => !headers.includes(h));
 
       if (missing.length) {
@@ -103,27 +104,50 @@ export class IndustryBulkUploadComponent {
         return;
       }
 
-      this.uploadedData = data;
-      this.tableHeaders = headers;
-      this.showPreviewModal = true;
+      const enrichedData = data.map(row => ({
+        ...row,
+        industry_name: this.industryName,
+        industry_short_code: this.industryShortCode,
+        from_date: this.fromDate,
+        to_date: this.toDate
+      }));
+
+      this.uploadedData = enrichedData;
     };
 
     reader.readAsBinaryString(this.selectedFile);
   }
 
-  /* ================= CONFIRM UPLOAD ================= */
+  /* ================= CONFIRM ================= */
 
   confirmUpload() {
-    console.log('Industry Bulk Data:', this.uploadedData);
 
-    // Backend not connected yet
-    alert('Backend not connected yet');
+    const batch = {
+      industry_name: this.industryName,
+      industry_short_code: this.industryShortCode,
+      from_date: this.fromDate,
+      to_date: this.toDate,
+      total_participants: this.uploadedData.length,
+      participants: [...this.uploadedData]
+    };
 
-    this.showPreviewModal = false;
+    this.batches.push(batch);
+
+    this.uploadedData = [];
+    this.selectedFile = null;
+    this.fileName = '';
   }
 
-  closePreview() {
-    this.showPreviewModal = false;
+  /* ================= VIEW ================= */
+
+  viewBatch(batch: any) {
+    this.selectedBatch = batch;
+    this.showBatchDetails = true;
+  }
+
+  closeBatchDetails() {
+    this.showBatchDetails = false;
+    this.selectedBatch = null;
   }
 
 }
