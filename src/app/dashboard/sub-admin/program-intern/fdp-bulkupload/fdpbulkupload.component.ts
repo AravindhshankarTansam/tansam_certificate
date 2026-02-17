@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
+import { BulkStorageService } from '../../../../services/bulk-storage.service';
 
 @Component({
   selector: 'app-fdp-bulk-upload',
@@ -27,6 +28,11 @@ export class FdpBulkUploadComponent {
   selectedFile: File | null = null;
   fileName = '';
   isDragActive = false;
+  constructor(private bulkStorage: BulkStorageService) {}
+ngOnInit(): void {
+  this.batches = this.bulkStorage.getFdpBatches();
+}
+
 
   requiredHeaders = [
     'staff_name',
@@ -143,7 +149,6 @@ uploadFile() {
     XLSX.writeFile(wb, 'FDP_Bulk_Template.xlsx');
   }
 
-  /* CONFIRM */
 confirmUpload() {
 
   if (!this.uploadedData.length) return;
@@ -157,17 +162,17 @@ confirmUpload() {
     participants: [...this.uploadedData]
   };
 
-  // Store as single batch row
-  this.batches.push(newBatch);
+  /* ✅ STORE IN SHARED SERVICE */
+  this.bulkStorage.addFdpBatch(newBatch);
 
-  // Clear preview
+  /* ✅ REFRESH LOCAL LIST */
+  this.batches = this.bulkStorage.getFdpBatches();
+
+  /* CLEAR PREVIEW */
   this.uploadedData = [];
-
-  // Reset file
   this.selectedFile = null;
   this.fileName = '';
 
-  // Reset form (optional)
   this.institutionName = '';
   this.institutionShortName = '';
   this.fromDate = '';

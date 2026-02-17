@@ -162,7 +162,8 @@
               {{ b.from_date | date }} -
               {{ b.to_date | date }}
             </td>
-            <td>{{ b.total_participants }}</td>
+            <td>{{ b.participants?.length }}</td>
+
             <td>
               <button class="industry-btn-primary"
                       (click)="viewBatch(b)">

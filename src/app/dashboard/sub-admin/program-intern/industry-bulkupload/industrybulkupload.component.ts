@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
+import { BulkStorageService } from '../../../../services/bulk-storage.service';
+
 
 @Component({
   selector: 'app-industry-bulk-upload',
@@ -31,6 +33,9 @@ export class IndustryBulkUploadComponent {
   batches: any[] = [];
   selectedBatch: any = null;
   showBatchDetails = false;
+
+  constructor(private bulkStorage: BulkStorageService) {}
+
 
   requiredHeaders = [
     'participant_name',
@@ -120,23 +125,27 @@ export class IndustryBulkUploadComponent {
 
   /* ================= CONFIRM ================= */
 
-  confirmUpload() {
+confirmUpload() {
 
-    const batch = {
-      industry_name: this.industryName,
-      industry_short_code: this.industryShortCode,
-      from_date: this.fromDate,
-      to_date: this.toDate,
-      total_participants: this.uploadedData.length,
-      participants: [...this.uploadedData]
-    };
+  const batch = {
+    industry_name: this.industryName,
+    industry_short_code: this.industryShortCode,
+    from_date: this.fromDate,
+    to_date: this.toDate,
+    participants: [...this.uploadedData]
+  };
 
-    this.batches.push(batch);
+  // Save to shared service
+  this.bulkStorage.setIndustryBatch(batch);
 
-    this.uploadedData = [];
-    this.selectedFile = null;
-    this.fileName = '';
-  }
+  // Also show in subadmin page
+  this.batches.push(batch);
+
+  this.uploadedData = [];
+  this.selectedFile = null;
+  this.fileName = '';
+}
+
 
   /* ================= VIEW ================= */
 

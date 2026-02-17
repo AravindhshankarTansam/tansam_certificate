@@ -1,24 +1,20 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ApiService } from "../../../../services/api.service";
 import { MatIconModule } from '@angular/material/icon';
+import { BulkStorageService } from '../../../../services/bulk-storage.service';
+
 
 @Component({
   selector: "app-tl-sdp-bulk-upload",
   standalone: true,
-  imports: [CommonModule,MatIconModule],
+  imports: [CommonModule, MatIconModule],
   templateUrl: "./tl-sdpbulkupload.component.html",
   styleUrls: ["./tl-sdpbulkupload.component.css"]
 })
 export class TlSdpBulkUploadComponent implements OnInit {
 
-  /* ================= RAW STUDENTS FROM DB ================= */
-  students: any[] = [];
-
-  /* ================= GROUPED BATCHES ================= */
   batches: any[] = [];
 
-  /* ================= MODALS ================= */
   showStudentsModal = false;
   selectedBatch: any = null;
 
@@ -27,52 +23,17 @@ export class TlSdpBulkUploadComponent implements OnInit {
 
   calendarDays: string[] = [];
 
-  constructor(private api: ApiService) {}
+  constructor(private bulkStorage: BulkStorageService) {}
 
-  /* =========================================================
-     LOAD STUDENTS FROM DB
-  ========================================================= */
   ngOnInit(): void {
-    this.loadStudents();
+    this.loadBatches();
   }
 
-  loadStudents() {
-    this.api.getTlSDP().subscribe((res: any[]) => {
-      this.students = res;
-      this.groupBatches();
-    });
+  /* LOAD FROM SHARED STORAGE */
+  loadBatches() {
+    this.batches = this.bulkStorage.getSdpBatches();
   }
 
-  /* =========================================================
-     GROUP BY COLLEGE + FROM + TO  (BATCH LOGIC)
-  ========================================================= */
-  groupBatches() {
-
-    const map = new Map();
-
-    this.students.forEach((s: any) => {
-
-      const key = `${s.college_name}_${s.from_date}_${s.to_date}`;
-
-      if (!map.has(key)) {
-        map.set(key, {
-          college_name: s.college_name,
-          from_date: s.from_date,
-          to_date: s.to_date,
-          students: []
-        });
-      }
-
-      map.get(key).students.push(s);
-
-    });
-
-    this.batches = Array.from(map.values());
-  }
-
-  /* =========================================================
-     OPEN STUDENT LIST MODAL
-  ========================================================= */
   openStudents(batch: any) {
     this.selectedBatch = batch;
     this.showStudentsModal = true;
@@ -82,38 +43,17 @@ export class TlSdpBulkUploadComponent implements OnInit {
     this.showStudentsModal = false;
   }
 
-  /* =========================================================
-     DOWNLOAD FULL BATCH CERTIFICATES
-  ========================================================= */
   downloadBatch(batch: any) {
-
-    batch.students.forEach((s: any) => {
-      window.open(
-        `http://localhost:5055/api/certificate/generate/sdp/${s.id}`
-      );
-    });
-
+    alert("Download all certificates (frontend only demo)");
   }
 
-  /* =========================================================
-     DOWNLOAD SINGLE CERTIFICATE
-  ========================================================= */
   downloadStudent(student: any) {
-
-    window.open(
-      `http://localhost:5055/api/certificate/generate/sdp/${student.id}`
-    );
-
+    alert("Download certificate for: " + student.student_name);
   }
 
-  /* =========================================================
-     OPEN ATTENDANCE CALENDAR
-  ========================================================= */
   openCalendar(student: any) {
-
     this.selectedStudent = student;
     this.showCalendar = true;
-
     this.generateDates(student.from_date, student.to_date);
   }
 
@@ -121,9 +61,6 @@ export class TlSdpBulkUploadComponent implements OnInit {
     this.showCalendar = false;
   }
 
-  /* =========================================================
-     GENERATE DATE RANGE
-  ========================================================= */
   generateDates(from: string, to: string) {
 
     const dates: string[] = [];
@@ -139,9 +76,6 @@ export class TlSdpBulkUploadComponent implements OnInit {
     this.calendarDays = dates;
   }
 
-  /* =========================================================
-     ATTENDANCE HELPERS
-  ========================================================= */
   isPresent(date: string) {
     return this.selectedStudent?.present_dates?.includes(date);
   }
@@ -150,7 +84,11 @@ export class TlSdpBulkUploadComponent implements OnInit {
 
     if (!this.selectedStudent) return;
 
-    const list = this.selectedStudent.present_dates || [];
+    if (!this.selectedStudent.present_dates) {
+      this.selectedStudent.present_dates = [];
+    }
+
+    const list = this.selectedStudent.present_dates;
 
     if (list.includes(date)) {
       this.selectedStudent.present_dates =
@@ -159,8 +97,6 @@ export class TlSdpBulkUploadComponent implements OnInit {
       list.push(date);
     }
 
-    /* call backend to update */
-    this.api.markTlSDPDate(this.selectedStudent.id, date).subscribe();
   }
 
 }

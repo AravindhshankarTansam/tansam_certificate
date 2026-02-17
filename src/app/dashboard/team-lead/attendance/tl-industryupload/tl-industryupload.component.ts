@@ -1,17 +1,18 @@
 import { Component, OnInit } from "@angular/core";
-import { ApiService } from "../../../../services/api.service";
 import { CommonModule } from "@angular/common";
 import { MatIconModule } from '@angular/material/icon';
+import { BulkStorageService } from '../../../../services/bulk-storage.service';
 
 @Component({
-    selector: 'app-tl-industry-bulk-upload',
-    standalone:true,
-    imports:[CommonModule,MatIconModule],
-    templateUrl: './tl-industryupload.component.html',
-    styleUrls: ['./tl-industryupload.component.css']
+  selector: 'app-tl-industry-bulk-upload',
+  standalone: true,
+  imports: [CommonModule, MatIconModule],
+  templateUrl: './tl-industryupload.component.html',
+  styleUrls: ['./tl-industryupload.component.css']
 })
 export class TlIndustryUploadComponent implements OnInit {
-     batches: any[] = [];
+
+  batches: any[] = [];
 
   showStaffModal = false;
   selectedBatch: any = null;
@@ -20,48 +21,20 @@ export class TlIndustryUploadComponent implements OnInit {
   selectedStaff: any = null;
 
   calendarDays: string[] = [];
-  holidays: string[] = [];
 
-  constructor(private api: ApiService) {}
+  constructor(private bulkStorage: BulkStorageService) {}
 
-  ngOnInit() {
-    this.loadStaff();
+  ngOnInit(): void {
+    this.loadBatches();
   }
 
-  /* ================= LOAD DATA ================= */
+  /* ================= LOAD FROM SERVICE ================= */
 
-  loadStaff() {
-    this.api.getTlIndustry().subscribe((res: any[]) => {
-      this.batches = this.groupByBatch(res);
-    });
+  loadBatches() {
+    this.batches = this.bulkStorage.getIndustryBatches();
   }
 
-  /* ================= GROUP BY INDUSTRY + DATE ================= */
-
-  groupByBatch(data: any[]) {
-
-    const grouped: any = {};
-
-    data.forEach(s => {
-
-      const key = `${s.industry_name}_${s.from_date}_${s.to_date}`;
-
-      if (!grouped[key]) {
-        grouped[key] = {
-          industry_name: s.industry_name,
-          from_date: s.from_date,
-          to_date: s.to_date,
-          staffs: []
-        };
-      }
-
-      grouped[key].staffs.push(s);
-    });
-
-    return Object.values(grouped);
-  }
-
-  /* ================= VIEW STAFF ================= */
+  /* ================= VIEW ================= */
 
   openStaff(batch: any) {
     this.selectedBatch = batch;
@@ -72,30 +45,22 @@ export class TlIndustryUploadComponent implements OnInit {
     this.showStaffModal = false;
   }
 
-  /* ================= DOWNLOAD ================= */
+  /* ================= DOWNLOAD (FRONTEND DEMO) ================= */
 
   downloadBatch(batch: any) {
-    batch.staffs.forEach((s: any) => {
-      window.open(
-        `http://localhost:5055/api/certificate/generate/industry/${s.id}`
-      );
-    });
+    alert("Download all Industry certificates (demo)");
   }
 
   downloadStaff(s: any) {
-    window.open(
-      `http://localhost:5055/api/certificate/generate/industry/${s.id}`
-    );
+    alert("Download certificate for: " + s.participant_name);
   }
 
-  /* ================= ATTENDANCE VIEW ================= */
+  /* ================= ATTENDANCE ================= */
 
   openCalendar(staff: any) {
     this.selectedStaff = staff;
     this.showCalendar = true;
-
     this.generateDates(staff.from_date, staff.to_date);
-    this.loadHolidays();
   }
 
   closeCalendar() {
@@ -124,24 +89,8 @@ export class TlIndustryUploadComponent implements OnInit {
     this.calendarDays = dates;
   }
 
-  loadHolidays() {
-
-    if (!this.selectedStaff) return;
-
-    const year = new Date(this.selectedStaff.from_date).getFullYear();
-
-    this.api.getTlHolidays(year).subscribe({
-      next: (res: any[]) => {
-        this.holidays = res.map(h => h.holiday_date);
-      }
-    });
-  }
-
   isPresent(date: string) {
     return this.selectedStaff?.present_dates?.includes(date);
   }
 
-  isHoliday(date: string) {
-    return this.holidays.includes(date);
-  }
 }

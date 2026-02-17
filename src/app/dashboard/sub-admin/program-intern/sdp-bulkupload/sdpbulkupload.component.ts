@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
+import { BulkStorageService } from '../../../../services/bulk-storage.service';
+
 
 @Component({
   selector: 'app-sdp-bulk-upload',
@@ -36,7 +38,10 @@ export class SdpBulkUploadComponent implements OnInit {
     'email'
   ];
 
-  ngOnInit(): void {}
+constructor(private bulkStorage: BulkStorageService) {}
+
+ngOnInit(): void {  this.batches = this.bulkStorage.getSdpBatches();}
+
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -88,24 +93,30 @@ export class SdpBulkUploadComponent implements OnInit {
     reader.readAsBinaryString(this.selectedFile);
   }
 
-  /* ✅ CONFIRM → STORE AS ONE BATCH */
-  confirmUpload() {
+confirmUpload() {
 
-    const batch = {
-      college_name: this.collegeName,
-      college_short_name: this.collegeShortName,
-      from_date: this.fromDate,
-      to_date: this.toDate,
-      total_students: this.uploadedData.length,
-      students: [...this.uploadedData]
-    };
+  const batch = {
+    college_name: this.collegeName,
+    college_short_name: this.collegeShortName,
+    from_date: this.fromDate,
+    to_date: this.toDate,
+    total_students: this.uploadedData.length,
+    students: [...this.uploadedData]
+  };
 
-    this.batches.push(batch);
+  /* ✅ STORE IN SHARED SERVICE */
+  this.bulkStorage.addSdpBatch(batch);
 
-    this.uploadedData = [];
-    this.selectedFile = null;
-    this.fileName = '';
-  }
+  /* ✅ ALSO UPDATE LOCAL LIST */
+  this.batches = this.bulkStorage.getSdpBatches();
+
+  /* RESET FORM */
+  this.uploadedData = [];
+  this.selectedFile = null;
+  this.fileName = '';
+}
+
+
 
   /* ✅ VIEW DETAILS */
   viewBatch(batch: any) {
