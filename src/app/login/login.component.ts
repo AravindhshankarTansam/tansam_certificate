@@ -79,6 +79,7 @@ export class LoginComponent {
           // save role
           const roleKey = res.role.replace(/\s+/g, '_').toUpperCase();
           localStorage.setItem('role', roleKey);
+          localStorage.setItem('lab_name', res.lab_name || '');
 
 
           /* =========================

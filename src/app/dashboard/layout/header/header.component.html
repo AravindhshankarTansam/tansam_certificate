@@ -6,8 +6,22 @@
     Dashboard
     <span class="divider">|</span>
     <span class="role-text">{{ role }}</span>
+
+    <!-- SHOW LAB FOR TEAM LEAD -->
+<ng-container *ngIf="role === 'team lead' && lab">
+  <span class="divider">|</span>
+  <span class="lab-text">{{ lab }}</span>
+</ng-container>
+
+    <!-- SHOW COORDINATOR FOR SUB ADMIN -->
+    <ng-container *ngIf="role === 'sub admin'">
+      <span class="divider">|</span>
+      <span class="lab-text">Coordinator</span>
+    </ng-container>
+
   </p>
 </div>
+
 
 
   <!-- RIGHT : Actions -->

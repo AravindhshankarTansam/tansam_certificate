@@ -37,12 +37,17 @@ exports.login = async (req, res) => {
     /* =========================
        2️⃣ CHECK SUB ADMIN / USERS
     ========================= */
-    const [userRows] = await db.query(`
-      SELECT u.*, r.name AS role_name
-      FROM users u
-      JOIN roles r ON r.id = u.role_id
-      WHERE u.email=?
-    `, [email]);
+  const [userRows] = await db.query(`
+  SELECT 
+    u.*, 
+    r.name AS role_name,
+    l.name AS lab_name
+  FROM users u
+  JOIN roles r ON r.id = u.role_id
+  LEFT JOIN labs l ON l.id = u.lab_id
+  WHERE u.email=?
+`, [email]);
+
 
     if (!userRows.length)
       return res.status(401).json({ message: 'User not found' });
@@ -74,7 +79,8 @@ req.session.user = {
 res.json({
   role: user.role_name,
   name: user.name,
-  lab_id: user.lab_id   // optional for debug
+  lab_id: user.lab_id,
+  lab_name: user.lab_name     // optional for debug
 });
 
 
