@@ -5,7 +5,6 @@
     <h2>Industry Bulk Upload Records</h2>
   </div>
 
-
   <!-- ================= BATCH TABLE ================= -->
   <div class="tl-table-card" *ngIf="batches.length; else emptyState">
 
@@ -16,7 +15,7 @@
           <th>Industry</th>
           <th>From</th>
           <th>To</th>
-          <th>Total Staff</th>
+          <th>Total Participants</th>
           <th>View</th>
           <th>Download All</th>
         </tr>
@@ -29,7 +28,9 @@
           <td>{{ batch.industry_name }}</td>
           <td>{{ batch.from_date | date:'dd-MM-yyyy' }}</td>
           <td>{{ batch.to_date | date:'dd-MM-yyyy' }}</td>
-          <td>{{ batch.staffs.length }}</td>
+
+          <!-- ✅ FIXED -->
+          <td>{{ batch.participants.length }}</td>
 
           <td>
             <button class="btn-view"
@@ -41,7 +42,7 @@
           <td>
             <button class="btn-download"
                     (click)="downloadBatch(batch)">
-    <mat-icon>download</mat-icon> Download All
+              <mat-icon>download</mat-icon> Download All
             </button>
           </td>
 
@@ -51,8 +52,7 @@
 
   </div>
 
-
-  <!-- ================= EMPTY ================= -->
+  <!-- ================= EMPTY STATE ================= -->
   <ng-template #emptyState>
     <div class="tl-empty">
       <h3>No Industry Bulk Uploads Yet</h3>
@@ -63,7 +63,7 @@
 </div>
 
 
-<!-- ================= STAFF MODAL ================= -->
+<!-- ================= PARTICIPANTS MODAL ================= -->
 
 <div class="tl-modal-backdrop" *ngIf="showStaffModal">
 
@@ -72,7 +72,7 @@
     <div class="tl-modal-header">
       <h3>
         {{ selectedBatch?.industry_name }}
-        ({{ selectedBatch?.staffs.length }} Staff)
+        ({{ selectedBatch?.participants.length }} Participants)
       </h3>
       <button (click)="closeStaff()">✕</button>
     </div>
@@ -85,8 +85,8 @@
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>ID</th>
             <th>Designation</th>
+            <th>Department</th>
             <th>Attendance</th>
             <th>Download</th>
           </tr>
@@ -94,24 +94,25 @@
 
         <tbody>
 
-          <tr *ngFor="let s of selectedBatch?.staffs; let i = index">
+          <!-- ✅ FIXED -->
+          <tr *ngFor="let s of selectedBatch?.participants; let i = index">
 
             <td>{{ i + 1 }}</td>
-            <td>{{ s.industry_staff_name }}</td>
-            <td>{{ s.industry_staff_id }}</td>
-            <td>{{ s.designation_name }}</td>
+            <td>{{ s.participant_name }}</td>
+            <td>{{ s.designation }}</td>
+            <td>{{ s.department }}</td>
 
             <td>
               <button class="btn-primary"
                       (click)="openCalendar(s)">
-               <mat-icon>event</mat-icon> Attendance
+                <mat-icon>event</mat-icon> Attendance
               </button>
             </td>
 
             <td>
               <button class="btn-download"
                       (click)="downloadStaff(s)">
-              <mat-icon>download</mat-icon> Download 
+                <mat-icon>download</mat-icon> Download
               </button>
             </td>
 
@@ -128,7 +129,6 @@
 </div>
 
 
-
 <!-- ================= ATTENDANCE MODAL ================= -->
 
 <div class="tl-modal-backdrop" *ngIf="showCalendar">
@@ -136,7 +136,7 @@
   <div class="tl-modal">
 
     <div class="tl-modal-header">
-      <h3>{{ selectedStaff?.industry_staff_name }}</h3>
+      <h3>{{ selectedStaff?.participant_name }}</h3>
       <button (click)="closeCalendar()">✕</button>
     </div>
 
@@ -145,8 +145,7 @@
       <div
         *ngFor="let d of calendarDays"
         class="day"
-        [class.present]="isPresent(d)"
-        [class.holiday]="isHoliday(d)">
+        [class.present]="isPresent(d)">
 
         {{ d.split('-')[2] }}
 

@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 export class BulkStorageService {
 
   private sdpBatches: any[] = [];
+ private fdpBatches: any[] = [];
+  private industryBatches: any[] = [];
 
   /* SAVE SDP BATCH */
   addSdpBatch(batch: any) {
@@ -18,7 +20,7 @@ export class BulkStorageService {
   }
   
   /* ================= FDP ================= */
-  private fdpBatches: any[] = [];
+
 
   addFdpBatch(batch: any) {
     this.fdpBatches.push(batch);
@@ -26,6 +28,14 @@ export class BulkStorageService {
 
   getFdpBatches() {
     return this.fdpBatches;
+  }
+    /* ================= INDUSTRY ================= */
+  setIndustryBatch(batch: any) {
+    this.industryBatches.push(batch);
+  }
+
+  getIndustryBatches() {
+    return this.industryBatches;
   }
 
 }
