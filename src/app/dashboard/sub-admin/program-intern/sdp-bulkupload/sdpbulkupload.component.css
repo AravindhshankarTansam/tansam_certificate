@@ -73,44 +73,69 @@
 }
 
 /* Floating Input */
+/* ================= FLOATING LABEL FIX ================= */
+
 .sdp-input-group {
   position: relative;
 }
 
+/* INPUT */
 .sdp-input-group input {
   width: 100%;
-  padding: 1.4rem 1rem 0.6rem;
+  height: 56px;
+  padding: 1.6rem 1rem 0.6rem;
   border-radius: 10px;
   border: 1.5px solid #cbd5e1;
   font-size: 0.95rem;
-  transition: 0.2s;
+  background: #fff;
   box-sizing: border-box;
+  transition: all 0.2s ease;
 }
 
+/* FOCUS */
 .sdp-input-group input:focus {
   border-color: #009999;
   box-shadow: 0 0 0 4px rgba(0,153,153,0.12);
   outline: none;
 }
 
+/* LABEL DEFAULT (CENTERED) */
 .sdp-input-group label {
   position: absolute;
-  top: 1.1rem;
   left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 0.95rem;
   color: #94a3b8;
   pointer-events: none;
-  transition: 0.2s;
+  transition: all 0.2s ease;
+  background: #fff;
+  padding: 0 4px;
 }
 
-.sdp-input-group input:focus + label,
-.sdp-input-group input:not(:placeholder-shown) + label {
-  top: 0.4rem;
+/* FLOAT LABEL ON FOCUS */
+.sdp-input-group input:focus + label {
+  top: 6px;
+  transform: none;
   font-size: 0.75rem;
   color: #009999;
-  background: white;
-  padding: 0 6px;
 }
+
+/* FLOAT LABEL WHEN INPUT HAS VALUE */
+.sdp-input-group input:not(:placeholder-shown),
+.sdp-input-group input:not([value=""]) {
+  padding-top: 1.6rem;
+}
+
+.sdp-input-group input:not(:placeholder-shown) + label,
+.sdp-input-group input:not([value=""]) + label {
+  top: 6px;
+  transform: none;
+  font-size: 0.75rem;
+  color: #009999;
+}
+
+
 
 /* =====================================================
    DROPZONE
@@ -290,4 +315,206 @@
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
+}
+
+/* =====================================================
+   INLINE PREVIEW SECTION
+===================================================== */
+.sdp-uploaded-section {
+  margin-top: 2.5rem;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+  border: 1px solid #e5e7eb;
+}
+
+.sdp-uploaded-section h3 {
+  margin-bottom: 1.5rem;
+  color: #006666;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* Info */
+.sdp-inline-info {
+  background: #f8fafc;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.sdp-inline-info p {
+  margin: 4px 0;
+  color: #475569;
+}
+
+/* Table */
+.sdp-inline-wrapper {
+  overflow-x: auto;
+}
+
+.sdp-inline-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.sdp-inline-table thead {
+  background: linear-gradient(135deg, #006666, #009999);
+  color: white;
+}
+
+.sdp-inline-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.sdp-inline-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.sdp-inline-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.sdp-inline-table tbody tr:hover {
+  background: #ecfdf5;
+}
+
+/* Footer buttons */
+.sdp-inline-footer {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* =========================================
+   SECTION CARD (PREVIEW + UPLOADED)
+========================================= */
+.sdp-uploaded-section {
+  margin-top: 2.5rem;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+}
+
+.sdp-uploaded-section h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f766e;
+  margin-bottom: 1.5rem;
+}
+
+/* =========================================
+   TABLE WRAPPER
+========================================= */
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 1rem;
+}
+
+/* =========================================
+   TABLE DESIGN
+========================================= */
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* HEADER */
+.table-wrapper thead {
+  background: linear-gradient(135deg, #006666, #009999);
+  color: #ffffff;
+}
+
+.table-wrapper th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* BODY */
+.table-wrapper td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #334155;
+}
+
+/* Zebra rows */
+.table-wrapper tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* Hover effect */
+.table-wrapper tbody tr:hover {
+  background: #ecfdf5;
+  transition: 0.2s ease;
+}
+
+/* =========================================
+   PREVIEW BUTTONS
+========================================= */
+.modal-actions {
+  margin-top: 1.8rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Cancel */
+.cancel-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 2px solid #009999;
+  background: transparent;
+  color: #009999;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: rgba(0, 153, 153, 0.08);
+}
+
+/* Confirm */
+.save-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #009999;
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.save-btn:hover {
+  background: #007f7f;
+  transform: translateY(-2px);
+}
+/* DATE INPUT FIX */
+.sdp-input-group input[type="date"] {
+  padding: 1.4rem 1rem 0.6rem;
+}
+
+.sdp-input-group input[type="date"] + label {
+  top: 4px;
+  transform: none;
+  font-size: 0.75rem;
+  color: #009999;
 }

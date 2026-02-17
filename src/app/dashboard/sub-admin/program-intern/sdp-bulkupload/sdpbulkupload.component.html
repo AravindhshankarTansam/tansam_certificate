@@ -16,51 +16,31 @@
       <p class="sdp-subtitle">Enter college details to start upload</p>
     </div>
 
- <!-- FORM ROW -->
-<div class="sdp-form-row">
+    <div class="sdp-form-row">
 
-  <!-- College Name -->
-  <div class="sdp-input-group">
-    <input type="text"
-           placeholder=" "
-           [(ngModel)]="collegeName">
-    <label>College Full Name</label>
-  </div>
+      <div class="sdp-input-group">
+        <input type="text" placeholder=" " [(ngModel)]="collegeName">
+        <label>College Full Name</label>
+      </div>
 
-  <!-- Short Code -->
-  <div class="sdp-input-group">
-    <input type="text"
-           placeholder=" "
-           [(ngModel)]="collegeShortName"
-           maxlength="10">
-    <label>College Short Code</label>
-  </div>
+      <div class="sdp-input-group">
+        <input type="text" placeholder=" " [(ngModel)]="collegeShortName">
+        <label>College Short Code</label>
+      </div>
 
-  <!-- Visit Date -->
-  <div class="sdp-input-group">
-    <input type="date"
-           [(ngModel)]="fromDate">
-    <label>From Date</label>
-  </div>
+      <div class="sdp-input-group">
+        <input type="date" [(ngModel)]="fromDate">
+        <label>From Date</label>
+      </div>
 
-  <!-- To Date -->
-  <div class="sdp-input-group">
-    <input type="date"
-           [(ngModel)]="toDate">
-    <label>To Date</label>
-  </div>
+      <div class="sdp-input-group">
+        <input type="date" [(ngModel)]="toDate">
+        <label>To Date</label>
+      </div>
 
-</div>
+    </div>
 
-
-    <!-- DROPZONE -->
-    <div class="sdp-dropzone"
-         (dragover)="onDragOver($event)"
-         (dragleave)="onDragLeave($event)"
-         (drop)="onDrop($event)"
-         [class.active]="isDragActive"
-         (click)="fileInput.click()">
-
+    <div class="sdp-dropzone" (click)="fileInput.click()">
       <div class="sdp-icon-circle">
         <i class="fa-solid fa-cloud-arrow-up fa-3x"></i>
       </div>
@@ -76,73 +56,154 @@
              (change)="onFileSelected($event)">
     </div>
 
-    <!-- FILE NAME -->
     <div class="sdp-file-status" *ngIf="fileName">
       Selected: <strong>{{ fileName }}</strong>
     </div>
 
-    <!-- ACTION BUTTONS -->
-    <div class="sdp-action-bar">
+ <div class="sdp-action-bar">
 
-      <button class="sdp-btn-outline"
-              (click)="downloadTemplate()">
-        <i class="fa-solid fa-file-arrow-down"></i>
-        Download Template
+  <!-- Download Template -->
+  <button class="sdp-btn-outline"
+          (click)="downloadTemplate()">
+    <i class="fa-solid fa-file-arrow-down"></i>
+    Download Template
+  </button>
+
+  <!-- Upload -->
+  <button class="sdp-btn-primary"
+          [disabled]="!collegeName || !fromDate || !toDate || !selectedFile"
+          (click)="uploadFile()">
+    <i class="fa-solid fa-upload"></i>
+    Upload Excel
+  </button>
+
+</div>
+
+
+  </div>
+
+  <!-- ================= INLINE PREVIEW ================= -->
+  <div class="sdp-uploaded-section"
+       *ngIf="uploadedData.length">
+
+    <h3>Preview Students</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Register</th>
+            <th>Department</th>
+            <th>From</th>
+            <th>To</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let s of uploadedData; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ s.student_name }}</td>
+            <td>{{ s.register_no }}</td>
+            <td>{{ s.department }}</td>
+            <td>{{ s.from_date | date }}</td>
+            <td>{{ s.to_date | date }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-actions">
+      <button class="save-btn"
+              (click)="confirmUpload()">
+        Confirm Upload
       </button>
-
-      <button class="sdp-btn-primary"
-              [disabled]="!collegeName ||  !fromDate || !toDate || !selectedFile"
-              (click)="uploadFile()">
-        <i class="fa-solid fa-upload"></i>
-        Upload Excel
-      </button>
-
     </div>
 
   </div>
 
-  <!-- PREVIEW MODAL -->
-  <div class="sdp-modal-backdrop" *ngIf="showPreviewModal">
+  <!-- ================= BATCH SUMMARY TABLE ================= -->
+  <div class="sdp-uploaded-section"
+       *ngIf="batches.length">
+
+    <h3>Uploaded Batches</h3>
+
+    <div class="table-wrapper">
+      <table>
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>College</th>
+            <th>Short Code</th>
+            <th>Date Range</th>
+            <th>Total Students</th>
+            <th>View</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let b of batches; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ b.college_name }}</td>
+            <td>{{ b.college_short_name }}</td>
+            <td>
+              {{ b.from_date | date }} -
+              {{ b.to_date | date }}
+            </td>
+            <td>{{ b.total_students }}</td>
+            <td>
+              <button class="save-btn"
+                      (click)="viewBatch(b)">
+                View
+              </button>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ================= STUDENT DETAILS MODAL ================= -->
+  <div class="sdp-modal-backdrop"
+       *ngIf="showBatchDetails">
+
     <div class="sdp-modal">
 
       <div class="sdp-modal-header">
-        <h2>SDP Preview</h2>
-        <button (click)="closePreview()">✕</button>
-      </div>
-
-      <div class="sdp-modal-info">
-        Total Records: <strong>{{ uploadedData.length }}</strong>
+        <h2>Student Details</h2>
+        <button (click)="closeBatchDetails()">✕</button>
       </div>
 
       <div class="sdp-preview-wrapper">
         <table class="sdp-preview-table">
+
           <thead>
             <tr>
-              <th *ngFor="let h of tableHeaders">
-                {{ h | titlecase }}
-              </th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Register</th>
+              <th>Department</th>
+              <th>Phone</th>
+              <th>Email</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr *ngFor="let row of uploadedData">
-              <td *ngFor="let h of tableHeaders">
-                {{ row[h] || '—' }}
-              </td>
+            <tr *ngFor="let s of selectedBatch?.students; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ s.student_name }}</td>
+              <td>{{ s.register_no }}</td>
+              <td>{{ s.department }}</td>
+              <td>{{ s.phone }}</td>
+              <td>{{ s.email }}</td>
             </tr>
           </tbody>
+
         </table>
-      </div>
-
-      <div class="sdp-modal-footer">
-        <button class="sdp-btn-outline"
-                (click)="closePreview()">
-          Close
-        </button>
-
-        <button class="sdp-btn-primary"
-                (click)="confirmUpload()">
-          Confirm Upload
-        </button>
       </div>
 
     </div>

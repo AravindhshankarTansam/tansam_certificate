@@ -12,27 +12,21 @@ import * as XLSX from 'xlsx';
 })
 export class SdpBulkUploadComponent implements OnInit {
 
-  /* ================= FORM FIELDS ================= */
-
   collegeName: string = '';
   collegeShortName: string = '';
   fromDate = '';
   toDate = '';
 
-
-  /* ================= FILE STATE ================= */
-
   selectedFile: File | null = null;
   fileName: string = '';
   isDragActive: boolean = false;
 
-  /* ================= PREVIEW STATE ================= */
-
-  showPreviewModal: boolean = false;
   uploadedData: any[] = [];
-  tableHeaders: string[] = [];
 
-  /* ================= REQUIRED HEADERS ================= */
+  /* ✅ NEW */
+  batches: any[] = [];
+  selectedBatch: any = null;
+  showBatchDetails = false;
 
   requiredHeaders = [
     'student_name',
@@ -44,8 +38,6 @@ export class SdpBulkUploadComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  /* ================= FILE SELECT ================= */
-
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (!file) return;
@@ -53,34 +45,6 @@ export class SdpBulkUploadComponent implements OnInit {
     this.selectedFile = file;
     this.fileName = file.name;
   }
-
-  /* ================= DRAG EVENTS ================= */
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragActive = true;
-  }
-
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragActive = false;
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.isDragActive = false;
-
-    const file = event.dataTransfer?.files[0];
-    if (!file) return;
-
-    this.selectedFile = file;
-    this.fileName = file.name;
-  }
-
-  /* ================= UPLOAD BUTTON ================= */
 
   uploadFile() {
 
@@ -110,7 +74,6 @@ export class SdpBulkUploadComponent implements OnInit {
         return;
       }
 
-      /* Attach form values to each row */
       const enrichedData = data.map(row => ({
         ...row,
         college_name: this.collegeName,
@@ -120,45 +83,56 @@ export class SdpBulkUploadComponent implements OnInit {
       }));
 
       this.uploadedData = enrichedData;
-      this.tableHeaders = Object.keys(enrichedData[0]);
-      this.showPreviewModal = true;
     };
 
     reader.readAsBinaryString(this.selectedFile);
   }
 
-  /* ================= TEMPLATE DOWNLOAD ================= */
-
-  downloadTemplate() {
-
-    const headers = [
-      'student_name',
-      'register_no',
-      'department',
-      'phone',
-      'email'
-    ];
-
-    const ws = XLSX.utils.aoa_to_sheet([headers]);
-    const wb = XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(wb, ws, 'SDP Template');
-    XLSX.writeFile(wb, 'SDP_Bulk_Template.xlsx');
-  }
-
-  /* ================= CONFIRM ================= */
-
+  /* ✅ CONFIRM → STORE AS ONE BATCH */
   confirmUpload() {
 
-    console.log('Final SDP Bulk Data:', this.uploadedData);
+    const batch = {
+      college_name: this.collegeName,
+      college_short_name: this.collegeShortName,
+      from_date: this.fromDate,
+      to_date: this.toDate,
+      total_students: this.uploadedData.length,
+      students: [...this.uploadedData]
+    };
 
-    alert('Backend not connected yet');
+    this.batches.push(batch);
 
-    this.showPreviewModal = false;
+    this.uploadedData = [];
+    this.selectedFile = null;
+    this.fileName = '';
   }
 
-  closePreview() {
-    this.showPreviewModal = false;
+  /* ✅ VIEW DETAILS */
+  viewBatch(batch: any) {
+    this.selectedBatch = batch;
+    this.showBatchDetails = true;
   }
+
+  closeBatchDetails() {
+    this.showBatchDetails = false;
+    this.selectedBatch = null;
+  }
+  downloadTemplate() {
+
+  const headers = [
+    'student_name',
+    'register_no',
+    'department',
+    'phone',
+    'email'
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet([headers]);
+  const wb = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(wb, ws, 'SDP Template');
+  XLSX.writeFile(wb, 'SDP_Bulk_Template.xlsx');
+}
+
 
 }
