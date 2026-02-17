@@ -3,11 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-certificate-access',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './certificate-access.component.html',
   styleUrl: './certificate-access.component.css'
 })
@@ -55,6 +56,30 @@ export class CertificateAccessComponent implements OnInit {
       error: () => alert('Invalid OTP')
     });
   }
+  moveNext(event: any, nextInput: any) {
+  if (event.target.value.length === 1 && nextInput) {
+    nextInput.focus();
+  }
+}
+
+movePrev(event: any, prevInput: any) {
+  if (event.key === 'Backspace' && !event.target.value && prevInput) {
+    prevInput.focus();
+  }
+}
+
+collectOtpAndVerify() {
+  const inputs = document.querySelectorAll('.otp-input');
+  let finalOtp = '';
+
+  inputs.forEach((input: any) => {
+    finalOtp += input.value;
+  });
+
+  this.otp = finalOtp;
+  this.verifyOtp();
+}
+
 
   /* ⭐ LOAD PROFILE */
   loadProfile() {

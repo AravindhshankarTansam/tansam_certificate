@@ -16,70 +16,214 @@
   height: auto;
   margin-top: 5px;
 }
-
 /* ===== BACKGROUND ===== */
 .certificate-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #0f172a, #111827);
+  background-size: 400% 400%;
+  animation: gradientMove 10s ease infinite;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* ===== CARD ===== */
 .certificate-card {
   width: 420px;
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  padding: 40px;
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  position: relative;
+  color: white;
   text-align: center;
 }
 
-/* ===== TITLE ===== */
-.title {
-  margin-bottom: 20px;
-  color: #0f172a;
-  font-weight: 600;
+/* Glow effect */
+.glow-circle {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, #2563eb, transparent);
+  top: -60px;
+  right: -60px;
+  opacity: 0.3;
+  border-radius: 50%;
 }
 
-/* ===== INPUT ===== */
-.input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #cbd5e1;
+/* ===== HEADER ===== */
+.logo {
+  width: 100px;
   margin-bottom: 15px;
-  transition: 0.3s;
-  font-size: 14px;
 }
 
-.input:focus {
+.title {
+  font-size: 26px;
+  margin-bottom: 5px;
+  color:white;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+/* ===== FLOATING INPUT ===== */
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: white;
+  font-size: 15px;
+}
+
+.input-group input:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+
+.input-group label {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  transition: 0.3s;
+  pointer-events: none;
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: -8px;
+  left: 10px;
+  font-size: 12px;
+  background: #1e293b;
+  padding: 0 6px;
+  border-radius: 4px;
 }
 
 /* ===== BUTTON ===== */
 .btn {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px;
+  border-radius: 12px;
   border: none;
-  cursor: pointer;
   font-weight: 600;
+  cursor: pointer;
   transition: 0.3s;
+  margin-top: 10px;
 }
 
 .primary {
-  background: #2563eb;
-  color: #fff;
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  color: white;
 }
 
 .primary:hover {
-  background: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59,130,246,0.4);
 }
+
+.download {
+  background: linear-gradient(90deg, #059669, #10b981);
+  color: white;
+}
+
+.download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16,185,129,0.4);
+}
+
+/* ===== OTP ===== */
+.otp-title {
+  margin-bottom: 5px;
+}
+
+.otp-sub {
+  font-size: 13px;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+
+.otp-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.otp-input {
+  width: 50px;
+  height: 55px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 10px rgba(59,130,246,0.6);
+}
+
+/* ===== PROFILE ===== */
+.profile-box {
+  background: rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.profile-box span {
+  display: inline-block;
+  width: 110px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.success-title {
+  margin-bottom: 20px;
+  color: #10b981;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 500px) {
+  .certificate-card {
+    width: 100%;
+    padding: 25px;
+  }
+
+  .otp-input {
+    width: 40px;
+    height: 50px;
+  }
+}
+
 
 /* ===== DOWNLOAD BUTTON ===== */
 .download {
@@ -103,6 +247,7 @@
 .profile-box p {
   margin: 8px 0;
   font-size: 14px;
+  color: #334155;
 }
 
 .profile-box span {
@@ -126,4 +271,59 @@ label {
   .certificate-card {
     width: 90%;
   }
+}
+/* ===== OTP STYLE ===== */
+
+.otp-step {
+  text-align: center;
+}
+
+.otp-label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 500;
+  color: #334155;
+  text-align: left;
+}
+
+.otp-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.otp-input {
+  width: 48px;
+  height: 55px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.verify-btn {
+  margin-top: 10px;
+}
+.success-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.success-icon {
+  font-size: 28px;
+  color: #10b981;
 }
