@@ -89,49 +89,128 @@
 
   </div>
 
-  <!-- PREVIEW MODAL -->
-  <div class="fdp-modal-backdrop" *ngIf="showPreviewModal">
+  <!-- ================= PREVIEW BELOW ================= -->
+  <div class="fdp-uploaded-section"
+       *ngIf="uploadedData.length">
+
+    <h3>Preview Participants</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Department</th>
+            <th>From</th>
+            <th>To</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let p of uploadedData; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ p.institution_name }}</td>
+            <td>{{ p.designation }}</td>
+            <td>{{ p.department }}</td>
+            <td>{{ p.from_date | date }}</td>
+            <td>{{ p.to_date | date }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-actions">
+      <button class="fdp-btn-primary"
+              (click)="confirmUpload()">
+        Confirm Upload
+      </button>
+    </div>
+
+  </div>
+  <!-- ================= BATCH SUMMARY ================= -->
+  <div class="fdp-uploaded-section"
+       *ngIf="batches.length">
+
+    <h3>Uploaded Industry Batches</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Industry</th>
+            <th>Short Code</th>
+            <th>Date Range</th>
+            <th>Total Participants</th>
+            <th>View</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let b of batches; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ b.institution_name }}</td>
+            <td>{{ b.institution_short_name }}</td>
+            <td>
+              {{ b.from_date | date }} -
+              {{ b.to_date | date }}
+            </td>
+            <td>{{ b.total_participants }}</td>
+            <td>
+              <button class="industry-btn-primary"
+                      (click)="viewBatch(b)">
+                View
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+<!-- ================= PARTICIPANT DETAILS MODAL ================= -->
+  <div class="fdp-modal-backdrop"
+       *ngIf="showBatchDetails">
+
     <div class="fdp-modal">
 
       <div class="fdp-modal-header">
-        <h2>FDP Preview</h2>
-        <button (click)="closePreview()">✕</button>
-      </div>
-
-      <div class="fdp-modal-info">
-        Total Records: <strong>{{ uploadedData.length }}</strong>
+        <h2>Participant Details</h2>
+        <button (click)="closeBatchDetails()">✕</button>
       </div>
 
       <div class="fdp-preview-wrapper">
         <table class="fdp-preview-table">
+
           <thead>
             <tr>
-              <th *ngFor="let h of tableHeaders">{{ h | titlecase }}</th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Designation</th>
+              <th>Department</th>
+              <th>Phone</th>
+              <th>Email</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr *ngFor="let row of uploadedData">
-              <td *ngFor="let h of tableHeaders">
-                {{ row[h] || '—' }}
-              </td>
+            <tr *ngFor="let p of selectedBatch?.participants; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ p.institution_name }}</td>
+              <td>{{ p.designation }}</td>
+              <td>{{ p.department }}</td>
+              <td>{{ p.phone }}</td>
+              <td>{{ p.email }}</td>
             </tr>
           </tbody>
+
         </table>
-      </div>
-
-      <div class="fdp-modal-footer">
-        <button class="fdp-btn-outline"
-                (click)="closePreview()">
-          Close
-        </button>
-
-        <button class="fdp-btn-primary"
-                (click)="confirmUpload()">
-          Confirm Upload
-        </button>
       </div>
 
     </div>
   </div>
 
 </div>
+

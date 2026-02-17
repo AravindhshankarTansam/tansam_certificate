@@ -1,6 +1,6 @@
 <div class="industry-bulk-page">
 
-  <!-- HERO -->
+  <!-- ================= HERO ================= -->
   <div class="industry-hero">
     <div>
       <h1>Industry – Bulk Upload</h1>
@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <!-- MAIN CARD -->
+  <!-- ================= MAIN CARD ================= -->
   <div class="industry-upload-card">
 
     <div class="industry-card-header">
@@ -21,38 +21,25 @@
     <!-- FORM ROW -->
     <div class="industry-form-row">
 
-      <!-- Industry Name -->
       <div class="industry-input-group">
-        <input type="text"
-               placeholder=" "
-               [(ngModel)]="industryName">
+        <input type="text" placeholder=" " [(ngModel)]="industryName">
         <label>Industry / Organization Name</label>
       </div>
 
-      <!-- Short Code -->
       <div class="industry-input-group">
-        <input type="text"
-               placeholder=" "
-               [(ngModel)]="industryShortCode"
-               maxlength="10">
+        <input type="text" placeholder=" " [(ngModel)]="industryShortCode">
         <label>Short Code</label>
       </div>
 
-      <!-- From Date -->
       <div class="industry-input-group">
-        <input type="date"
-               [(ngModel)]="fromDate">
+        <input type="date" [(ngModel)]="fromDate">
         <label>From Date</label>
       </div>
 
-      <!-- To Date -->
       <div class="industry-input-group">
-        <input type="date"
-               [(ngModel)]="toDate">
+        <input type="date" [(ngModel)]="toDate">
         <label>To Date</label>
       </div>
-
-
 
     </div>
 
@@ -94,58 +81,139 @@
       </button>
 
       <button class="industry-btn-primary"
-              [disabled]="!industryName ||  !fromDate || !toDate || !selectedFile"
+              [disabled]="!industryName || !fromDate || !toDate || !selectedFile"
               (click)="uploadFile()">
-        <i class="fa-solid fa-upload"></i>
         Upload Excel
       </button>
 
     </div>
 
   </div>
+  <!-- END MAIN CARD -->
 
-  <!-- PREVIEW MODAL -->
-  <div class="industry-modal-backdrop" *ngIf="showPreviewModal">
+
+  <!-- ================= PREVIEW BELOW ================= -->
+  <div class="industry-uploaded-section"
+       *ngIf="uploadedData.length">
+
+    <h3>Preview Participants</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Department</th>
+            <th>From</th>
+            <th>To</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let p of uploadedData; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ p.participant_name }}</td>
+            <td>{{ p.designation }}</td>
+            <td>{{ p.department }}</td>
+            <td>{{ p.from_date | date }}</td>
+            <td>{{ p.to_date | date }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-actions">
+      <button class="industry-btn-primary"
+              (click)="confirmUpload()">
+        Confirm Upload
+      </button>
+    </div>
+
+  </div>
+
+
+  <!-- ================= BATCH SUMMARY ================= -->
+  <div class="industry-uploaded-section"
+       *ngIf="batches.length">
+
+    <h3>Uploaded Industry Batches</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Industry</th>
+            <th>Short Code</th>
+            <th>Date Range</th>
+            <th>Total Participants</th>
+            <th>View</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let b of batches; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ b.industry_name }}</td>
+            <td>{{ b.industry_short_code }}</td>
+            <td>
+              {{ b.from_date | date }} -
+              {{ b.to_date | date }}
+            </td>
+            <td>{{ b.total_participants }}</td>
+            <td>
+              <button class="industry-btn-primary"
+                      (click)="viewBatch(b)">
+                View
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+  <!-- ================= PARTICIPANT DETAILS MODAL ================= -->
+  <div class="industry-modal-backdrop"
+       *ngIf="showBatchDetails">
+
     <div class="industry-modal">
 
       <div class="industry-modal-header">
-        <h2>Industry Preview</h2>
-        <button (click)="closePreview()">✕</button>
-      </div>
-
-      <div class="industry-modal-info">
-        Total Records: <strong>{{ uploadedData.length }}</strong>
+        <h2>Participant Details</h2>
+        <button (click)="closeBatchDetails()">✕</button>
       </div>
 
       <div class="industry-preview-wrapper">
         <table class="industry-preview-table">
+
           <thead>
             <tr>
-              <th *ngFor="let h of tableHeaders">
-                {{ h | titlecase }}
-              </th>
+              <th>#</th>
+              <th>Name</th>
+              <th>Designation</th>
+              <th>Department</th>
+              <th>Phone</th>
+              <th>Email</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr *ngFor="let row of uploadedData">
-              <td *ngFor="let h of tableHeaders">
-                {{ row[h] || '—' }}
-              </td>
+            <tr *ngFor="let p of selectedBatch?.participants; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ p.participant_name }}</td>
+              <td>{{ p.designation }}</td>
+              <td>{{ p.department }}</td>
+              <td>{{ p.phone }}</td>
+              <td>{{ p.email }}</td>
             </tr>
           </tbody>
+
         </table>
-      </div>
-
-      <div class="industry-modal-footer">
-        <button class="industry-btn-outline"
-                (click)="closePreview()">
-          Close
-        </button>
-
-        <button class="industry-btn-primary"
-                (click)="confirmUpload()">
-          Confirm Upload
-        </button>
       </div>
 
     </div>
