@@ -6,7 +6,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ApiService {
   // private BASE_URL = 'http://localhost:5055/api';
-  private BASE_URL = 'https://internship.tansam.org/api';
+  private BASE_URL = 'https://interncertificate.tansam.org/api';
+
 
   constructor(private http: HttpClient) {}
 
