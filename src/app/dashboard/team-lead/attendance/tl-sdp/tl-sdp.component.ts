@@ -40,7 +40,7 @@ export class TlSdpComponent implements OnInit {
 
   /* ================= OPEN CALENDAR ================= */
 openCalendar(student: any) {
-  console.log("🧑 Student:", student); // 👈 ADD THIS
+  console.log(" Student:", student);
   this.selectedStudent = student;
   this.showCalendar = true;
 
@@ -74,7 +74,7 @@ generateDates(from: string, to: string) {
 
   this.calendarDays = dates;
 
-  console.log('📅 Generated Days:', this.calendarDays);
+  console.log('Generated Days:', this.calendarDays);
 }
 
 
@@ -87,7 +87,7 @@ loadHolidays() {
   const start = new Date(this.selectedStudent.from_date);
   const year = start.getFullYear();
 
-  console.log('📅 Fetching FULL YEAR holidays:', year);
+  console.log('Fetching FULL YEAR holidays:', year);
 
   this.api.getTlHolidays(year).subscribe({
 

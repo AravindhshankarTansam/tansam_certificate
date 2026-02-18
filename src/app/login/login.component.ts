@@ -44,7 +44,7 @@ export class LoginComponent {
 
   login() {
     /* =========================
-     1️⃣ EMPTY FIELD CHECK FIRST
+     1️ EMPTY FIELD CHECK FIRST
   ========================= */
     if (!this.email || !this.password) {
       this.toast.show('Please enter email and password', 'info');
@@ -52,7 +52,7 @@ export class LoginComponent {
     }
 
     /* =========================
-     2️⃣ CAPTCHA CHECK
+     2️ CAPTCHA CHECK
   ========================= */
     if (this.userAnswer !== this.captchaAnswer) {
       this.toast.show('Captcha incorrect', 'error');
@@ -61,7 +61,7 @@ export class LoginComponent {
     }
 
     /* =========================
-     3️⃣ API LOGIN
+     3️ API LOGIN
   ========================= */
     this.loading = true;
 
@@ -80,10 +80,10 @@ export class LoginComponent {
           const roleKey = res.role.replace(/\s+/g, '_').toUpperCase();
           localStorage.setItem('role', roleKey);
           localStorage.setItem('lab_name', res.lab_name || '');
-
+          localStorage.setItem('name', res.name || '');
 
           /* =========================
-             🔥 CONSOLE LOGS (ADD THIS)
+           CONSOLE LOGS (ADD THIS)
           ========================= */
           console.log('========= LOGIN SUCCESS =========');
           console.log('Email:', this.email);
@@ -102,7 +102,7 @@ export class LoginComponent {
           else if (roleKey === 'TEAM_LEAD') {
             this.router.navigate(['/dashboard/teamlead/dashboard']);
           }
-          else if (roleKey === 'FINANCE') {   // ⭐ ADD THIS
+          else if (roleKey === 'FINANCE') {
             this.router.navigate(['/dashboard/finance/dashboard']);
           }
         },

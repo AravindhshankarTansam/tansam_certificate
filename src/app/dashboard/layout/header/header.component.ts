@@ -11,14 +11,17 @@ import { Component, HostListener } from '@angular/core';
 export class HeaderComponent {
   role: string = '';
   lab: string = '';
+  name: string = '';
   showDropdown = false;
 
   ngOnInit() {
     const storedRole = localStorage.getItem('role');
     const storedLab = localStorage.getItem('lab_name');
+    const storedName = localStorage.getItem('name');
 
     this.role = storedRole ? storedRole.replace(/_/g, ' ').toLowerCase() : '';
     this.lab = storedLab ? storedLab : '';
+    this.name = storedName ? storedName : '';
   }
 
   toggleDropdown() {
@@ -32,4 +35,9 @@ export class HeaderComponent {
       this.showDropdown = false;
     }
   }
+
+  logout() {
+  localStorage.clear();
+}
+
 }

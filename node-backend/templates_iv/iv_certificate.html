@@ -2,15 +2,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Industrial Visit Certificate</title>
-<link rel="stylesheet" href="iv_certificate.css">
+{{styles}}
+<link rel="stylesheet" href="./iv_certificate.css">
 </head>
 
 <body>
 
 <div class="certificate">
 
-<div class="watermark"></div>
+<div class="watermark">
+  <img src="{{watermark}}">
+</div>
 
 <!-- CORNERS -->
 <div class="corner green"></div>
@@ -22,9 +24,9 @@
 
 <!-- LOGOS -->
 <div class="top-bar">
-  <img src="../public/images/tansam.png">
-  <img src="../public/images/tidco.png">
-  <img src="../public/images/siemens1.png">
+  <img src="{{tansamLogo}}">
+  <img src="{{tidcoLogo}}">
+  <img src="{{siemensLogo}}">
 </div>
 
 <!-- TITLE -->
@@ -45,7 +47,7 @@ on <b>{{visited_date}}</b>.
      <img src="{{signatureImage}}" style="height:70px;margin-bottom:8px">
     <div class="line"></div>
     <p><b>{{signName}}</b></p>
-    <p>{{signRole}}</p>
+    <p>{{signDesignation}}</p>
   </div>
 </div>
 
@@ -53,6 +55,11 @@ on <b>{{visited_date}}</b>.
 <div class="certificate-number">
   Certificate Number – <b>{{certificateNo}}</b>
 </div>
+
+<!-- QR -->
+<!-- <div class="qr-code">
+  <img src="{{qrCode}}">
+</div> -->
 
 </div>
 
