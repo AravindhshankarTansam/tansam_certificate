@@ -3,8 +3,8 @@ const path = require('path');
 const fs = require('fs');
 
 /* ========= SAFE NAME ========= */
-const safeName = (name) =>
-  name.replace(/[^a-zA-Z0-9_-]/g, ''); // prevent ../ hacks
+const safeName = (name = '') =>
+  name.replace(/[^a-zA-Z0-9_-]/g, '');
 
 
 /* ========= STORAGE ========= */
@@ -14,9 +14,17 @@ const storage = multer.diskStorage({
 
     const short = safeName(req.body.collegeShortName || 'common');
 
+    /* 🔥 detect module dynamically */
+    let moduleFolder = 'common';
+
+    if (req.originalUrl.includes('/sdp')) moduleFolder = 'sdp';
+    if (req.originalUrl.includes('/fdp')) moduleFolder = 'fdp';
+    if (req.originalUrl.includes('/iv')) moduleFolder = 'iv';
+    if (req.originalUrl.includes('/industry')) moduleFolder = 'industry';
+
     const uploadDir = path.join(
       __dirname,
-      `../uploads/iv/${short}`
+      `../uploads/${moduleFolder}/${short}`
     );
 
     if (!fs.existsSync(uploadDir)) {

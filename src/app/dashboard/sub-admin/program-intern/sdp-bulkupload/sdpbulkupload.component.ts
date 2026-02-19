@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
-import { BulkStorageService } from '../../../../services/bulk-storage.service';
-
+import { ApiService } from '../../../../services/api.service';
 
 @Component({
   selector: 'app-sdp-bulk-upload',
@@ -16,6 +15,9 @@ export class SdpBulkUploadComponent implements OnInit {
 
   collegeName: string = '';
   collegeShortName: string = '';
+  labs: any[] = [];
+  selectedLab: string = '';
+
   fromDate = '';
   toDate = '';
 
@@ -25,7 +27,6 @@ export class SdpBulkUploadComponent implements OnInit {
 
   uploadedData: any[] = [];
 
-  /* ✅ NEW */
   batches: any[] = [];
   selectedBatch: any = null;
   showBatchDetails = false;
@@ -38,10 +39,35 @@ export class SdpBulkUploadComponent implements OnInit {
     'email'
   ];
 
-constructor(private bulkStorage: BulkStorageService) {}
+  constructor(private api: ApiService) {}
 
-ngOnInit(): void {  this.batches = this.bulkStorage.getSdpBatches();}
+  ngOnInit(): void {
+    this.loadBatches();
+    this.loadLabs();
+  }
 
+  loadLabs() {
+  this.api.getLabs().subscribe({
+    next: (res) => {
+      this.labs = res;
+    },
+    error: (err) => {
+      console.error('Failed to load labs', err);
+    }
+  });
+}
+
+
+  /* ================= LOAD BATCHES ================= */
+
+  loadBatches() {
+    this.api.getBulkSdpBatches().subscribe({
+      next: (res) => this.batches = res,
+      error: (err) => console.error('Failed to load batches', err)
+    });
+  }
+
+  /* ================= FILE SELECT ================= */
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -51,9 +77,24 @@ ngOnInit(): void {  this.batches = this.bulkStorage.getSdpBatches();}
     this.fileName = file.name;
   }
 
+  /* ================= EXCEL PARSE ================= */
+
   uploadFile() {
 
-    if (!this.selectedFile) return;
+    if (!this.selectedLab) {
+      alert('Please select Programme');
+      return;
+    }
+
+    if (!this.selectedFile) {
+      alert('Please select Excel file');
+      return;
+    }
+
+    if (!this.collegeName || !this.fromDate || !this.toDate) {
+      alert('Fill college and date details');
+      return;
+    }
 
     const reader = new FileReader();
 
@@ -79,71 +120,98 @@ ngOnInit(): void {  this.batches = this.bulkStorage.getSdpBatches();}
         return;
       }
 
-      const enrichedData = data.map(row => ({
+      this.uploadedData = data.map(row => ({
         ...row,
         college_name: this.collegeName,
         college_short_name: this.collegeShortName,
         from_date: this.fromDate,
         to_date: this.toDate
       }));
-
-      this.uploadedData = enrichedData;
     };
 
     reader.readAsBinaryString(this.selectedFile);
   }
 
-confirmUpload() {
+  /* ================= CONFIRM UPLOAD ================= */
 
-  const batch = {
-    college_name: this.collegeName,
-    college_short_name: this.collegeShortName,
-    from_date: this.fromDate,
-    to_date: this.toDate,
-    total_students: this.uploadedData.length,
-    students: [...this.uploadedData]
-  };
+  confirmUpload() {
 
-  /* ✅ STORE IN SHARED SERVICE */
-  this.bulkStorage.addSdpBatch(batch);
+    if (!this.selectedFile || !this.uploadedData.length) {
+      alert('Upload and preview Excel first');
+      return;
+    }
 
-  /* ✅ ALSO UPDATE LOCAL LIST */
-  this.batches = this.bulkStorage.getSdpBatches();
+    const formData = new FormData();
 
-  /* RESET FORM */
-  this.uploadedData = [];
-  this.selectedFile = null;
-  this.fileName = '';
-}
+    formData.append('file', this.selectedFile);
+    formData.append('collegeName', this.collegeName);
+    formData.append('collegeShortName', this.collegeShortName);
+    formData.append('labId', this.selectedLab);
+    formData.append('fromDate', this.fromDate);
+    formData.append('toDate', this.toDate);
+    formData.append('students', JSON.stringify(this.uploadedData));
 
+    this.api.bulkUploadSDP(formData).subscribe({
+      next: () => {
+        alert('Bulk upload successful');
 
+        this.resetForm();
+        this.loadBatches();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Upload failed');
+      }
+    });
+  }
 
-  /* ✅ VIEW DETAILS */
+  /* ================= RESET ================= */
+
+  resetForm() {
+    this.uploadedData = [];
+    this.selectedFile = null;
+    this.fileName = '';
+
+    this.collegeName = '';
+    this.collegeShortName = '';
+    this.fromDate = '';
+    this.toDate = '';
+  }
+
+  /* ================= VIEW BATCH ================= */
+
   viewBatch(batch: any) {
-    this.selectedBatch = batch;
-    this.showBatchDetails = true;
+
+    this.api.getBulkSdpStudents(batch.id).subscribe({
+      next: (students) => {
+        this.selectedBatch = { ...batch, students };
+        this.showBatchDetails = true;
+      },
+      error: (err) => console.error('Failed to load students', err)
+    });
   }
 
   closeBatchDetails() {
     this.showBatchDetails = false;
     this.selectedBatch = null;
   }
+
+  /* ================= TEMPLATE ================= */
+
   downloadTemplate() {
 
-  const headers = [
-    'student_name',
-    'register_no',
-    'department',
-    'phone',
-    'email'
-  ];
+    const headers = [
+      'student_name',
+      'register_no',
+      'department',
+      'phone',
+      'email'
+    ];
 
-  const ws = XLSX.utils.aoa_to_sheet([headers]);
-  const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([headers]);
+    const wb = XLSX.utils.book_new();
 
-  XLSX.utils.book_append_sheet(wb, ws, 'SDP Template');
-  XLSX.writeFile(wb, 'SDP_Bulk_Template.xlsx');
-}
-
-
+    XLSX.utils.book_append_sheet(wb, ws, 'SDP Template');
+    XLSX.writeFile(wb, 'SDP_Bulk_Template.xlsx');
+  }
 }

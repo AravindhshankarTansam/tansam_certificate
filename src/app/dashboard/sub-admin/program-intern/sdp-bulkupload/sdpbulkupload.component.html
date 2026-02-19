@@ -28,6 +28,17 @@
         <label>College Short Code</label>
       </div>
 
+        <div class="sdp-input-group">
+          <select [(ngModel)]="selectedLab">
+            <option value="">Select Programme</option>
+            <option *ngFor="let lab of labs" [value]="lab.id">
+              {{ lab.name }}
+            </option>
+          </select>
+          <label>Programme / Lab *</label>
+        </div>
+
+
       <div class="sdp-input-group">
         <input type="date" [(ngModel)]="fromDate">
         <label>From Date</label>
