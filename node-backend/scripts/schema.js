@@ -465,7 +465,6 @@ CREATE TABLE IF NOT EXISTS sdp_students_bulk (
   /* CERTIFICATE */
   certificate_no VARCHAR(100),
   certificate_generated TINYINT DEFAULT 0,
-  certificate_path VARCHAR(255),
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

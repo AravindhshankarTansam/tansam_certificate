@@ -9,6 +9,8 @@ const randomCode = () =>
     .substring(0,7)
     .toUpperCase();
 
+
+/* ===== IV ===== */
 exports.generateIVCertNo = (short, date) => {
 
   const d = new Date(date);
@@ -17,4 +19,16 @@ exports.generateIVCertNo = (short, date) => {
   const full = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
 
   return `TCOE/${ym}/${short}/${full}/${randomCode()}`;
+};
+
+
+/* ===== SDP ===== */
+exports.generateSDPCertNo = (short, date) => {
+
+  const d = new Date(date);
+
+  const ym = `${d.getFullYear()}${pad(d.getMonth()+1)}`;
+  const full = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+
+  return `TCOE/SDP/${ym}/${short}/${full}/${randomCode()}`;
 };

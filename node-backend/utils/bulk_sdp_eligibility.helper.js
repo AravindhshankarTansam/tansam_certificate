@@ -1,8 +1,6 @@
 const db = require('../db');
 const fs = require('fs');
 const path = require('path');
-
-const { generateCertificate } = require('./certificate.helper');
 const { generateSDPCertNo } = require('./certNo.helper');
 
 const safeName = (name = '') =>
@@ -15,9 +13,8 @@ exports.generateBulkSdpIfEligible = async (batchId) => {
     const [students] = await db.query(`
       SELECT
         s.*,
-        b.college_name,
-        b.college_short_name,
-        b.paid_status AS batch_paid
+        b.paid_status AS batch_paid,
+        b.college_short_name
       FROM sdp_students_bulk s
       JOIN sdp_batches b ON s.batch_id = b.id
       WHERE s.batch_id = ?
@@ -30,7 +27,8 @@ exports.generateBulkSdpIfEligible = async (batchId) => {
 
       if (
         student.batch_paid !== 1 ||
-        student.attendance_percentage < 90
+        student.attendance_percentage < 90 ||
+        student.certificate_generated === 1
       ) continue;
 
       const certNo = generateSDPCertNo(
@@ -38,50 +36,14 @@ exports.generateBulkSdpIfEligible = async (batchId) => {
         student.from_date
       );
 
-      /* ===== Generate PDF ===== */
-      const pdfBuffer = await generateCertificate(
-        {
-          name: student.student_name,
-          institution: student.college_name,
-          department: student.department,
-          programme: 'SDP',
-          startDate: student.from_date,
-          endDate: student.to_date,
-          certificateNo: certNo
-        },
-        db
-      );
-
-      const short = safeName(student.college_short_name);
-
-      const folder = path.join(
-        __dirname,
-        `../uploads/sdp/${short}`
-      );
-
-      if (!fs.existsSync(folder)) {
-        fs.mkdirSync(folder, { recursive: true });
-      }
-
-      const safeCertNo = certNo.replace(/[\/\\]/g, '_');
-
-      fs.writeFileSync(
-        path.join(folder, `${safeCertNo}.pdf`),
-        pdfBuffer
-      );
-
+      /* ✅ Only save certificate number */
       await db.query(`
         UPDATE sdp_students_bulk
         SET
           certificate_generated = 1,
-          certificate_no = ?,
-          certificate_path = ?
+          certificate_no = ?
         WHERE id = ?
-      `, [
-        certNo,
-        `sdp/${short}/${safeCertNo}.pdf`,
-        student.id
-      ]);
+      `, [certNo, student.id]);
 
       generatedCount++;
     }

@@ -214,4 +214,35 @@ export class SdpBulkUploadComponent implements OnInit {
     XLSX.utils.book_append_sheet(wb, ws, 'SDP Template');
     XLSX.writeFile(wb, 'SDP_Bulk_Template.xlsx');
   }
+
+  //  ========== DOWNLOAD BATCH DATA ==========  //
+
+  downloadBatch(batch: any) {
+
+  if (!batch.generated_count || batch.generated_count === 0) {
+    alert('Certificates not generated yet');
+    return;
+  }
+
+  this.api.bulkDownloadSdpCertificates(batch.id).subscribe({
+    next: (blob: Blob) => {
+
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${batch.college_short_name}_SDP_CERTIFICATES.zip`;
+
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error(err);
+      alert('Download failed');
+    }
+  });
+}
 }

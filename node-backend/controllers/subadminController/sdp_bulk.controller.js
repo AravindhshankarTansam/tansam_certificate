@@ -3,9 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const archiver = require('archiver');
 
-const { generateBulkSdpIfEligible } =
-  require('../../utils/bulk_sdp_eligibility.helper');
-
+const { generateBulkSdpIfEligible } = require('../../utils/bulk_sdp_eligibility.helper');
+const { generateSDPCertificate } = require('../../utils/bulkSDPcertificate.helper');
 const safeName = (name = '') =>
   name.replace(/[^a-zA-Z0-9_-]/g, '');
 
@@ -14,6 +13,7 @@ const safeName = (name = '') =>
    BULK UPLOAD (LAB BASED)
 ====================================================== */
 exports.bulkUpload = async (req, res) => {
+
   try {
 
     const {
@@ -253,43 +253,124 @@ exports.updatePayment = async (req, res) => {
 };
 
 /* ======================================================
+   DOWNLOAD SINGLE CERTIFICATE
+====================================================== */
+exports.downloadSingleCertificate = async (req, res) => {
+  try {
+
+    const { studentId } = req.params;
+
+    const [[student]] = await db.query(`
+      SELECT
+        s.*,
+        b.college_name,
+        l.name AS programme
+      FROM sdp_students_bulk s
+      JOIN sdp_batches b ON s.batch_id = b.id
+      JOIN labs l ON s.lab_id = l.id
+      WHERE s.id = ?
+    `, [studentId]);
+
+    if (!student || !student.certificate_generated) {
+      return res.status(400).json({
+        message: 'Not eligible or certificate not generated'
+      });
+    }
+
+    const pdfBuffer = await generateSDPCertificate(
+      {
+        name: student.student_name,
+        institution: student.college_name,
+        department: student.department,
+        programme: student.programme, // ✅ LAB NAME
+        startDate: student.from_date,
+        endDate: student.to_date,
+        certificateNo: student.certificate_no
+      },
+      db
+    );
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=${student.certificate_no}.pdf`
+    );
+
+    res.send(pdfBuffer);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Download failed');
+  }
+};
+/* ======================================================
    BULK DOWNLOAD
 ====================================================== */
-
 exports.bulkDownload = async (req, res) => {
+
+  const safeFileName = (name = '') =>
+    name.replace(/[\/\\?%*:|"<>]/g, '-');
+
   try {
 
     const { batchId } = req.params;
 
     const [students] = await db.query(`
-      SELECT certificate_no, certificate_path
-      FROM sdp_students_bulk
-      WHERE batch_id = ?
-      AND certificate_generated = 1
+      SELECT
+        s.*,
+        b.college_name,
+        l.name AS programme
+      FROM sdp_students_bulk s
+      JOIN sdp_batches b ON s.batch_id = b.id
+      JOIN labs l ON s.lab_id = l.id
+      WHERE s.batch_id = ?
+      AND s.certificate_generated = 1
     `, [batchId]);
 
     if (!students.length) {
-      return res.status(400).send('No certificates');
+      return res.status(400).send('No certificates generated');
     }
 
     res.setHeader('Content-Type', 'application/zip');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=SDP_CERTIFICATES_${batchId}.zip`
+    );
 
     const archive = archiver('zip', { zlib: { level: 9 } });
+
+    archive.on('error', err => {
+      console.error('ZIP ERROR:', err);
+      res.status(500).end();
+    });
+
     archive.pipe(res);
 
-    students.forEach(student => {
+for (const student of students) {
 
-      const filePath = path.join(
-        __dirname,
-        `../../uploads/${student.certificate_path}`
-      );
+  const pdfBuffer = await generateSDPCertificate (
+    {
+      name: student.student_name,
+      institution: student.college_name,
+      department: student.department,
+      programme: student.programme,
+      startDate: student.from_date,
+      endDate: student.to_date,
+      certificateNo: student.certificate_no
+    },
+    db
+  );
 
-      if (fs.existsSync(filePath)) {
-        archive.file(filePath, {
-          name: `${student.certificate_no}.pdf`
-        });
-      }
-    });
+  // ✅ DEBUG
+  if (!pdfBuffer || !Buffer.isBuffer(pdfBuffer)) {
+    console.error("PDF generation failed for:", student.certificate_no);
+    continue; // skip instead of crashing
+  }
+
+  const fileName = safeFileName(`${student.certificate_no}.pdf`);
+
+  archive.append(pdfBuffer, { name: fileName });
+}
 
     await archive.finalize();
 
