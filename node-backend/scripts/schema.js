@@ -284,7 +284,7 @@ CREATE TABLE IF NOT EXISTS industry_staff (
 );
 `);
 
-await db.query(`
+    await db.query(`
 CREATE TABLE IF NOT EXISTS iv_visits (
   id INT PRIMARY KEY AUTO_INCREMENT,
 
@@ -321,7 +321,7 @@ CREATE TABLE IF NOT EXISTS iv_visits (
 `);
 
 
-await db.query(`
+    await db.query(`
 CREATE TABLE IF NOT EXISTS iv_students (
   id INT PRIMARY KEY AUTO_INCREMENT,
 
@@ -350,10 +350,10 @@ CREATE TABLE IF NOT EXISTS iv_students (
   FOREIGN KEY (visit_id) REFERENCES iv_visits(id) ON DELETE CASCADE
 );
 `);
-/* =========================
-   CERTIFICATE ACCESS (SECURE DOWNLOAD)
-========================= */
-await db.query(`
+    /* =========================
+       CERTIFICATE ACCESS (SECURE DOWNLOAD)
+    ========================= */
+    await db.query(`
   CREATE TABLE IF NOT EXISTS certificate_access (
     id INT PRIMARY KEY AUTO_INCREMENT,
 
@@ -391,6 +391,95 @@ await db.query(`
     INDEX idx_user (user_id),
     INDEX idx_type (type)
   );
+`);
+    /* =========================
+      Bulk_SDP TABLE
+    ========================= */
+await db.query(`
+CREATE TABLE IF NOT EXISTS sdp_batches (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+
+  college_name VARCHAR(255) NOT NULL,
+  college_short_name VARCHAR(50) NOT NULL,
+
+  from_date DATE,
+  to_date DATE,
+
+  excel_file VARCHAR(255),
+  total_students INT,
+
+  /* PROGRAMME */
+  lab_id INT NOT NULL,
+
+  /* PAYMENT */
+  payment_mode VARCHAR(50),
+  amount DECIMAL(10,2),
+  transaction_id VARCHAR(100),
+  payment_date DATE,
+  received_by VARCHAR(100),
+
+  paid_status TINYINT DEFAULT 0,
+
+  /* CERTIFICATE */
+  generated_count INT DEFAULT 0,
+  certificate_generated TINYINT DEFAULT 0,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT fk_sdp_batch_lab
+    FOREIGN KEY (lab_id)
+    REFERENCES labs(id)
+    ON DELETE RESTRICT
+);
+
+`);
+
+/* =========================
+   Bulk SDP STUDENTS TABLE
+========================= */
+await db.query(`
+CREATE TABLE IF NOT EXISTS sdp_students_bulk (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+
+  batch_id INT NOT NULL,
+
+  /* PROGRAMME */
+  lab_id INT NOT NULL,
+
+  /* STUDENT */
+  student_name VARCHAR(255),
+  register_no VARCHAR(100),
+  department VARCHAR(100),
+  phone VARCHAR(20),
+  email VARCHAR(255),
+
+  from_date DATE,
+  to_date DATE,
+
+  /* ATTENDANCE */
+  present_dates JSON NULL,
+  present_count INT DEFAULT 0,
+  total_days INT DEFAULT 0,
+  attendance_percentage DECIMAL(5,2) DEFAULT 0,
+
+  /* CERTIFICATE */
+  certificate_no VARCHAR(100),
+  certificate_generated TINYINT DEFAULT 0,
+
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  /* FOREIGN KEYS */
+  CONSTRAINT fk_sdp_batch
+    FOREIGN KEY (batch_id)
+    REFERENCES sdp_batches(id)
+    ON DELETE CASCADE,
+
+  CONSTRAINT fk_sdp_student_lab
+    FOREIGN KEY (lab_id)
+    REFERENCES labs(id)
+    ON DELETE RESTRICT
+);
+
 `);
 
 

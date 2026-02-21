@@ -28,6 +28,17 @@
         <label>College Short Code</label>
       </div>
 
+        <div class="sdp-input-group">
+          <select [(ngModel)]="selectedLab">
+            <option value="">Select Programme</option>
+            <option *ngFor="let lab of labs" [value]="lab.id">
+              {{ lab.name }}
+            </option>
+          </select>
+          <label>Programme / Lab *</label>
+        </div>
+
+
       <div class="sdp-input-group">
         <input type="date" [(ngModel)]="fromDate">
         <label>From Date</label>
@@ -140,6 +151,7 @@
             <th>Date Range</th>
             <th>Total Students</th>
             <th>View</th>
+            <th>Download</th>
           </tr>
         </thead>
 
@@ -158,6 +170,13 @@
                       (click)="viewBatch(b)">
                 View
               </button>
+            </td>
+            <td>
+                <button class="download-btn"
+                        [disabled]="!b.generated_count"
+                        (click)="downloadBatch(b)">
+                  Download
+                </button>
             </td>
           </tr>
         </tbody>
@@ -189,6 +208,7 @@
               <th>Department</th>
               <th>Phone</th>
               <th>Email</th>
+              <th>Certificate Download</th>
             </tr>
           </thead>
 
@@ -200,6 +220,13 @@
               <td>{{ s.department }}</td>
               <td>{{ s.phone }}</td>
               <td>{{ s.email }}</td>
+              <td>
+                <button class="download-btn"
+                        [disabled]="!s.certificate_generated"
+                        (click)="downloadCertificate(s)">
+                  Download
+                </button>
+              </td>
             </tr>
           </tbody>
 

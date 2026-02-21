@@ -102,11 +102,12 @@ border: 3px solid #099ca499;
 
 /* ================= INPUTS ================= */
 input {
+  width: 100%; /* ✅ ADD THIS */
   padding: 13px 14px;
   border-radius: 10px;
   border: 1px solid #e6e6e6;
   font-size: 14px;
-
+  box-sizing: border-box; /* ✅ IMPORTANT */
   background: #fafafa;
   transition: 0.25s;
 }
@@ -183,4 +184,23 @@ input:focus {
 
 .refresh:hover {
   background: #ddd;
+}
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-wrapper i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
 }

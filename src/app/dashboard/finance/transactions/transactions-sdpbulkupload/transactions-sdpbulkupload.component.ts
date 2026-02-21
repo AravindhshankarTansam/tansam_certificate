@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import * as XLSX from 'xlsx';
+import { ApiService } from "../../../../services/api.service";
+import { ToastService } from "../../../../services/toast.service";
 
 @Component({
   selector: "app-transactions-sdp-bulk-upload",
@@ -10,98 +11,73 @@ import * as XLSX from 'xlsx';
   templateUrl: "./transactions-sdpbulkupload.component.html",
   styleUrls: ["./transactions-sdpbulkupload.component.css"]
 })
-export class TransactionsSdpBulkUploadComponent {
+export class TransactionsSdpBulkUploadComponent implements OnInit {
 
-    /* ================= FORM FIELDS ================= */
+  batches: any[] = [];
 
-  collegeName = '';
-  collegeShortName = '';
-  fromDate = '';
-  toDate = '';
+  constructor(
+    private api: ApiService,
+    private toast: ToastService
+  ) {}
 
-  selectedFile: File | null = null;
-  fileName = '';
-
-  uploadedData: any[] = [];
-  tableHeaders: string[] = [];
-  showPreview = false;
-
-  rows: any[] = [];
-
-  /* ================= FILE SELECT ================= */
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    this.selectedFile = file;
-    this.fileName = file.name;
+  ngOnInit(): void {
+    this.load();
   }
 
-  /* ================= READ EXCEL ================= */
-
-  uploadFile() {
-    if (!this.selectedFile) return;
-
-    const reader = new FileReader();
-
-    reader.onload = (e: any) => {
-
-      const workbook: XLSX.WorkBook = XLSX.read(
-        e.target.result,
-        { type: 'binary' }
-      );
-
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-
-      const data: any[] =
-        XLSX.utils.sheet_to_json(sheet, { defval: '' });
-
-      if (!data.length) {
-        alert('Excel file is empty');
-        return;
+  /* ================= LOAD BATCHES ================= */
+  load() {
+    this.api.getBulkSdpBatches().subscribe({
+      next: (res: any[]) => {
+        this.batches = res.map(b => ({
+          ...b,
+          isEditing: false
+        }));
+      },
+      error: () => {
+        this.toast.show("Failed to load SDP batches", "error");
       }
+    });
+  }
 
-      // Add extra fields into each row
-      const enrichedData = data.map(row => ({
-        ...row,
-        college_name: this.collegeName,
-        college_short_name: this.collegeShortName,
-        from_date: this.fromDate,
-        to_date: this.toDate
-      }));
+  /* ================= EDIT ================= */
+  edit(batch: any) {
+    batch.isEditing = true;
+  }
 
-      this.uploadedData = enrichedData;
-      this.tableHeaders = Object.keys(enrichedData[0]);
+  cancel(batch: any) {
+    batch.isEditing = false;
+  }
 
-      this.rows = [...this.rows, ...this.uploadedData];
+  /* ================= SAVE PAYMENT ================= */
+  save(batch: any) {
 
-      alert('Transactions uploaded successfully (frontend only)');
+    if (!batch.payment_mode || !batch.amount) {
+      this.toast.show("Fill all required fields", "error");
+      return;
+    }
+
+    if (!batch.transaction_id) {
+      this.toast.show("Transaction / Reference number required", "error");
+      return;
+    }
+
+    const payload = {
+      payment_mode: batch.payment_mode,
+      amount: Number(batch.amount),
+      transaction_id: batch.transaction_id,
+      payment_date: batch.payment_date,
+      received_by: batch.received_by
     };
 
-    reader.readAsBinaryString(this.selectedFile);
+    this.api.updateBulkSdpPayment(batch.id, payload).subscribe({
+      next: () => {
+        batch.isEditing = false;
+        batch.paid_status = 1;
+        this.toast.show("Payment updated successfully", "success");
+      },
+      error: () => {
+        this.toast.show("Payment update failed", "error");
+      }
+    });
   }
-
-  /* ================= TEMPLATE DOWNLOAD ================= */
-
-  downloadTemplate() {
-
-    const headers = [
-      'student_name',
-      'college_name',
-      'payment_mode',
-      'amount',
-      'transaction_id',
-      'payment_date'
-    ];
-
-    const ws = XLSX.utils.aoa_to_sheet([headers]);
-
-    const wb = XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(wb, ws, 'SDP Transactions');
-
-    XLSX.writeFile(wb, 'SDP_Transactions_Template.xlsx');
-  }
-
 }

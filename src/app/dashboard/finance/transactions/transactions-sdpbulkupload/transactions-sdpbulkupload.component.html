@@ -1,119 +1,138 @@
-<div class="bulk-upload-page">
+<div class="transactions-container">
 
-  <!-- Hero -->
-  <div class="hero">
-    <h1>SDP Transactions – Bulk Upload</h1>
-    <p>Upload transaction details using Excel / CSV file</p>
+  <div class="header">
+    <h2>SDP Bulk Transactions</h2>
+    <p>Manage payment and finance approvals for bulk SDP batches</p>
   </div>
 
-  <!-- Upload Card -->
-  <div class="modern-card">
-
-    <div class="card-header">
-      <h2>New SDP Transaction Upload</h2>
-      <p class="subtitle">Enter details and upload Excel file</p>
-    </div>
-
-    <!-- ================= FORM ROW ================= -->
-    <div class="form-row">
-
-      <!-- College Name -->
-      <div class="input-group floating-label college-wide">
-        <input type="text"
-               placeholder=" "
-               [(ngModel)]="collegeName" />
-      <label [class.active]="collegeName">College Name</label>
-      </div>
-
-      <!-- College Short Name -->
-      <div class="input-group floating-label short-input">
-        <input type="text"
-               placeholder=" "
-               [(ngModel)]="collegeShortName" />
-      <label [class.active]="collegeShortName">College Short Code</label>
-      </div>
-
-      <!-- From Date -->
-      <div class="input-group floating-label short-input">
-        <input type="date"
-               [(ngModel)]="fromDate" />
-    <label [class.active]="fromDate">From Date</label>
-      </div>
-
-      <!-- To Date -->
-      <div class="input-group floating-label short-input">
-        <input type="date"
-               [(ngModel)]="toDate" />
-        <label [class.active]="toDate">To Date</label>
-      </div>
-
-    </div>
-
-    <!-- ================= DROPZONE ================= -->
-    <div class="modern-dropzone"
-         (click)="fileInput.click()">
-
-      <div class="icon-circle">
-        <i class="fa-solid fa-cloud-arrow-up fa-2x"></i>
-      </div>
-
-      <p class="drop-text">Drag & drop your Excel file here</p>
-      <p class="or">or</p>
-      <p class="browse-text">Click to Browse File</p>
-
-      <input
-        #fileInput
-        type="file"
-        accept=".xlsx,.xls,.csv"
-        (change)="onFileSelected($event)"
-        hidden
-      />
-    </div>
-
-    <!-- Selected File -->
-    <div class="file-status" *ngIf="fileName">
-      Selected File: <strong>{{ fileName }}</strong>
-    </div>
-
-    <!-- Buttons -->
-    <div class="action-bar">
-
-      <button class="btn btn-outline"
-              (click)="downloadTemplate()">
-        Download Template
-      </button>
-
-      <button class="btn btn-primary"
-              [disabled]="!selectedFile || !collegeName || !fromDate || !toDate"
-              (click)="uploadFile()">
-        Upload Excel
-      </button>
-
-    </div>
-
-  </div>
-
-  <!-- Uploaded Transactions -->
-  <div class="modern-section" *ngIf="rows.length">
-    <h3>Uploaded Transactions</h3>
+  <div class="table-wrapper">
 
     <table class="modern-table">
+
       <thead>
         <tr>
-          <th *ngFor="let h of tableHeaders">
-            {{ h | titlecase }}
-          </th>
+          <th>Sl. No</th>
+          <th>College</th>
+          <th>Short Code</th>
+          <th>Date Range</th>
+          <th>Total</th>
+          <th>Mode</th>
+          <th>Amount</th>
+          <th>Txn / Ref</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Action</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let row of rows">
-          <td *ngFor="let h of tableHeaders">
-            {{ row[h] || '—' }}
+        <tr *ngFor="let b of batches; let i = index" [class.editing]="b.isEditing">
+
+          <!-- SL NO -->
+          <td class="sl">{{ i + 1 }}</td>
+
+          <td class="college">{{ b.college_name }}</td>
+          <td>{{ b.college_short_name }}</td>
+
+          <td>
+            {{ b.from_date | date:'dd MMM yyyy' }} -
+            {{ b.to_date | date:'dd MMM yyyy' }}
           </td>
+
+          <td>
+            <span class="pill">{{ b.total_students }}</span>
+          </td>
+
+          <!-- MODE -->
+          <td>
+            <span *ngIf="!b.isEditing"
+                  class="badge mode"
+                  [ngClass]="b.payment_mode?.toLowerCase()">
+              {{ b.payment_mode || '—' }}
+            </span>
+
+            <select *ngIf="b.isEditing"
+                    [(ngModel)]="b.payment_mode"
+                    class="input">
+              <option value="">Select</option>
+              <option value="RTGS">RTGS</option>
+              <option value="NEFT">NEFT</option>
+              <option value="CHEQUE">Cheque</option>
+              <option value="UPI">UPI</option>
+            </select>
+          </td>
+
+          <!-- AMOUNT -->
+          <td>
+            <span *ngIf="!b.isEditing" class="amount">
+              ₹ {{ b.amount || 0 }}
+            </span>
+
+            <input *ngIf="b.isEditing"
+                   type="number"
+                   [(ngModel)]="b.amount"
+                   class="input" />
+          </td>
+
+          <!-- TXN -->
+          <td>
+            <span *ngIf="!b.isEditing">
+              {{ b.transaction_id || '—' }}
+            </span>
+
+            <input *ngIf="b.isEditing"
+                   [(ngModel)]="b.transaction_id"
+                   class="input" />
+          </td>
+
+          <!-- DATE -->
+          <td>
+            <span *ngIf="!b.isEditing">
+              {{ b.payment_date | date:'dd-MM-yyyy' }}
+            </span>
+
+            <input *ngIf="b.isEditing"
+                   type="date"
+                   [(ngModel)]="b.payment_date"
+                   class="input" />
+          </td>
+
+          <!-- STATUS -->
+          <td>
+            <span class="badge status"
+                  [class.paid]="b.paid_status">
+              {{ b.paid_status ? 'Paid' : 'Pending' }}
+            </span>
+          </td>
+
+          <!-- ACTION -->
+          <td>
+
+<button *ngIf="!b.isEditing"
+        class="btn edit"
+        (click)="edit(b)">
+  <i class="fa-solid fa-pen"></i> Edit
+</button>
+
+<button *ngIf="b.isEditing"
+        class="btn save"
+        (click)="save(b)">
+  <i class="fa-solid fa-check"></i>
+</button>
+
+<button *ngIf="b.isEditing"
+        class="btn cancel"
+        (click)="cancel(b)">
+  <i class="fa-solid fa-xmark"></i> 
+</button>
+
+
+          </td>
+
         </tr>
       </tbody>
-    </table>
-  </div>
 
+    </table>
+
+  </div>
 </div>

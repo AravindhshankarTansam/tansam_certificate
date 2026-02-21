@@ -104,6 +104,7 @@ const financePaymentRoutes = require('./routes/finance/payment.routes');
 const financeListRoutes = require('./routes/finance/list.routes');
 const teamLeadRoutes = require('./routes/teamlead/teamlead.routes');
 const certificateAccessRoutes = require('./routes/certificateAccess.routes');
+const sdpBulkRoutes = require('./routes/subadmin/sdp_bulk.routes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin/master-table/labs', labRoutes);
@@ -122,6 +123,7 @@ app.use('/api/teamlead/holidays', holidayRoutes);
 app.use('/api/certificate', require('./routes/certificate.routes'));
 app.use('/api/iv', ivRoutes);
 app.use('/api/certificate-access', certificateAccessRoutes);
+app.use('/api/subadmin/sdp/bulk', sdpBulkRoutes);
 
 /* ======================================================
  PROTECTED STATIC FILES

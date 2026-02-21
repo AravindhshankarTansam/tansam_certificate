@@ -71,6 +71,42 @@
   margin-bottom: 2rem;
   align-items: flex-end;
 }
+/* SELECT STYLE */
+.sdp-input-group select {
+  width: 100%;
+  height: 56px;
+  padding: 1.6rem 1rem 0.6rem;
+  border-radius: 10px;
+  border: 1.5px solid #cbd5e1;
+  font-size: 0.95rem;
+  background: #fff;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* SELECT FOCUS */
+.sdp-input-group select:focus {
+  border-color: #009999;
+  box-shadow: 0 0 0 4px rgba(0,153,153,0.12);
+  outline: none;
+}
+
+/* FLOAT LABEL ON SELECT FOCUS */
+.sdp-input-group select:focus + label {
+  top: 6px;
+  transform: none;
+  font-size: 0.75rem;
+  color: #009999;
+}
+
+/* FLOAT LABEL WHEN SELECTED */
+.sdp-input-group select:not([value=""]) + label {
+  top: 6px;
+  transform: none;
+  font-size: 0.75rem;
+  color: #009999;
+}
 
 /* Floating Input */
 /* ================= FLOATING LABEL FIX ================= */
