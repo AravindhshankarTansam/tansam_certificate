@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ApiService } from '../services/api.service';
 import { ToastService } from '../services/toast.service';
 import { Router } from '@angular/router';
@@ -7,14 +8,14 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   email = '';
   password = '';
-
+  showPassword = false;
   // captcha
   num1!: number;
   num2!: number;
@@ -114,4 +115,7 @@ export class LoginComponent {
         },
       });
   }
+  togglePassword() {
+  this.showPassword = !this.showPassword;
+}
 }

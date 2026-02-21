@@ -13,11 +13,25 @@
     <!-- Login Card -->
     <div class="card">
 
-      <h2>Login Account</h2>
+      <h2>Login</h2>
 
       <input type="email" placeholder="Email ID" [(ngModel)]="email" />
 
-      <input type="password" placeholder="Password" [(ngModel)]="password" />
+      <div class="password-wrapper">
+
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Password"
+            [(ngModel)]="password"
+          />
+
+          <i
+            class="fa"
+            [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"
+            (click)="togglePassword()"
+          ></i>
+
+        </div>
 
       <div class="captcha">
         <span>{{ num1 }} + {{ num2 }} = ?</span>
