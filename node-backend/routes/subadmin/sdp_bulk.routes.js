@@ -33,5 +33,6 @@ router.put('/payment/:id', isFinance, controller.updatePayment);
 
 /* ================= DOWNLOAD ================= */
 router.get('/bulk-download/:batchId', controller.bulkDownload);
+router.get('/download/:studentId', controller.downloadSingleCertificate);
 
 module.exports = router;

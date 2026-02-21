@@ -176,24 +176,33 @@ exports.getStudentsByVisit = async (req, res) => {
    GENERATE CERTIFICATE (ONLY PAID)
 ====================================================== */
 exports.generate = async (req, res) => {
-
   try {
 
     const { id } = req.params;
 
+    /* ================= FETCH STUDENT + VISIT ================= */
     const [[row]] = await db.query(`
-      SELECT s.*, v.college_name, v.college_short_name, v.visit_date, v.paid_status
+      SELECT
+        s.*,
+        v.college_name,
+        v.college_short_name,
+        v.visit_date,
+        v.paid_status
       FROM iv_students s
       JOIN iv_visits v ON s.visit_id = v.id
       WHERE s.id = ?
     `, [id]);
 
-    if (!row) return res.status(404).send('Not found');
-    if (!row.paid_status)
+    if (!row) {
+      return res.status(404).send('Student not found');
+    }
+
+    /* ================= CHECK PAYMENT ================= */
+    if (!row.paid_status) {
       return res.status(400).send('Payment not completed');
+    }
 
-
-    /* ================= CERT NO ================= */
+    /* ================= GENERATE CERTIFICATE NUMBER ================= */
     let certNo = row.certificate_no;
 
     if (!certNo) {
@@ -204,13 +213,14 @@ exports.generate = async (req, res) => {
 
       await db.query(`
         UPDATE iv_students
-        SET certificate_generated = 1, certificate_no = ?
+        SET
+          certificate_generated = 1,
+          certificate_no = ?
         WHERE id = ?
       `, [certNo, id]);
     }
 
-
-    /* ================= ⭐ USE NEW IV HELPER ================= */
+    /* ================= GENERATE PDF (IN MEMORY) ================= */
     const pdfBuffer = await generateIVCertificate({
       name: row.student_name,
       institution: row.college_name,
@@ -219,33 +229,9 @@ exports.generate = async (req, res) => {
       certificateNo: certNo
     }, db);
 
-
-    /* ================= SAVE FILE ================= */
-    const short = safeName(row.college_short_name);
-
-    const folder = path.join(
-      __dirname,
-      `../../uploads/iv/${short}`
-    );
-
-    if (!fs.existsSync(folder)) {
-      fs.mkdirSync(folder, { recursive: true });
-    }
-
+    /* ================= SEND DIRECT DOWNLOAD ================= */
     const safeCertNo = certNo.replace(/[\/\\]/g, '_');
-    const pdfPath = path.join(folder, `${safeCertNo}.pdf`);
 
-    fs.writeFileSync(pdfPath, pdfBuffer);
-
-
-    await db.query(`
-      UPDATE iv_students
-      SET certificate_path = ?
-      WHERE id = ?
-    `, [`iv/${short}/${safeCertNo}.pdf`, id]);
-
-
-    /* ================= SEND ================= */
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename=${safeCertNo}.pdf`
@@ -253,14 +239,11 @@ exports.generate = async (req, res) => {
 
     res.send(pdfBuffer);
 
-  }
-  catch (err) {
+  } catch (err) {
     console.error(err);
     res.status(500).send('Certificate generation failed');
   }
 };
-
-
 /* ======================================================
    UPDATE PAYMENT (FINANCE)
 ====================================================== */

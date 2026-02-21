@@ -40,6 +40,10 @@ exports.generateSDPCertificate = async (data, db) => {
       process.cwd(),
       'templates/certificate.css'
     );
+      console.log("Template path:", templatePath);
+  console.log("CSS path:", cssPath);
+  console.log("Generating certificate:", data.certificateNo);
+
 
     let html = fs.readFileSync(templatePath, 'utf8');
     const css = fs.readFileSync(cssPath, 'utf8');
@@ -95,16 +99,22 @@ exports.generateSDPCertificate = async (data, db) => {
     r('{{watermark}}', watermark);
 
     /* ===== PUPPETEER ===== */
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox']
-    });
+const browser = await puppeteer.launch({
+  headless: true,
+  args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-gpu'
+  ]
+});
 
     const page = await browser.newPage();
 
-    await page.setContent(html, {
-      waitUntil: 'networkidle0'
-    });
+await page.setContent(html, {
+  waitUntil: 'networkidle0',
+  timeout: 30000
+});
 
     const pdf = await page.pdf({
       format: 'A4',
@@ -117,7 +127,7 @@ exports.generateSDPCertificate = async (data, db) => {
     return pdf;
 
   } catch (err) {
-    console.error("SDP CERT ERROR:", err);
+    console.error("SDP CERT ERROR FULL:", err.stack || err);
     return null;
   }
 };

@@ -208,6 +208,7 @@
               <th>Department</th>
               <th>Phone</th>
               <th>Email</th>
+              <th>Certificate Download</th>
             </tr>
           </thead>
 
@@ -219,6 +220,13 @@
               <td>{{ s.department }}</td>
               <td>{{ s.phone }}</td>
               <td>{{ s.email }}</td>
+              <td>
+                <button class="download-btn"
+                        [disabled]="!s.certificate_generated"
+                        (click)="downloadCertificate(s)">
+                  Download
+                </button>
+              </td>
             </tr>
           </tbody>
 

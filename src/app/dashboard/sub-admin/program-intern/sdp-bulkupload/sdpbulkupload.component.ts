@@ -245,4 +245,38 @@ export class SdpBulkUploadComponent implements OnInit {
     }
   });
 }
+
+downloadCertificate(student: any) {
+
+  if (!student.certificate_generated) {
+    alert('Certificate not generated');
+    return;
+  }
+
+  this.api.downloadSingleSdpCertificate(student.id).subscribe({
+    next: (blob: Blob) => {
+
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+
+      // use DB certificate number for filename
+      const safeFileName =
+        student.certificate_no.replace(/[\/\\?%*:|"<>]/g, '-');
+
+      a.download = `${safeFileName}.pdf`;
+
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error(err);
+      alert('Download failed');
+    }
+  });
+}
 }

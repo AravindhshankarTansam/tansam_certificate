@@ -276,25 +276,28 @@ exports.downloadSingleCertificate = async (req, res) => {
         message: 'Not eligible or certificate not generated'
       });
     }
+const originalCertNo = student.certificate_no;
 
-    const pdfBuffer = await generateSDPCertificate(
-      {
-        name: student.student_name,
-        institution: student.college_name,
-        department: student.department,
-        programme: student.programme, // ✅ LAB NAME
-        startDate: student.from_date,
-        endDate: student.to_date,
-        certificateNo: student.certificate_no
-      },
-      db
-    );
+const pdfBuffer = await generateSDPCertificate(
+  {
+    name: student.student_name,
+    institution: student.college_name,
+    department: student.department,
+    programme: student.programme,
+    startDate: student.from_date,
+    endDate: student.to_date,
+    certificateNo: originalCertNo  // ✅ original
+  },
+  db
+);
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename=${student.certificate_no}.pdf`
-    );
+// Only filename safe
+const safeFileName = originalCertNo.replace(/[\/\\?%*:|"<>]/g, '-');
+
+res.setHeader(
+  'Content-Disposition',
+  `attachment; filename=${safeFileName}.pdf`
+);
 
     res.send(pdfBuffer);
 
@@ -348,7 +351,10 @@ exports.bulkDownload = async (req, res) => {
 
 for (const student of students) {
 
-  const pdfBuffer = await generateSDPCertificate (
+  // original certificate number (DB)
+  const originalCertNo = student.certificate_no;
+
+  const pdfBuffer = await generateSDPCertificate(
     {
       name: student.student_name,
       institution: student.college_name,
@@ -356,7 +362,7 @@ for (const student of students) {
       programme: student.programme,
       startDate: student.from_date,
       endDate: student.to_date,
-      certificateNo: student.certificate_no
+      certificateNo: originalCertNo  // ✅ use DB value
     },
     db
   );
@@ -367,7 +373,9 @@ for (const student of students) {
     continue; // skip instead of crashing
   }
 
-  const fileName = safeFileName(`${student.certificate_no}.pdf`);
+const safeFileNameValue = originalCertNo.replace(/[\/\\?%*:|"<>]/g, '-');
+
+const fileName = `${safeFileNameValue}.pdf`;
 
   archive.append(pdfBuffer, { name: fileName });
 }

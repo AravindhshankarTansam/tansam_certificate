@@ -588,6 +588,15 @@ bulkDownloadSdpCertificates(batchId: number) {
     }
   );
 }
-
+/* ---------- SINGLE CERTIFICATE ---------- */
+downloadSingleSdpCertificate(studentId: number) {
+  return this.http.get(
+    `${this.BASE_URL}/subadmin/sdp/bulk/download/${studentId}`,
+    {
+      responseType: 'blob',
+      withCredentials: true
+    }
+  );
+}
 
 }
