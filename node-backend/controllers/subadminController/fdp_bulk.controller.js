@@ -292,3 +292,60 @@ exports.bulkDownload = async (req, res) => {
     res.status(500).send('Download failed');
   }
 };
+/* ======================================================
+   DOWNLOAD SINGLE FDP CERTIFICATE
+====================================================== */
+exports.downloadSingleCertificate = async (req, res) => {
+  try {
+
+    const { studentId } = req.params;
+
+    const [[staff]] = await db.query(`
+      SELECT
+        s.*,
+        b.college_name,
+        l.name AS programme
+      FROM fdp_staff_bulk s
+      JOIN fdp_batches b ON s.batch_id = b.id
+      JOIN labs l ON s.lab_id = l.id
+      WHERE s.id = ?
+    `, [studentId]);
+
+    if (!staff || !staff.certificate_generated) {
+      return res.status(400).json({
+        message: 'Not eligible or certificate not generated'
+      });
+    }
+
+    /* ✅ Use original certificate number */
+    const originalCertNo = staff.certificate_no;
+
+    const pdfBuffer = await generateFDPCertificate(
+      {
+        name: staff.staff_name,
+        institution: staff.college_name,
+        department: staff.department,
+        programme: staff.programme,
+        startDate: staff.from_date,
+        endDate: staff.to_date,
+        certificateNo: originalCertNo
+      },
+      db
+    );
+
+    /* ✅ Safe filename */
+    const safeFileName =
+      originalCertNo.replace(/[\/\\?%*:|"<>]/g, '-');
+
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename=${safeFileName}.pdf`
+    );
+
+    res.send(pdfBuffer);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Download failed');
+  }
+};

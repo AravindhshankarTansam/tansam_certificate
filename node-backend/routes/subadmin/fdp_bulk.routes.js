@@ -27,5 +27,7 @@ router.put('/attendance/:studentId', isTeamLead, controller.markAttendance);
 router.put('/payment/:id', isFinance, controller.updatePayment);
 
 router.get('/bulk-download/:batchId', controller.bulkDownload);
+/* ================= SINGLE DOWNLOAD ================= */
+router.get('/download/:studentId', controller.downloadSingleCertificate);
 
 module.exports = router;
