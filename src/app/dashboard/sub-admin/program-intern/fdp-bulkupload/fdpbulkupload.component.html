@@ -1,56 +1,58 @@
-<div class="fdp-bulk-page">
+<div class="sdp-bulk-page">
 
   <!-- HERO -->
-  <div class="fdp-hero">
-    <div class="fdp-hero-content">
+  <div class="sdp-hero">
+    <div class="sdp-hero-content">
       <h1>FDP – Bulk Upload</h1>
-      <p>Upload FDP staff list using Excel file</p>
+      <p>Upload FDP faculty list using Excel file</p>
     </div>
   </div>
 
   <!-- MAIN CARD -->
-  <div class="fdp-upload-card">
+  <div class="sdp-upload-card">
 
-    <div class="fdp-card-header">
+    <div class="sdp-card-header">
       <h2>New FDP Record</h2>
-      <p class="fdp-subtitle">Enter institution details to start upload</p>
+      <p class="sdp-subtitle">Enter institution details to start upload</p>
     </div>
 
-    <!-- FORM ROW -->
-    <div class="fdp-form-row">
+    <div class="sdp-form-row">
 
-      <div class="fdp-input-group">
-        <input type="text" placeholder=" " [(ngModel)]="institutionName">
-        <label>Institution Full Name</label>
+      <div class="sdp-input-group">
+        <input type="text" placeholder=" " [(ngModel)]="collegeName">
+        <label>Institution / College Name</label>
       </div>
 
-      <div class="fdp-input-group">
-        <input type="text" placeholder=" " [(ngModel)]="institutionShortName" maxlength="10">
+      <div class="sdp-input-group">
+        <input type="text" placeholder=" " [(ngModel)]="collegeShortName">
         <label>Institution Short Code</label>
       </div>
 
-      <div class="fdp-input-group">
+      <div class="sdp-input-group">
+        <select [(ngModel)]="selectedLab">
+          <option value="">Select Programme</option>
+          <option *ngFor="let lab of labs" [value]="lab.id">
+            {{ lab.name }}
+          </option>
+        </select>
+        <label>Programme / Domain *</label>
+      </div>
+
+      <div class="sdp-input-group">
         <input type="date" [(ngModel)]="fromDate">
         <label>From Date</label>
       </div>
 
-      <div class="fdp-input-group">
+      <div class="sdp-input-group">
         <input type="date" [(ngModel)]="toDate">
         <label>To Date</label>
       </div>
 
-    
     </div>
 
-    <!-- DROPZONE -->
-    <div class="fdp-dropzone"
-         (dragover)="onDragOver($event)"
-         (dragleave)="onDragLeave($event)"
-         (drop)="onDrop($event)"
-         [class.active]="isDragActive"
-         (click)="fileInput.click()">
-
-      <div class="fdp-icon-circle">
+    <!-- FILE UPLOAD -->
+    <div class="sdp-dropzone" (click)="fileInput.click()">
+      <div class="sdp-icon-circle">
         <i class="fa-solid fa-cloud-arrow-up fa-3x"></i>
       </div>
 
@@ -65,21 +67,21 @@
              (change)="onFileSelected($event)">
     </div>
 
-    <div class="fdp-file-status" *ngIf="fileName">
+    <div class="sdp-file-status" *ngIf="fileName">
       Selected: <strong>{{ fileName }}</strong>
     </div>
 
-    <!-- ACTION BUTTONS -->
-    <div class="fdp-action-bar">
+    <!-- ACTIONS -->
+    <div class="sdp-action-bar">
 
-      <button class="fdp-btn-outline"
+      <button class="sdp-btn-outline"
               (click)="downloadTemplate()">
         <i class="fa-solid fa-file-arrow-down"></i>
         Download Template
       </button>
 
-      <button class="fdp-btn-primary"
-              [disabled]="!institutionName ||  !fromDate || !toDate || !selectedFile"
+      <button class="sdp-btn-primary"
+              [disabled]="!collegeName || !fromDate || !toDate || !selectedFile"
               (click)="uploadFile()">
         <i class="fa-solid fa-upload"></i>
         Upload Excel
@@ -89,19 +91,20 @@
 
   </div>
 
-  <!-- ================= PREVIEW BELOW ================= -->
-  <div class="fdp-uploaded-section"
+
+  <!-- ================= PREVIEW ================= -->
+  <div class="sdp-uploaded-section"
        *ngIf="uploadedData.length">
 
-    <h3>Preview Participants</h3>
+    <h3>Preview Faculty</h3>
 
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Designation</th>
+            <th>Sl.No</th>
+            <th>Staff Name</th>
+            <th>Staff ID</th>
             <th>Department</th>
             <th>From</th>
             <th>To</th>
@@ -109,100 +112,122 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let p of uploadedData; let i = index">
+          <tr *ngFor="let s of uploadedData; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ p.institution_name }}</td>
-            <td>{{ p.designation }}</td>
-            <td>{{ p.department }}</td>
-            <td>{{ p.from_date | date }}</td>
-            <td>{{ p.to_date | date }}</td>
+            <td>{{ s.staff_name }}</td>
+            <td>{{ s.staff_id }}</td>
+            <td>{{ s.department }}</td>
+            <td>{{ s.from_date | date }}</td>
+            <td>{{ s.to_date | date }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="modal-actions">
-      <button class="fdp-btn-primary"
+      <button class="save-btn"
               (click)="confirmUpload()">
         Confirm Upload
       </button>
     </div>
 
   </div>
+
+
   <!-- ================= BATCH SUMMARY ================= -->
-  <div class="fdp-uploaded-section"
+  <div class="sdp-uploaded-section"
        *ngIf="batches.length">
 
-    <h3>Uploaded Industry Batches</h3>
+    <h3>Uploaded FDP Batches</h3>
 
     <div class="table-wrapper">
       <table>
+
         <thead>
           <tr>
             <th>#</th>
-            <th>Industry</th>
+            <th>Institution</th>
             <th>Short Code</th>
             <th>Date Range</th>
-            <th>Total Participants</th>
+            <th>Total Faculty</th>
             <th>View</th>
+            <th>Download</th>
           </tr>
         </thead>
 
         <tbody>
           <tr *ngFor="let b of batches; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ b.institution_name }}</td>
-            <td>{{ b.institution_short_name }}</td>
+            <td>{{ b.college_name }}</td>
+            <td>{{ b.college_short_name }}</td>
             <td>
               {{ b.from_date | date }} -
               {{ b.to_date | date }}
             </td>
-            <td>{{ b.total_participants }}</td>
+            <td>{{ b.total_students }}</td>
             <td>
-              <button class="industry-btn-primary"
+              <button class="save-btn"
                       (click)="viewBatch(b)">
                 View
               </button>
             </td>
+            <td>
+              <button class="download-btn"
+                      [disabled]="!b.generated_count"
+                      (click)="downloadBatch(b)">
+                Download
+              </button>
+            </td>
           </tr>
         </tbody>
+
       </table>
     </div>
 
   </div>
-<!-- ================= PARTICIPANT DETAILS MODAL ================= -->
-  <div class="fdp-modal-backdrop"
+
+
+  <!-- ================= MODAL ================= -->
+  <div class="sdp-modal-backdrop"
        *ngIf="showBatchDetails">
 
-    <div class="fdp-modal">
+    <div class="sdp-modal">
 
-      <div class="fdp-modal-header">
-        <h2>Participant Details</h2>
+      <div class="sdp-modal-header">
+        <h2>Faculty Details</h2>
         <button (click)="closeBatchDetails()">✕</button>
       </div>
 
-      <div class="fdp-preview-wrapper">
-        <table class="fdp-preview-table">
+      <div class="sdp-preview-wrapper">
+        <table class="sdp-preview-table">
 
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
-              <th>Designation</th>
+              <th>Staff Name</th>
+              <th>Staff ID</th>
               <th>Department</th>
               <th>Phone</th>
               <th>Email</th>
+              <th>Certificate</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr *ngFor="let p of selectedBatch?.participants; let i = index">
+            <tr *ngFor="let s of selectedBatch?.students; let i = index">
               <td>{{ i + 1 }}</td>
-              <td>{{ p.institution_name }}</td>
-              <td>{{ p.designation }}</td>
-              <td>{{ p.department }}</td>
-              <td>{{ p.phone }}</td>
-              <td>{{ p.email }}</td>
+              <td>{{ s.staff_name }}</td>
+              <td>{{ s.staff_id }}</td>
+              <td>{{ s.department }}</td>
+              <td>{{ s.phone }}</td>
+              <td>{{ s.email }}</td>
+              <td>
+                <button class="download-btn"
+                        [disabled]="!s.certificate_generated"
+                        (click)="downloadCertificate(s)">
+                  Download
+                </button>
+              </td>
             </tr>
           </tbody>
 
@@ -213,4 +238,3 @@
   </div>
 
 </div>
-

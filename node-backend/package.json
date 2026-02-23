@@ -10,11 +10,10 @@
     "setup": "npm run schema && npm run seed:admin"
   },
   "description": "Backend for Tansam Internship Certificate Management System",
-  "keywords": [],
   "author": "Aravindh Uma Shankar - Full stack lead",
   "license": "ISC",
   "dependencies": {
-    "archiver": "^7.0.1",
+    "archiver": "^4.0.2",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -28,11 +27,15 @@
     "multer": "^2.0.2",
     "mysql2": "^3.16.1",
     "nodemailer": "^8.0.1",
-    "puppeteer": "^24.36.1",
+    "puppeteer": "^24.37.5",
     "qrcode": "^1.5.4",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
+  },
+  "overrides": {
+    "minimatch": "^10.2.1",
+    "glob": "^11.0.0"
   }
 }

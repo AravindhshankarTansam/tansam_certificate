@@ -1,101 +1,128 @@
-import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
-import { BulkStorageService } from '../../../../services/bulk-storage.service';
-import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from "@angular/common";
+import { ApiService } from "../../../../services/api.service";
 
 @Component({
-  selector: 'app-tl-fdp-bulk-upload',
+  selector: "app-tl-fdp-bulk-upload",
   standalone: true,
-  imports: [CommonModule, MatIconModule],
-  templateUrl: './tl-fdpbulkupload.component.html',
-  styleUrls: ['./tl-fdpbulkupload.component.css']
+  imports: [CommonModule],
+  templateUrl: "./tl-fdpbulkupload.component.html",
+  styleUrls: ["./tl-fdpbulkupload.component.css"]
 })
 export class TlFdpBulkUploadComponent implements OnInit {
 
   batches: any[] = [];
+  staff: any[] = [];
 
-  showFacultyModal = false;
   selectedBatch: any = null;
+  selectedStaff: any = null;
 
+  showStaffModal = false;
   showCalendar = false;
-  selectedStudent: any = null;
 
   calendarDays: string[] = [];
+  holidays: string[] = [];
 
-  constructor(private bulkStorage: BulkStorageService) {}
+  constructor(private api: ApiService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadBatches();
   }
 
-  /* LOAD FROM SHARED STORAGE */
+  /* ================= LOAD BATCHES ================= */
   loadBatches() {
-    this.batches = this.bulkStorage.getFdpBatches();
+    this.api.getBulkFdpBatches().subscribe(res => {
+      this.batches = res;
+    });
   }
 
-  /* OPEN MODAL */
-  openFaculties(batch: any) {
+  /* ================= OPEN STAFF ================= */
+  openStaff(batch: any) {
     this.selectedBatch = batch;
-    this.showFacultyModal = true;
+    this.showStaffModal = true;
+
+    this.api.getBulkFdpStudents(batch.id).subscribe(res => {
+      this.staff = res;
+    });
   }
 
-  closeFaculties() {
-    this.showFacultyModal = false;
-    this.selectedBatch = null;
+  closeStaff() {
+    this.showStaffModal = false;
   }
 
-  /* DOWNLOAD */
-  downloadBatch(batch: any) {
-    alert("Download all FDP certificates (frontend demo)");
-  }
-
-  downloadFaculty(f: any) {
-    alert("Download certificate for: " + f.staff_name);
-  }
-
-  /* ATTENDANCE */
-  openCalendar(faculty: any) {
-    this.selectedStudent = faculty;
+  /* ================= OPEN CALENDAR ================= */
+  openCalendar(s: any) {
+    this.selectedStaff = s;
     this.showCalendar = true;
-    this.generateDates(faculty.from_date, faculty.to_date);
+
+    this.generateDates(s.from_date, s.to_date);
+    this.loadHolidays();
   }
 
   closeCalendar() {
     this.showCalendar = false;
-    this.selectedStudent = null;
   }
 
+  /* ================= DATE RANGE ================= */
   generateDates(from: string, to: string) {
     const dates: string[] = [];
-    const start = new Date(from);
+
+    let start = new Date(from);
     const end = new Date(to);
 
     while (start <= end) {
-      dates.push(start.toISOString().slice(0, 10));
+      const y = start.getFullYear();
+      const m = String(start.getMonth() + 1).padStart(2, '0');
+      const d = String(start.getDate()).padStart(2, '0');
+
+      dates.push(`${y}-${m}-${d}`);
       start.setDate(start.getDate() + 1);
     }
 
     this.calendarDays = dates;
   }
 
-  isPresent(date: string) {
-    return this.selectedStudent?.present_dates?.includes(date);
+  /* ================= HOLIDAYS ================= */
+  loadHolidays() {
+    if (!this.selectedStaff) return;
+
+    const year = new Date(this.selectedStaff.from_date).getFullYear();
+
+    this.api.getTlHolidays(year).subscribe(res => {
+      this.holidays = res.map((h: any) => h.holiday_date);
+    });
   }
 
+  /* ================= TOGGLE ================= */
   toggleDate(date: string) {
-    if (!this.selectedStudent) return;
 
-    if (!this.selectedStudent.present_dates) {
-      this.selectedStudent.present_dates = [];
+    if (this.holidays.includes(date)) return;
+
+    let list = this.selectedStaff.present_dates || [];
+
+    if (typeof list === 'string') {
+      list = JSON.parse(list);
     }
 
-    const list = this.selectedStudent.present_dates;
-
     if (list.includes(date)) {
-      this.selectedStudent.present_dates =
-        list.filter((d: string) => d !== date);
+      list = list.filter((d: string) => d !== date);
     } else {
       list.push(date);
     }
+
+    this.selectedStaff.present_dates = list;
+
+    this.api.markBulkFdpAttendance(
+      this.selectedStaff.id,
+      list
+    ).subscribe();
+  }
+
+  isPresent(date: string) {
+    return this.selectedStaff?.present_dates?.includes(date);
+  }
+
+  isHoliday(date: string) {
+    return this.holidays.includes(date);
   }
 }

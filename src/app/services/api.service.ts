@@ -5,8 +5,8 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class ApiService {
-  // private BASE_URL = 'http://localhost:5055/api';
-  private BASE_URL = 'https://interncertificate.tansam.org/api';
+  private BASE_URL = 'http://localhost:5055/api';
+  // private BASE_URL = 'https://interncertificate.tansam.org/api';
 
 
   constructor(private http: HttpClient) {}
@@ -592,6 +592,73 @@ bulkDownloadSdpCertificates(batchId: number) {
 downloadSingleSdpCertificate(studentId: number) {
   return this.http.get(
     `${this.BASE_URL}/subadmin/sdp/bulk/download/${studentId}`,
+    {
+      responseType: 'blob',
+      withCredentials: true
+    }
+  );
+}
+
+/* ================= FDP BULK ================= */
+
+/* ---------- BULK UPLOAD ---------- */
+bulkUploadFDP(data: FormData) {
+  return this.http.post(
+    `${this.BASE_URL}/subadmin/fdp/bulk/bulk-upload`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+/* ---------- GET BATCHES ---------- */
+getBulkFdpBatches() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/subadmin/fdp/bulk/batches`,
+    { withCredentials: true }
+  );
+}
+
+/* ---------- GET STUDENTS ---------- */
+getBulkFdpStudents(batchId: number) {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/subadmin/fdp/bulk/batch/${batchId}/students`,
+    { withCredentials: true }
+  );
+}
+
+/* ---------- UPDATE PAYMENT ---------- */
+updateBulkFdpPayment(batchId: number, data: any) {
+  return this.http.put(
+    `${this.BASE_URL}/subadmin/fdp/bulk/payment/${batchId}`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+/* ---------- MARK ATTENDANCE ---------- */
+markBulkFdpAttendance(studentId: number, presentDates: string[]) {
+  return this.http.put(
+    `${this.BASE_URL}/subadmin/fdp/bulk/attendance/${studentId}`,
+    { presentDates },
+    { withCredentials: true }
+  );
+}
+
+/* ---------- BULK DOWNLOAD CERTIFICATES ---------- */
+bulkDownloadFdpCertificates(batchId: number) {
+  return this.http.get(
+    `${this.BASE_URL}/subadmin/fdp/bulk/bulk-download/${batchId}`,
+    {
+      responseType: 'blob',
+      withCredentials: true
+    }
+  );
+}
+
+/* ---------- SINGLE CERTIFICATE ---------- */
+downloadSingleFdpCertificate(studentId: number) {
+  return this.http.get(
+    `${this.BASE_URL}/subadmin/fdp/bulk/download/${studentId}`,
     {
       responseType: 'blob',
       withCredentials: true

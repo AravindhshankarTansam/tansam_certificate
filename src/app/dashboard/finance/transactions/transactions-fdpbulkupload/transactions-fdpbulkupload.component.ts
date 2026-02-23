@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import * as XLSX from 'xlsx';
+import { ApiService } from "../../../../services/api.service";
+import { ToastService } from "../../../../services/toast.service";
 
 @Component({
   selector: "app-transactions-fdp-bulk-upload",
@@ -10,99 +11,73 @@ import * as XLSX from 'xlsx';
   templateUrl: "./transactions-fdpbulkupload.component.html",
   styleUrls: ["./transactions-fdpbulkupload.component.css"]
 })
-export class TransactionsFdpBulkUploadComponent {
+export class TransactionsFdpBulkUploadComponent implements OnInit {
 
-  /* ===== FORM FIELDS ===== */
-  collegeName: string = '';
-  collegeShortCode: string = '';
-  fromDate: string = '';
-  toDate: string = '';
+  batches: any[] = [];
 
-  /* ===== FILE ===== */
-  selectedFile: File | null = null;
-  fileName = '';
+  constructor(
+    private api: ApiService,
+    private toast: ToastService
+  ) {}
 
-  /* ===== TABLE DATA ===== */
-  uploadedData: any[] = [];
-  tableHeaders: string[] = [];
-  rows: any[] = [];
-
-  showPreview = false;
-
-  /* ================= FILE SELECT ================= */
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    this.selectedFile = file;
-    this.fileName = file.name;
+  ngOnInit(): void {
+    this.load();
   }
 
-  /* ================= READ EXCEL ================= */
-
-  uploadFile() {
-
-    if (!this.selectedFile) return;
-
-    const reader = new FileReader();
-
-    reader.onload = (e: any) => {
-
-      const workbook: XLSX.WorkBook = XLSX.read(
-        e.target.result,
-        { type: 'binary' }
-      );
-
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-
-      const data: any[] =
-        XLSX.utils.sheet_to_json(sheet, { defval: '' });
-
-      if (!data.length) {
-        alert('Excel file is empty');
-        return;
+  /* ================= LOAD FDP BATCHES ================= */
+  load() {
+    this.api.getBulkFdpBatches().subscribe({
+      next: (res: any[]) => {
+        this.batches = res.map(b => ({
+          ...b,
+          isEditing: false
+        }));
+      },
+      error: () => {
+        this.toast.show("Failed to load FDP batches", "error");
       }
+    });
+  }
 
-      this.uploadedData = data;
-      this.tableHeaders = Object.keys(data[0]);
-      this.showPreview = true;
+  /* ================= EDIT ================= */
+  edit(batch: any) {
+    batch.isEditing = true;
+  }
+
+  cancel(batch: any) {
+    batch.isEditing = false;
+  }
+
+  /* ================= SAVE PAYMENT ================= */
+  save(batch: any) {
+
+    if (!batch.payment_mode || !batch.amount) {
+      this.toast.show("Fill all required fields", "error");
+      return;
+    }
+
+    if (!batch.transaction_id) {
+      this.toast.show("Transaction / Reference number required", "error");
+      return;
+    }
+
+    const payload = {
+      payment_mode: batch.payment_mode,
+      amount: Number(batch.amount),
+      transaction_id: batch.transaction_id,
+      payment_date: batch.payment_date,
+      received_by: batch.received_by
     };
 
-    reader.readAsBinaryString(this.selectedFile);
-  }
-
-  /* ================= CONFIRM ================= */
-
-  confirmUpload() {
-
-    this.rows = [...this.rows, ...this.uploadedData];
-
-    this.showPreview = false;
-    this.selectedFile = null;
-    this.fileName = '';
-  }
-
-  /* ================= DOWNLOAD TEMPLATE ================= */
-
-  downloadTemplate() {
-
-    const templateData = [
-      {
-        staff_name: '',
-        college_name: '',
-        payment_mode: '',
-        amount: '',
-        transaction_id: '',
-        payment_date: ''
+    this.api.updateBulkFdpPayment(batch.id, payload).subscribe({
+      next: () => {
+        batch.isEditing = false;
+        batch.paid_status = 1;
+        this.toast.show("FDP Payment updated successfully", "success");
+      },
+      error: () => {
+        this.toast.show("Payment update failed", "error");
       }
-    ];
-
-    const ws = XLSX.utils.json_to_sheet(templateData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "FDP_Template");
-
-    XLSX.writeFile(wb, "FDP_Transactions_Template.xlsx");
+    });
   }
-
 }
