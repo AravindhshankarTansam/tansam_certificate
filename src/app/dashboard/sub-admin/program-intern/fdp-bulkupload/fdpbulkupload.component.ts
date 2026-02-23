@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
-import { BulkStorageService } from '../../../../services/bulk-storage.service';
+import { ApiService } from '../../../../services/api.service';
 
 @Component({
   selector: 'app-fdp-bulk-upload',
@@ -11,42 +11,58 @@ import { BulkStorageService } from '../../../../services/bulk-storage.service';
   templateUrl: './fdpbulkupload.component.html',
   styleUrls: ['./fdpbulkupload.component.css']
 })
-export class FdpBulkUploadComponent {
+export class FdpBulkUploadComponent implements OnInit {
 
-  institutionName = '';
-  institutionShortName = '';
+  collegeName = '';
+  collegeShortName = '';
+  labs: any[] = [];
+  selectedLab = '';
+
   fromDate = '';
   toDate = '';
 
-  showPreviewModal = false;
+  selectedFile: File | null = null;
+  fileName = '';
+
   uploadedData: any[] = [];
-  tableHeaders: string[] = [];
-    batches: any[] = [];
+
+  batches: any[] = [];
   selectedBatch: any = null;
   showBatchDetails = false;
 
-  selectedFile: File | null = null;
-  fileName = '';
-  isDragActive = false;
-  constructor(private bulkStorage: BulkStorageService) {}
-ngOnInit(): void {
-  this.batches = this.bulkStorage.getFdpBatches();
-}
+  /* ✅ CHANGED HEADERS */
+requiredHeaders = [
+  'sl_no',
+  'staff_name',
+  'staff_id',
+  'department',
+  'phone',
+  'email'
+];
+  constructor(private api: ApiService) {}
 
+  ngOnInit(): void {
+    this.loadLabs();
+    this.loadBatches();
+  }
 
-  requiredHeaders = [
-    'staff_name',
-    'designation',
-    'institution_name',
-    'department',
-    'phone',
-    'email',
-    'lab_id',
-    'from_date',
-    'to_date'
-  ];
+  /* ================= LOAD LABS ================= */
+  loadLabs() {
+    this.api.getLabs().subscribe({
+      next: res => this.labs = res,
+      error: err => console.error(err)
+    });
+  }
 
-  /* FILE SELECT */
+  /* ================= LOAD BATCHES ================= */
+  loadBatches() {
+    this.api.getBulkFdpBatches().subscribe({
+      next: res => this.batches = res,
+      error: err => console.error(err)
+    });
+  }
+
+  /* ================= FILE ================= */
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (!file) return;
@@ -55,141 +71,172 @@ ngOnInit(): void {
     this.fileName = file.name;
   }
 
-uploadFile() {
-  if (!this.selectedFile) return;
+  /* ================= EXCEL ================= */
+  uploadFile() {
 
-  const reader = new FileReader();
-
-  reader.onload = (e: any) => {
-
-    const workbook = XLSX.read(e.target.result, { type: 'binary' });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const data = XLSX.utils.sheet_to_json<any>(sheet, { defval: '' });
-
-    if (!data.length) {
-      alert('Excel sheet is empty');
+    if (!this.selectedLab) {
+      alert('Select Programme');
       return;
     }
 
-    const headers = Object.keys(data[0]);
-    const missing = this.requiredHeaders.filter(h => !headers.includes(h));
-
-    if (missing.length) {
-      alert('Missing columns: ' + missing.join(', '));
+    if (!this.selectedFile) {
+      alert('Select Excel file');
       return;
     }
 
-    // Attach form values
-    this.uploadedData = data.map(row => ({
-      ...row,
-      from_date: this.fromDate,
-      to_date: this.toDate
-    }));
-
-  };
-
-  reader.readAsBinaryString(this.selectedFile);
-}
-
-
-  /* DRAG EVENTS */
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.isDragActive = true;
-  }
-
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    this.isDragActive = false;
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.isDragActive = false;
-
-    const file = event.dataTransfer?.files[0];
-    if (file) {
-      this.selectedFile = file;
-      this.fileName = file.name;
-    }
-  }
-
-  /* READ EXCEL */
-  private readExcel(file: File) {
     const reader = new FileReader();
 
     reader.onload = (e: any) => {
+
       const workbook = XLSX.read(e.target.result, { type: 'binary' });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
       const data = XLSX.utils.sheet_to_json<any>(sheet, { defval: '' });
 
-      if (!data.length) return alert('Empty sheet');
+      if (!data.length) {
+        alert('Excel empty');
+        return;
+      }
 
       const headers = Object.keys(data[0]);
-      const missing = this.requiredHeaders.filter(h => !headers.includes(h));
+
+      const missing = this.requiredHeaders.filter(
+        h => !headers.includes(h)
+      );
 
       if (missing.length) {
         alert('Missing columns: ' + missing.join(', '));
         return;
       }
 
-      this.uploadedData = data;
-      this.tableHeaders = headers;
-      this.showPreviewModal = true;
+      /* ✅ Map Excel to backend fields */
+this.uploadedData = data.map(row => ({
+  staff_name: row.staff_name,
+  staff_id: row.staff_id,
+  department: row.department,
+  phone: row.phone,
+  email: row.email,
+  from_date: this.fromDate,
+  to_date: this.toDate
+}));
     };
 
-    reader.readAsBinaryString(file);
+    reader.readAsBinaryString(this.selectedFile);
   }
 
-  /* TEMPLATE DOWNLOAD */
-  downloadTemplate() {
-    const ws = XLSX.utils.aoa_to_sheet([this.requiredHeaders]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'FDP_Template');
-    XLSX.writeFile(wb, 'FDP_Bulk_Template.xlsx');
+  /* ================= CONFIRM ================= */
+  confirmUpload() {
+
+    if (!this.uploadedData.length) {
+      alert('Upload Excel first');
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('file', this.selectedFile!);
+    formData.append('collegeName', this.collegeName);
+    formData.append('collegeShortName', this.collegeShortName);
+    formData.append('labId', this.selectedLab);
+    formData.append('fromDate', this.fromDate);
+    formData.append('toDate', this.toDate);
+    formData.append('students', JSON.stringify(this.uploadedData));
+
+    this.api.bulkUploadFDP(formData).subscribe({
+      next: () => {
+        alert('FDP upload success');
+        this.reset();
+        this.loadBatches();
+      },
+      error: () => alert('Upload failed')
+    });
   }
 
-confirmUpload() {
-
-  if (!this.uploadedData.length) return;
-
-  const newBatch = {
-    institution_name: this.institutionName,
-    institution_short_name: this.institutionShortName,
-    from_date: this.fromDate,
-    to_date: this.toDate,
-    total_participants: this.uploadedData.length,
-    participants: [...this.uploadedData]
-  };
-
-  /* ✅ STORE IN SHARED SERVICE */
-  this.bulkStorage.addFdpBatch(newBatch);
-
-  /* ✅ REFRESH LOCAL LIST */
-  this.batches = this.bulkStorage.getFdpBatches();
-
-  /* CLEAR PREVIEW */
-  this.uploadedData = [];
-  this.selectedFile = null;
-  this.fileName = '';
-
-  this.institutionName = '';
-  this.institutionShortName = '';
-  this.fromDate = '';
-  this.toDate = '';
-}
-
-
-  closePreview() {
-    this.showPreviewModal = false;
+  /* ================= RESET ================= */
+  reset() {
+    this.uploadedData = [];
+    this.selectedFile = null;
+    this.fileName = '';
   }
-    viewBatch(batch: any) {
-    this.selectedBatch = batch;
-    this.showBatchDetails = true;
+
+  /* ================= VIEW ================= */
+  viewBatch(batch: any) {
+    this.api.getBulkFdpStudents(batch.id).subscribe({
+      next: students => {
+        this.selectedBatch = { ...batch, students };
+        this.showBatchDetails = true;
+      }
+    });
   }
 
   closeBatchDetails() {
     this.showBatchDetails = false;
-    this.selectedBatch = null;
+  }
+
+  /* ================= TEMPLATE ================= */
+downloadTemplate() {
+
+  const headers = [
+    'sl_no',
+    'staff_name',
+    'staff_id',
+    'department',
+    'phone',
+    'email'
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet([headers]);
+  const wb = XLSX.utils.book_new();
+
+  XLSX.utils.book_append_sheet(wb, ws, 'FDP Template');
+  XLSX.writeFile(wb, 'FDP_Bulk_Template.xlsx');
+}
+
+  /* ================= DOWNLOAD ================= */
+  downloadBatch(batch: any) {
+
+    if (!batch.generated_count) {
+      alert('Certificates not ready');
+      return;
+    }
+
+    this.api.bulkDownloadFdpCertificates(batch.id).subscribe({
+      next: blob => {
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${batch.college_short_name}_FDP_CERTIFICATES.zip`;
+
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
+  }
+
+  downloadCertificate(staff: any) {
+
+    if (!staff.certificate_generated) {
+      alert('Not generated');
+      return;
+    }
+
+    this.api.downloadSingleFdpCertificate(staff.id).subscribe({
+      next: blob => {
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+        const safeFile =
+          staff.certificate_no.replace(/[\/\\?%*:|"<>]/g, '-');
+
+        a.download = `${safeFile}.pdf`;
+
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
   }
 }

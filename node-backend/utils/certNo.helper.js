@@ -32,3 +32,14 @@ exports.generateSDPCertNo = (short, date) => {
 
   return `TCOE/SDP/${ym}/${short}/${full}/${randomCode()}`;
 };
+
+/* ===== FDP ===== */
+exports.generateFDPCertNo = (short, date) => {
+
+  const d = new Date(date);
+
+  const ym = `${d.getFullYear()}${pad(d.getMonth()+1)}`;
+  const full = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+
+  return `TCOE/FDP/${ym}/${short}/${full}/${randomCode()}`;
+};

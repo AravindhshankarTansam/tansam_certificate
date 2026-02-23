@@ -14,7 +14,7 @@ const app = express();
 ====================================================== */
 
 app.disable('x-powered-by'); // hide express fingerprint
-app.set('trust proxy', 1); // required for secure cookies behind proxy
+app.set('trust proxy', 1);
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" }
@@ -79,8 +79,8 @@ app.use(session({
   proxy: true,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: false,
+    sameSite:'lax',
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
@@ -105,6 +105,7 @@ const financeListRoutes = require('./routes/finance/list.routes');
 const teamLeadRoutes = require('./routes/teamlead/teamlead.routes');
 const certificateAccessRoutes = require('./routes/certificateAccess.routes');
 const sdpBulkRoutes = require('./routes/subadmin/sdp_bulk.routes');
+const fdpBulkRoutes = require('./routes/subadmin/fdp_bulk.routes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin/master-table/labs', labRoutes);
@@ -124,6 +125,7 @@ app.use('/api/certificate', require('./routes/certificate.routes'));
 app.use('/api/iv', ivRoutes);
 app.use('/api/certificate-access', certificateAccessRoutes);
 app.use('/api/subadmin/sdp/bulk', sdpBulkRoutes);
+app.use('/api/subadmin/fdp/bulk', fdpBulkRoutes);
 
 /* ======================================================
  PROTECTED STATIC FILES
