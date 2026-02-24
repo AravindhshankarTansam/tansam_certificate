@@ -1,57 +1,58 @@
-<div class="industry-bulk-page">
+<div class="sdp-bulk-page">
 
-  <!-- ================= HERO ================= -->
-  <div class="industry-hero">
-    <div>
+  <!-- HERO -->
+  <div class="sdp-hero">
+    <div class="sdp-hero-content">
       <h1>Industry – Bulk Upload</h1>
-      <p>Upload Industry participants using Excel file</p>
+      <p>Upload Industry employee list using Excel file</p>
     </div>
   </div>
 
-  <!-- ================= MAIN CARD ================= -->
-  <div class="industry-upload-card">
+  <!-- MAIN CARD -->
+  <div class="sdp-upload-card">
 
-    <div class="industry-card-header">
+    <div class="sdp-card-header">
       <h2>New Industry Record</h2>
-      <p class="industry-subtitle">
-        Enter organization details to start upload
-      </p>
+      <p class="sdp-subtitle">Enter company details toa start upload</p>
     </div>
 
-    <!-- FORM ROW -->
-    <div class="industry-form-row">
+    <div class="sdp-form-row">
 
-      <div class="industry-input-group">
-        <input type="text" placeholder=" " [(ngModel)]="industryName">
-        <label>Industry / Organization Name</label>
+      <div class="sdp-input-group">
+        <input type="text" placeholder=" " [(ngModel)]="companyName">
+        <label>Company Name</label>
       </div>
 
-      <div class="industry-input-group">
-        <input type="text" placeholder=" " [(ngModel)]="industryShortCode">
-        <label>Short Code</label>
+      <div class="sdp-input-group">
+        <input type="text" placeholder=" " [(ngModel)]="companyShortName">
+        <label>Company Short Code</label>
       </div>
 
-      <div class="industry-input-group">
+      <div class="sdp-input-group">
+        <select [(ngModel)]="selectedLab">
+          <option value="">Select Programme</option>
+          <option *ngFor="let lab of labs" [value]="lab.id">
+            {{ lab.name }}
+          </option>
+        </select>
+        <label>Programme / Domain *</label>
+      </div>
+
+      <div class="sdp-input-group">
         <input type="date" [(ngModel)]="fromDate">
         <label>From Date</label>
       </div>
 
-      <div class="industry-input-group">
+      <div class="sdp-input-group">
         <input type="date" [(ngModel)]="toDate">
         <label>To Date</label>
       </div>
 
     </div>
 
-    <!-- DROPZONE -->
-    <div class="industry-dropzone"
-         (dragover)="onDragOver($event)"
-         (dragleave)="onDragLeave($event)"
-         (drop)="onDrop($event)"
-         [class.active]="isDragActive"
-         (click)="fileInput.click()">
-
-      <div class="industry-icon-circle">
+    <!-- FILE UPLOAD -->
+    <div class="sdp-dropzone" (click)="fileInput.click()">
+      <div class="sdp-icon-circle">
         <i class="fa-solid fa-cloud-arrow-up fa-3x"></i>
       </div>
 
@@ -66,45 +67,44 @@
              (change)="onFileSelected($event)">
     </div>
 
-    <!-- FILE NAME -->
-    <div class="industry-file-status" *ngIf="fileName">
+    <div class="sdp-file-status" *ngIf="fileName">
       Selected: <strong>{{ fileName }}</strong>
     </div>
 
-    <!-- ACTION BUTTONS -->
-    <div class="industry-action-bar">
+    <!-- ACTIONS -->
+    <div class="sdp-action-bar">
 
-      <button class="industry-btn-outline"
+      <button class="sdp-btn-outline"
               (click)="downloadTemplate()">
         <i class="fa-solid fa-file-arrow-down"></i>
         Download Template
       </button>
 
-      <button class="industry-btn-primary"
-              [disabled]="!industryName || !fromDate || !toDate || !selectedFile"
+      <button class="sdp-btn-primary"
+              [disabled]="!companyName || !fromDate || !toDate || !selectedFile"
               (click)="uploadFile()">
+        <i class="fa-solid fa-upload"></i>
         Upload Excel
       </button>
 
     </div>
 
   </div>
-  <!-- END MAIN CARD -->
 
 
-  <!-- ================= PREVIEW BELOW ================= -->
-  <div class="industry-uploaded-section"
+  <!-- ================= PREVIEW ================= -->
+  <div class="sdp-uploaded-section"
        *ngIf="uploadedData.length">
 
-    <h3>Preview Participants</h3>
+    <h3>Preview Employees</h3>
 
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Designation</th>
+            <th>Sl.No</th>
+            <th>Employee Name</th>
+            <th>ID</th>
             <th>Department</th>
             <th>From</th>
             <th>To</th>
@@ -112,20 +112,20 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let p of uploadedData; let i = index">
+          <tr *ngFor="let s of uploadedData; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ p.participant_name }}</td>
-            <td>{{ p.designation }}</td>
-            <td>{{ p.department }}</td>
-            <td>{{ p.from_date | date }}</td>
-            <td>{{ p.to_date | date }}</td>
+            <td>{{ s.employee_name }}</td>
+            <td>{{ s.employee_id_no }}</td>
+            <td>{{ s.department }}</td>
+            <td>{{ s.from_date | date }}</td>
+            <td>{{ s.to_date | date }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="modal-actions">
-      <button class="industry-btn-primary"
+      <button class="save-btn"
               (click)="confirmUpload()">
         Confirm Upload
       </button>
@@ -135,82 +135,99 @@
 
 
   <!-- ================= BATCH SUMMARY ================= -->
-  <div class="industry-uploaded-section"
+  <div class="sdp-uploaded-section"
        *ngIf="batches.length">
 
     <h3>Uploaded Industry Batches</h3>
 
     <div class="table-wrapper">
       <table>
+
         <thead>
           <tr>
             <th>#</th>
-            <th>Industry</th>
+            <th>Company</th>
             <th>Short Code</th>
             <th>Date Range</th>
-            <th>Total Participants</th>
+            <th>Total Employees</th>
             <th>View</th>
+            <th>Download</th>
           </tr>
         </thead>
 
         <tbody>
           <tr *ngFor="let b of batches; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ b.industry_name }}</td>
-            <td>{{ b.industry_short_code }}</td>
+            <td>{{ b.company_name }}</td>
+            <td>{{ b.company_short_name }}</td>
             <td>
               {{ b.from_date | date }} -
               {{ b.to_date | date }}
             </td>
-            <td>{{ b.participants?.length }}</td>
-
+            <td>{{ b.total_employees }}</td>
             <td>
-              <button class="industry-btn-primary"
+              <button class="save-btn"
                       (click)="viewBatch(b)">
                 View
               </button>
             </td>
+            <td>
+              <button class="download-btn"
+                      [disabled]="!b.generated_count"
+                      (click)="downloadBatch(b)">
+                Download
+              </button>
+            </td>
           </tr>
         </tbody>
+
       </table>
     </div>
 
   </div>
 
 
-  <!-- ================= PARTICIPANT DETAILS MODAL ================= -->
-  <div class="industry-modal-backdrop"
+  <!-- ================= MODAL ================= -->
+  <div class="sdp-modal-backdrop"
        *ngIf="showBatchDetails">
 
-    <div class="industry-modal">
+    <div class="sdp-modal">
 
-      <div class="industry-modal-header">
-        <h2>Participant Details</h2>
+      <div class="sdp-modal-header">
+        <h2>Employee Details</h2>
         <button (click)="closeBatchDetails()">✕</button>
       </div>
 
-      <div class="industry-preview-wrapper">
-        <table class="industry-preview-table">
+      <div class="sdp-preview-wrapper">
+        <table class="sdp-preview-table">
 
           <thead>
             <tr>
               <th>#</th>
               <th>Name</th>
-              <th>Designation</th>
+              <th>ID</th>
               <th>Department</th>
               <th>Phone</th>
               <th>Email</th>
+              <th>Certificate</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr *ngFor="let p of selectedBatch?.participants; let i = index">
+            <tr *ngFor="let s of selectedBatch?.employees; let i = index">
               <td>{{ i + 1 }}</td>
-              <td>{{ p.participant_name }}</td>
-              <td>{{ p.designation }}</td>
-              <td>{{ p.department }}</td>
-              <td>{{ p.phone }}</td>
-              <td>{{ p.email }}</td>
+              <td>{{ s.employee_name }}</td>
+              <td>{{ s.employee_id_no }}</td>
+              <td>{{ s.department }}</td>
+              <td>{{ s.phone }}</td>
+              <td>{{ s.email }}</td>
+              <td>
+                <button class="download-btn"
+                        [disabled]="!s.certificate_generated"
+                        (click)="downloadCertificate(s)">
+                  Download
+                </button>
+              </td>
             </tr>
           </tbody>
 

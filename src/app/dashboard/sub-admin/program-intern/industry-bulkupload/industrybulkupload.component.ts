@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as XLSX from 'xlsx';
-import { BulkStorageService } from '../../../../services/bulk-storage.service';
-
+import { ApiService } from '../../../../services/api.service';
 
 @Component({
   selector: 'app-industry-bulk-upload',
@@ -12,151 +11,229 @@ import { BulkStorageService } from '../../../../services/bulk-storage.service';
   templateUrl: './industrybulkupload.component.html',
   styleUrls: ['./industrybulkupload.component.css']
 })
-export class IndustryBulkUploadComponent {
+export class IndustryBulkUploadComponent implements OnInit {
 
-  /* ================= BASIC INFO ================= */
-  industryName = '';
-  industryShortCode = '';
+  companyName = '';
+  companyShortName = '';
+  labs: any[] = [];
+  selectedLab = '';
+
   fromDate = '';
   toDate = '';
 
-  /* ================= FILE ================= */
   selectedFile: File | null = null;
   fileName = '';
-  isDragActive = false;
 
-  /* ================= PREVIEW ================= */
   uploadedData: any[] = [];
-  tableHeaders: string[] = [];
 
-  /* ================= FINAL STORAGE ================= */
   batches: any[] = [];
   selectedBatch: any = null;
   showBatchDetails = false;
 
-  constructor(private bulkStorage: BulkStorageService) {}
-
-
+  /* ✅ Industry Excel headers */
   requiredHeaders = [
-    'participant_name',
-    'designation',
+    'sl_no',
+    'employee_name',
+    'employee_id_no',
     'department',
     'phone',
     'email'
   ];
 
-  /* ================= FILE HANDLING ================= */
+  constructor(private api: ApiService) {}
 
+  ngOnInit(): void {
+    this.loadLabs();
+    this.loadBatches();
+  }
+
+  /* ================= LOAD LABS ================= */
+  loadLabs() {
+    this.api.getLabs().subscribe({
+      next: res => this.labs = res
+    });
+  }
+
+  /* ================= LOAD BATCHES ================= */
+  loadBatches() {
+    this.api.getBulkIndustryBatches().subscribe({
+      next: res => this.batches = res
+    });
+  }
+
+  /* ================= FILE ================= */
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (!file) return;
+
     this.selectedFile = file;
     this.fileName = file.name;
   }
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.isDragActive = true;
-  }
-
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    this.isDragActive = false;
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.isDragActive = false;
-
-    const file = event.dataTransfer?.files[0];
-    if (file) {
-      this.selectedFile = file;
-      this.fileName = file.name;
-    }
-  }
-
-  /* ================= TEMPLATE ================= */
-
-  downloadTemplate() {
-    const ws = XLSX.utils.aoa_to_sheet([this.requiredHeaders]);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Industry Template');
-    XLSX.writeFile(wb, 'Industry_Bulk_Template.xlsx');
-  }
-
-  /* ================= UPLOAD ================= */
-
+  /* ================= EXCEL ================= */
   uploadFile() {
-    if (!this.selectedFile) return;
+
+    if (!this.selectedLab) {
+      alert('Select Programme');
+      return;
+    }
+
+    if (!this.selectedFile) {
+      alert('Select Excel file');
+      return;
+    }
 
     const reader = new FileReader();
 
     reader.onload = (e: any) => {
+
       const workbook = XLSX.read(e.target.result, { type: 'binary' });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
       const data = XLSX.utils.sheet_to_json<any>(sheet, { defval: '' });
 
       if (!data.length) {
-        alert('Empty sheet');
+        alert('Excel empty');
         return;
       }
 
       const headers = Object.keys(data[0]);
-      const missing = this.requiredHeaders.filter(h => !headers.includes(h));
+
+      const missing = this.requiredHeaders.filter(
+        h => !headers.includes(h)
+      );
 
       if (missing.length) {
         alert('Missing columns: ' + missing.join(', '));
         return;
       }
 
-      const enrichedData = data.map(row => ({
-        ...row,
-        industry_name: this.industryName,
-        industry_short_code: this.industryShortCode,
+      /* ✅ Map Excel */
+      this.uploadedData = data.map(row => ({
+        employee_name: row.employee_name,
+        employee_id_no: row.employee_id_no,
+        department: row.department,
+        phone: row.phone,
+        email: row.email,
         from_date: this.fromDate,
         to_date: this.toDate
       }));
-
-      this.uploadedData = enrichedData;
     };
 
     reader.readAsBinaryString(this.selectedFile);
   }
 
   /* ================= CONFIRM ================= */
+  confirmUpload() {
 
-confirmUpload() {
+    if (!this.uploadedData.length) {
+      alert('Upload Excel first');
+      return;
+    }
 
-  const batch = {
-    industry_name: this.industryName,
-    industry_short_code: this.industryShortCode,
-    from_date: this.fromDate,
-    to_date: this.toDate,
-    participants: [...this.uploadedData]
-  };
+    const formData = new FormData();
 
-  // Save to shared service
-  this.bulkStorage.setIndustryBatch(batch);
+    formData.append('file', this.selectedFile!);
+    formData.append('companyName', this.companyName);
+    formData.append('companyShortName', this.companyShortName);
+    formData.append('labId', this.selectedLab);
+    formData.append('fromDate', this.fromDate);
+    formData.append('toDate', this.toDate);
+    formData.append('employees', JSON.stringify(this.uploadedData));
 
-  // Also show in subadmin page
-  this.batches.push(batch);
+    this.api.bulkUploadIndustry(formData).subscribe({
+      next: () => {
+        alert('Industry upload success');
+        this.reset();
+        this.loadBatches();
+      },
+      error: () => alert('Upload failed')
+    });
+  }
 
-  this.uploadedData = [];
-  this.selectedFile = null;
-  this.fileName = '';
-}
-
+  reset() {
+    this.uploadedData = [];
+    this.selectedFile = null;
+    this.fileName = '';
+  }
 
   /* ================= VIEW ================= */
-
   viewBatch(batch: any) {
-    this.selectedBatch = batch;
-    this.showBatchDetails = true;
+    this.api.getBulkIndustryEmployees(batch.id).subscribe({
+      next: employees => {
+        this.selectedBatch = { ...batch, employees };
+        this.showBatchDetails = true;
+      }
+    });
   }
 
   closeBatchDetails() {
     this.showBatchDetails = false;
-    this.selectedBatch = null;
+  }
+
+  /* ================= TEMPLATE ================= */
+  downloadTemplate() {
+
+    const headers = [
+      'sl_no',
+      'employee_name',
+      'employee_id_no',
+      'department',
+      'phone',
+      'email'
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet([headers]);
+    const wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(wb, ws, 'Industry Template');
+    XLSX.writeFile(wb, 'Industry_Bulk_Template.xlsx');
+  }
+
+  /* ================= DOWNLOAD ================= */
+  downloadBatch(batch: any) {
+
+    if (!batch.generated_count) {
+      alert('Certificates not ready');
+      return;
+    }
+
+    this.api.bulkDownloadIndustryCertificates(batch.id)
+      .subscribe(blob => {
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${batch.company_short_name}_IND_CERTIFICATES.zip`;
+
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+  }
+
+  downloadCertificate(emp: any) {
+
+    if (!emp.certificate_generated) {
+      alert('Not generated');
+      return;
+    }
+
+    this.api.downloadSingleIndustryCertificate(emp.id)
+      .subscribe(blob => {
+
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+
+        const safeFile =
+          emp.certificate_no.replace(/[\/\\?%*:|"<>]/g, '-');
+
+        a.download = `${safeFile}.pdf`;
+
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
   }
 
 }

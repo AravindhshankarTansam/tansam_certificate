@@ -1,96 +1,128 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { MatIconModule } from '@angular/material/icon';
-import { BulkStorageService } from '../../../../services/bulk-storage.service';
+import { ApiService } from "../../../../services/api.service";
 
 @Component({
   selector: 'app-tl-industry-bulk-upload',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule],
   templateUrl: './tl-industryupload.component.html',
   styleUrls: ['./tl-industryupload.component.css']
 })
 export class TlIndustryUploadComponent implements OnInit {
 
   batches: any[] = [];
+  employees: any[] = [];
 
-  showStaffModal = false;
   selectedBatch: any = null;
+  selectedEmployee: any = null;
 
+  showEmployeeModal = false;
   showCalendar = false;
-  selectedStaff: any = null;
 
   calendarDays: string[] = [];
+  holidays: string[] = [];
 
-  constructor(private bulkStorage: BulkStorageService) {}
+  constructor(private api: ApiService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadBatches();
   }
 
-  /* ================= LOAD FROM SERVICE ================= */
-
+  /* ================= LOAD INDUSTRY BATCHES ================= */
   loadBatches() {
-    this.batches = this.bulkStorage.getIndustryBatches();
+    this.api.getBulkIndustryBatches().subscribe(res => {
+      this.batches = res;
+    });
   }
 
-  /* ================= VIEW ================= */
-
-  openStaff(batch: any) {
+  /* ================= OPEN EMPLOYEE ================= */
+  openEmployees(batch: any) {
     this.selectedBatch = batch;
-    this.showStaffModal = true;
+    this.showEmployeeModal = true;
+
+    this.api.getBulkIndustryEmployees(batch.id).subscribe(res => {
+      this.employees = res;
+    });
   }
 
-  closeStaff() {
-    this.showStaffModal = false;
+  closeEmployees() {
+    this.showEmployeeModal = false;
   }
 
-  /* ================= DOWNLOAD (FRONTEND DEMO) ================= */
-
-  downloadBatch(batch: any) {
-    alert("Download all Industry certificates (demo)");
-  }
-
-  downloadStaff(s: any) {
-    alert("Download certificate for: " + s.participant_name);
-  }
-
-  /* ================= ATTENDANCE ================= */
-
-  openCalendar(staff: any) {
-    this.selectedStaff = staff;
+  /* ================= OPEN CALENDAR ================= */
+  openCalendar(emp: any) {
+    this.selectedEmployee = emp;
     this.showCalendar = true;
-    this.generateDates(staff.from_date, staff.to_date);
+
+    this.generateDates(emp.from_date, emp.to_date);
+    this.loadHolidays();
   }
 
   closeCalendar() {
     this.showCalendar = false;
-    this.selectedStaff = null;
   }
 
+  /* ================= DATE RANGE ================= */
   generateDates(from: string, to: string) {
-
     const dates: string[] = [];
 
-    const start = new Date(from);
+    let start = new Date(from);
     const end = new Date(to);
 
     while (start <= end) {
+      const y = start.getFullYear();
+      const m = String(start.getMonth() + 1).padStart(2, '0');
+      const d = String(start.getDate()).padStart(2, '0');
 
-      const yyyy = start.getFullYear();
-      const mm = String(start.getMonth() + 1).padStart(2, '0');
-      const dd = String(start.getDate()).padStart(2, '0');
-
-      dates.push(`${yyyy}-${mm}-${dd}`);
-
+      dates.push(`${y}-${m}-${d}`);
       start.setDate(start.getDate() + 1);
     }
 
     this.calendarDays = dates;
   }
 
-  isPresent(date: string) {
-    return this.selectedStaff?.present_dates?.includes(date);
+  /* ================= HOLIDAYS ================= */
+  loadHolidays() {
+    if (!this.selectedEmployee) return;
+
+    const year = new Date(this.selectedEmployee.from_date).getFullYear();
+
+    this.api.getTlHolidays(year).subscribe(res => {
+      this.holidays = res.map((h: any) => h.holiday_date);
+    });
   }
 
+  /* ================= TOGGLE ================= */
+  toggleDate(date: string) {
+
+    if (this.holidays.includes(date)) return;
+
+    let list = this.selectedEmployee.present_dates || [];
+
+    if (typeof list === 'string') {
+      list = JSON.parse(list);
+    }
+
+    if (list.includes(date)) {
+      list = list.filter((d: string) => d !== date);
+    } else {
+      list.push(date);
+    }
+
+    this.selectedEmployee.present_dates = list;
+
+    this.api.markBulkIndustryAttendance(
+      this.selectedEmployee.id,
+      list
+    ).subscribe();
+  }
+
+  isPresent(date: string) {
+    return this.selectedEmployee?.present_dates?.includes(date);
+  }
+
+  isHoliday(date: string) {
+    return this.holidays.includes(date);
+  }
 }

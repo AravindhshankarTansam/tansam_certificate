@@ -666,4 +666,71 @@ downloadSingleFdpCertificate(studentId: number) {
   );
 }
 
+/* ================= INDUSTRY BULK ================= */
+
+/* ---------- BULK UPLOAD ---------- */
+bulkUploadIndustry(data: FormData) {
+  return this.http.post(
+    `${this.BASE_URL}/subadmin/industry/bulk/bulk-upload`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+/* ---------- GET BATCHES ---------- */
+getBulkIndustryBatches() {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/subadmin/industry/bulk/batches`,
+    { withCredentials: true }
+  );
+}
+
+/* ---------- GET EMPLOYEES ---------- */
+getBulkIndustryEmployees(batchId: number) {
+  return this.http.get<any[]>(
+    `${this.BASE_URL}/subadmin/industry/bulk/batch/${batchId}/employees`,
+    { withCredentials: true }
+  );
+}
+
+/* ---------- UPDATE PAYMENT ---------- */
+updateBulkIndustryPayment(batchId: number, data: any) {
+  return this.http.put(
+    `${this.BASE_URL}/subadmin/industry/bulk/payment/${batchId}`,
+    data,
+    { withCredentials: true }
+  );
+}
+
+/* ---------- MARK ATTENDANCE ---------- */
+markBulkIndustryAttendance(employeeId: number, presentDates: string[]) {
+  return this.http.put(
+    `${this.BASE_URL}/subadmin/industry/bulk/attendance/${employeeId}`,
+    { presentDates },
+    { withCredentials: true }
+  );
+}
+
+/* ---------- BULK DOWNLOAD CERTIFICATES ---------- */
+bulkDownloadIndustryCertificates(batchId: number) {
+  return this.http.get(
+    `${this.BASE_URL}/subadmin/industry/bulk/bulk-download/${batchId}`,
+    {
+      responseType: 'blob',
+      withCredentials: true
+    }
+  );
+}
+
+/* ---------- SINGLE CERTIFICATE ---------- */
+downloadSingleIndustryCertificate(employeeId: number) {
+  return this.http.get(
+    `${this.BASE_URL}/subadmin/industry/bulk/download/${employeeId}`,
+    {
+      responseType: 'blob',
+      withCredentials: true
+    }
+  );
+}
+
 }

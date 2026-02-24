@@ -43,3 +43,14 @@ exports.generateFDPCertNo = (short, date) => {
 
   return `TCOE/FDP/${ym}/${short}/${full}/${randomCode()}`;
 };
+
+/* ===== INDUSTRY ===== */
+exports.generateIndustryCertNo = (short, date) => {
+
+  const d = new Date(date);
+
+  const ym = `${d.getFullYear()}${pad(d.getMonth()+1)}`;
+  const full = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+
+  return `TCOE/IND/${ym}/${short}/${full}/${randomCode()}`;
+};
