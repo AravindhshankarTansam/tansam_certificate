@@ -106,6 +106,7 @@ const teamLeadRoutes = require('./routes/teamlead/teamlead.routes');
 const certificateAccessRoutes = require('./routes/certificateAccess.routes');
 const sdpBulkRoutes = require('./routes/subadmin/sdp_bulk.routes');
 const fdpBulkRoutes = require('./routes/subadmin/fdp_bulk.routes');
+const industryBulkRoutes = require('./routes/subadmin/industry_bulk.routes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin/master-table/labs', labRoutes);
@@ -126,6 +127,7 @@ app.use('/api/iv', ivRoutes);
 app.use('/api/certificate-access', certificateAccessRoutes);
 app.use('/api/subadmin/sdp/bulk', sdpBulkRoutes);
 app.use('/api/subadmin/fdp/bulk', fdpBulkRoutes);
+app.use('/api/subadmin/industry/bulk', industryBulkRoutes);
 
 /* ======================================================
  PROTECTED STATIC FILES

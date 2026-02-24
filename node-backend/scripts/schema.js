@@ -565,6 +565,87 @@ CREATE TABLE IF NOT EXISTS sdp_students_bulk (
   INDEX idx_certificate (certificate_no)
 );
 `);
+    /* =========================
+       Bulk Industry
+    ========================= */
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS industry_batches (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+
+  /* COMPANY */
+  company_name VARCHAR(255) NOT NULL,
+  company_short_name VARCHAR(100) NOT NULL,
+
+  /* DATE */
+  from_date DATE,
+  to_date DATE,
+
+  /* EXCEL */
+  excel_file VARCHAR(255),
+
+  /* PROGRAMME */
+  lab_id INT NOT NULL,
+
+  /* SUMMARY */
+  total_employees INT DEFAULT 0,
+  generated_count INT DEFAULT 0,
+
+  /* PAYMENT */
+  payment_mode VARCHAR(50),
+  amount DECIMAL(10,2),
+  transaction_id VARCHAR(100),
+  payment_date DATE,
+  received_by VARCHAR(100),
+  paid_status TINYINT DEFAULT 0,
+
+  /* AUDIT */
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  INDEX idx_lab (lab_id)
+);
+`);
+
+    /* ==============================
+       Bulk Industry Employees Table
+    ================================= */
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS industry_employee_bulk (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+
+  /* BATCH */
+  batch_id INT NOT NULL,
+  lab_id INT NOT NULL,
+
+  /* EMPLOYEE */
+  employee_name VARCHAR(255),
+  employee_id_no VARCHAR(100),
+  department VARCHAR(150),
+  phone VARCHAR(20),
+  email VARCHAR(255),
+
+  /* DATE */
+  from_date DATE,
+  to_date DATE,
+
+  /* ATTENDANCE */
+  present_dates JSON,
+  present_count INT DEFAULT 0,
+  total_days INT DEFAULT 0,
+  attendance_percentage DECIMAL(5,2) DEFAULT 0,
+
+  /* CERTIFICATE */
+  certificate_no VARCHAR(255),
+  certificate_generated TINYINT DEFAULT 0,
+
+  /* AUDIT */
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  INDEX idx_batch (batch_id),
+  INDEX idx_employee (employee_id_no),
+  INDEX idx_certificate (certificate_no)
+);
+`);
+
 
     console.log('✅ All tables created successfully');
     process.exit();

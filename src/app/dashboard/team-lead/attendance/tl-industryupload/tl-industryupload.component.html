@@ -1,123 +1,91 @@
-<div class="tl-sdp-page">
+<div class="attendance-container">
 
-  <!-- ================= HEADER ================= -->
-  <div class="tl-header">
-    <h2>Industry Bulk Upload Records</h2>
-  </div>
+  <h2 class="title">Industry Bulk Attendance</h2>
 
-  <!-- ================= BATCH TABLE ================= -->
-  <div class="tl-table-card" *ngIf="batches.length; else emptyState">
+  <div class="card">
 
-    <table class="tl-table">
+    <table class="faculty-table">
       <thead>
         <tr>
           <th>#</th>
-          <th>Industry</th>
-          <th>From</th>
-          <th>To</th>
-          <th>Total Participants</th>
-          <th>View</th>
-          <th>Download All</th>
+          <th>Company</th>
+          <th>From Date</th>
+          <th>To Date</th>
+          <th>Employee Count</th>
+          <th>Action</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let batch of batches; let i = index">
-
+        <tr *ngFor="let b of batches; let i = index">
           <td>{{ i + 1 }}</td>
-          <td>{{ batch.industry_name }}</td>
-          <td>{{ batch.from_date | date:'dd-MM-yyyy' }}</td>
-          <td>{{ batch.to_date | date:'dd-MM-yyyy' }}</td>
-
-          <!-- ✅ FIXED -->
-          <td>{{ batch.participants.length }}</td>
+          <td class="name">{{ b.company_name }}</td>
+          <td>{{ b.from_date | date }}</td>
+          <td>{{ b.to_date | date }}</td>
+          <td>{{ b.total_employees }}</td>
 
           <td>
-            <button class="btn-view"
-                    (click)="openStaff(batch)">
-              <mat-icon>visibility</mat-icon> View
+            <button class="btn-primary" (click)="openEmployees(b)">
+              Take Attendance
             </button>
           </td>
-
-          <td>
-            <button class="btn-download"
-                    (click)="downloadBatch(batch)">
-              <mat-icon>download</mat-icon> Download All
-            </button>
-          </td>
-
         </tr>
       </tbody>
     </table>
 
   </div>
-
-  <!-- ================= EMPTY STATE ================= -->
-  <ng-template #emptyState>
-    <div class="tl-empty">
-      <h3>No Industry Bulk Uploads Yet</h3>
-      <p>Uploaded records will appear here.</p>
-    </div>
-  </ng-template>
-
 </div>
 
 
-<!-- ================= PARTICIPANTS MODAL ================= -->
+<!-- ================= EMPLOYEE LIST ================= -->
+<div class="overlay" *ngIf="showEmployeeModal">
 
-<div class="tl-modal-backdrop" *ngIf="showStaffModal">
+  <div class="modal large">
 
-  <div class="tl-modal large">
-
-    <div class="tl-modal-header">
-      <h3>
-        {{ selectedBatch?.industry_name }}
-        ({{ selectedBatch?.participants.length }} Participants)
-      </h3>
-      <button (click)="closeStaff()">✕</button>
+    <div class="modal-header">
+      <h3>{{ selectedBatch?.company_name }}</h3>
+      <button class="close-btn" (click)="closeEmployees()">✕</button>
     </div>
 
-    <div class="tl-modal-body">
+    <div class="card">
 
-      <table class="tl-student-table">
+      <table class="faculty-table">
 
         <thead>
           <tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Designation</th>
-            <th>Department</th>
+            <th>Employee Name</th>
+            <th>Employee ID</th>
             <th>Attendance</th>
-            <th>Download</th>
+            <th>Eligibility</th>
           </tr>
         </thead>
 
         <tbody>
-
-          <!-- ✅ FIXED -->
-          <tr *ngFor="let s of selectedBatch?.participants; let i = index">
+          <tr *ngFor="let s of employees; let i = index">
 
             <td>{{ i + 1 }}</td>
-            <td>{{ s.participant_name }}</td>
-            <td>{{ s.designation }}</td>
-            <td>{{ s.department }}</td>
+            <td class="name">{{ s.employee_name }}</td>
+            <td>{{ s.employee_id_no }}</td>
 
             <td>
-              <button class="btn-primary"
-                      (click)="openCalendar(s)">
-                <mat-icon>event</mat-icon> Attendance
+              <button class="btn-primary" (click)="openCalendar(s)">
+                Open Calendar
               </button>
             </td>
 
             <td>
-              <button class="btn-download"
-                      (click)="downloadStaff(s)">
-                <mat-icon>download</mat-icon> Download
-              </button>
+              <span
+                class="badge"
+                [ngClass]="{
+                  'eligible': s.attendance_percentage >= 90,
+                  'noteligible': s.attendance_percentage < 90
+                }">
+                {{ s.attendance_percentage || 0 }} %
+              </span>
             </td>
 
           </tr>
-
         </tbody>
 
       </table>
@@ -129,35 +97,37 @@
 </div>
 
 
-<!-- ================= ATTENDANCE MODAL ================= -->
+<!-- ================= CALENDAR ================= -->
+<div class="overlay" *ngIf="showCalendar">
 
-<div class="tl-modal-backdrop" *ngIf="showCalendar">
+  <div class="modal">
 
-  <div class="tl-modal">
-
-    <div class="tl-modal-header">
-      <h3>{{ selectedStaff?.participant_name }}</h3>
-      <button (click)="closeCalendar()">✕</button>
+    <div class="modal-header">
+      <h3>{{ selectedEmployee?.employee_name }}</h3>
+      <button class="close-btn" (click)="closeCalendar()">✕</button>
     </div>
 
-    <div class="calendar-grid">
+    <div class="legend">
+      <span class="box present"></span> Present
+      <span class="box holiday"></span> Holiday
+      <span class="box normal"></span> Working
+    </div>
+
+    <div class="calendar">
 
       <div
         *ngFor="let d of calendarDays"
         class="day"
-        [class.present]="isPresent(d)">
+        [class.present]="isPresent(d)"
+        [class.holiday]="isHoliday(d)"
+        (click)="toggleDate(d)">
 
         {{ d.split('-')[2] }}
 
+        <span *ngIf="isHoliday(d)">🎉</span>
+
       </div>
 
-    </div>
-
-    <div class="calendar-summary">
-      Present:
-      {{ selectedStaff?.present_dates?.length || 0 }}
-      /
-      {{ calendarDays.length }}
     </div>
 
   </div>

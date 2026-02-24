@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import * as XLSX from "xlsx";
+import { ApiService } from "../../../../services/api.service";
+import { ToastService } from "../../../../services/toast.service";
 
 @Component({
   selector: "app-transactions-industry-bulk-upload",
@@ -10,83 +11,73 @@ import * as XLSX from "xlsx";
   templateUrl: "./transactions-industrybulkupload.component.html",
   styleUrls: ["./transactions-industrybulkupload.component.css"]
 })
-export class TransactionsIndustryBulkUploadComponent {
- 
-  collegeName = '';
-  collegeShortCode = '';
-  fromDate = '';
-  toDate = '';
+export class TransactionsIndustryBulkUploadComponent implements OnInit {
 
-  selectedFile: File | null = null;
-  fileName = '';
+  batches: any[] = [];
 
-  uploadedData: any[] = [];
-  tableHeaders: string[] = [];
-  showPreview = false;
+  constructor(
+    private api: ApiService,
+    private toast: ToastService
+  ) {}
 
-  rows: any[] = [];
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    this.selectedFile = file;
-    this.fileName = file.name;
+  ngOnInit(): void {
+    this.load();
   }
 
-  uploadFile() {
-    if (!this.selectedFile) return;
-
-    const reader = new FileReader();
-
-    reader.onload = (e: any) => {
-
-      const workbook: XLSX.WorkBook =
-        XLSX.read(e.target.result, { type: "binary" });
-
-      const sheet = workbook.Sheets[workbook.SheetNames[0]];
-
-      const data: any[] =
-        XLSX.utils.sheet_to_json(sheet, { defval: "" });
-
-      if (!data.length) {
-        alert("Excel file is empty");
-        return;
+  /* ================= LOAD INDUSTRY BATCHES ================= */
+  load() {
+    this.api.getBulkIndustryBatches().subscribe({
+      next: (res: any[]) => {
+        this.batches = res.map(b => ({
+          ...b,
+          isEditing: false
+        }));
+      },
+      error: () => {
+        this.toast.show("Failed to load Industry batches", "error");
       }
+    });
+  }
 
-      this.uploadedData = data;
-      this.tableHeaders = Object.keys(data[0]);
-      this.showPreview = true;
+  /* ================= EDIT ================= */
+  edit(batch: any) {
+    batch.isEditing = true;
+  }
+
+  cancel(batch: any) {
+    batch.isEditing = false;
+  }
+
+  /* ================= SAVE PAYMENT ================= */
+  save(batch: any) {
+
+    if (!batch.payment_mode || !batch.amount) {
+      this.toast.show("Fill all required fields", "error");
+      return;
+    }
+
+    if (!batch.transaction_id) {
+      this.toast.show("Transaction / Reference number required", "error");
+      return;
+    }
+
+    const payload = {
+      payment_mode: batch.payment_mode,
+      amount: Number(batch.amount),
+      transaction_id: batch.transaction_id,
+      payment_date: batch.payment_date,
+      received_by: batch.received_by
     };
 
-    reader.readAsBinaryString(this.selectedFile);
-  }
-
-  confirmUpload() {
-
-    this.rows = [...this.rows, ...this.uploadedData];
-
-    this.showPreview = false;
-    this.uploadedData = [];
-
-    this.selectedFile = null;
-    this.fileName = '';
-  }
-
-  downloadTemplate() {
-
-    const headers = [
-      "Staff Name",
-      "Amount",
-      "Payment Mode",
-      "Transaction Id",
-      "Payment Date"
-    ];
-
-    const worksheet = XLSX.utils.aoa_to_sheet([headers]);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
-
-    XLSX.writeFile(workbook, "Industry_Transactions_Template.xlsx");
+    this.api.updateBulkIndustryPayment(batch.id, payload).subscribe({
+      next: () => {
+        batch.isEditing = false;
+        batch.paid_status = 1;
+        this.toast.show("Industry Payment updated successfully", "success");
+      },
+      error: () => {
+        this.toast.show("Payment update failed", "error");
+      }
+    });
   }
 }
