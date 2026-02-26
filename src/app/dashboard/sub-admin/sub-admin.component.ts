@@ -18,7 +18,7 @@ export class SubAdminComponent implements OnInit{
   isLoadingCounts: boolean = true;
   errorMessageCounts: string = '';
 
-  selectedType: 'sdp' | 'fdp' | 'industry' | '' = '';
+  selectedType: 'sdp' | 'fdp' | 'industry' | '' = 'sdp';
   batches: any[] = [];
   isLoadingBatches: boolean = false;
   errorMessageBatches: string = '';
@@ -38,6 +38,7 @@ export class SubAdminComponent implements OnInit{
 
   ngOnInit() {
     this.loadCounts();
+    this.onTypeChange();
   }
 
   loadCounts() {
