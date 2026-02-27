@@ -74,12 +74,12 @@
       [(ngModel)]="form.designation"
       placeholder="Enter designation"
     />
-
-    <input
-      type="text"
-      [(ngModel)]="form.lab"
-      placeholder="Enter lab name"
-    />
+<select [(ngModel)]="form.lab">
+  <option value="" disabled>Select Lab</option>
+  <option *ngFor="let lab of labs" [value]="lab.name">
+    {{ lab.name }}
+  </option>
+</select>
     <!-- Signature Upload -->
     <input
       type="file"

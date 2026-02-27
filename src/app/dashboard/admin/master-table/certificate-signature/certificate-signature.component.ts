@@ -14,6 +14,7 @@ import { ToastService } from '../../../../services/toast.service';
 export class CertificateSignatureComponent implements OnInit {
 
   list: any[] = [];
+    labs: any[] = [];  
   showModal = false;
   editing: any = null;
 
@@ -29,12 +30,23 @@ export class CertificateSignatureComponent implements OnInit {
 
   ngOnInit() {
     this.load();
+      this.loadLabs();
   }
 
   load() {
     this.api.getSignatures().subscribe(res => this.list = res);
   }
-
+loadLabs() {
+  this.api.getLabs().subscribe({
+    next: (res) => {
+      this.labs = res;
+    },
+    error: (err) => {
+      console.error('Failed to load labs:', err);
+      this.toast.show('Failed to load labs', 'error');
+    }
+  });
+}
   openModal(item?: any) {
     this.showModal = true;
     this.editing = item || null;
