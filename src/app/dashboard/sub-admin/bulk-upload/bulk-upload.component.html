@@ -119,42 +119,53 @@
   </div>
 
   <!-- Preview Modal – Shown after file selection/upload -->
-  <div class="modal-backdrop" *ngIf="showPreviewModal">
-    <div class="modal fullscreen modern-modal">
-      <div class="modal-header">
-        <h2>{{ category }} – Preview</h2>
-        <button class="close-btn" (click)="closePreview()">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
+<!-- Preview Modal – Improved UI -->
+<div class="modal-backdrop" *ngIf="showPreviewModal">
+  <div class="preview-modal modern-modal">
+    <div class="modal-header">
+      <h2>{{ category }} – Preview & Confirm</h2>
+      <button class="close-btn" (click)="closePreview()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
 
-      <div class="modal-info">
-        <p>Total Records: <strong>{{ uploadedData.length }}</strong></p>
+    <!-- Prominent Info Bar -->
+    <div class="preview-info-bar">
+      <div class="info-item">
+        <span class="label">Total Records</span>
+        <span class="value">{{ uploadedData.length }}</span>
       </div>
-
-      <div class="preview-table-wrapper">
-        <table class="preview-table">
-          <thead>
-            <tr>
-              <th *ngFor="let h of tableHeaders">{{ h | titlecase }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of uploadedData; let i = index">
-              <td *ngFor="let h of tableHeaders">{{ row[h] || '—' }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-outline" (click)="closePreview()">Close</button>
-        <button class="btn btn-primary" (click)="confirmUpload()">
-          Confirm Upload
-        </button>
+      <div class="info-item">
+        <span class="label">File</span>
+        <span class="value">{{ fileName || 'Uploaded data' }}</span>
       </div>
     </div>
+
+    <!-- Scrollable Table Area -->
+    <div class="preview-table-container">
+      <table class="preview-table">
+        <thead>
+          <tr>
+            <th *ngFor="let h of visibleHeaders">{{ h | titlecase }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of uploadedData; let i = index">
+            <td *ngFor="let h of visibleHeaders">{{ row[h] || '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer with Actions -->
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="closePreview()">Cancel</button>
+      <button class="btn btn-primary confirm-btn" (click)="confirmUpload()">
+        <i class="fa-solid fa-check"></i> Confirm & Upload
+      </button>
+    </div>
   </div>
+</div>
 
   <!-- Students Modal -->
   <div class="students-backdrop" *ngIf="showStudentsModal">

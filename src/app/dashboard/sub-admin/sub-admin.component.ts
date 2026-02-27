@@ -150,42 +150,56 @@ export class SubAdminComponent implements OnInit{
   }
 
   // Download single certificate (example – adjust field names as per your API)
-  downloadSingle(entry: any) {
-    if (!entry.certificate_generated) {
-      alert('Certificate not generated yet.');
-      return;
-    }
-
-    let downloadApi;
-    switch (this.selectedType) {
-      case 'sdp':
-        downloadApi = this.api.downloadSingleSdpCertificate(entry.id);
-        break;
-      case 'fdp':
-        downloadApi = this.api.downloadSingleFdpCertificate(entry.id);
-        break;
-      case 'industry':
-        downloadApi = this.api.downloadSingleIndustryCertificate(entry.id);
-        break;
-      default:
-        return;
-    }
-
-    downloadApi.subscribe({
-      next: (blob: Blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${entry.certificate_no || 'certificate'}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      },
-      error: (err) => {
-        console.error('Download failed:', err);
-        alert('Failed to download certificate.');
-      }
-    });
+ downloadSingle(entry: any) {
+  if (!entry.certificate_generated) {
+    alert('Certificate not generated yet.');
+    return;
   }
+
+  let downloadApi: any;
+  switch (this.selectedType) {
+    case 'sdp':      downloadApi = this.api.downloadSingleSdpCertificate(entry.id); break;
+    case 'fdp':      downloadApi = this.api.downloadSingleFdpCertificate(entry.id); break;
+    case 'industry': downloadApi = this.api.downloadSingleIndustryCertificate(entry.id); break;
+    default: return;
+  }
+
+  downloadApi.subscribe({
+    next: (blob: Blob) => {
+      // ✅ Check if server returned an error JSON disguised as blob
+      if (blob.type === 'application/json') {
+        blob.text().then(text => {
+          const parsed = JSON.parse(text);
+          alert('Error: ' + (parsed.message || 'Certificate generation failed'));
+        });
+        return;
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${entry.certificate_no || 'certificate'}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err:any) => {
+      // ✅ Read the actual error message from blob error response
+      if (err.error instanceof Blob) {
+        err.error.text().then((text: string) => {
+          try {
+            const parsed = JSON.parse(text);
+            alert('Download failed: ' + (parsed.message || text));
+          } catch {
+            alert('Download failed: ' + text);
+          }
+        });
+      } else {
+        console.error('Download failed:', err);
+        alert('Failed to download certificate. Status: ' + err.status);
+      }
+    }
+  });
+}
 }
