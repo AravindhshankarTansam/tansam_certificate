@@ -1,65 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-{{styles}}
-<link rel="stylesheet" href="./iv_certificate.css">
+  <meta charset="UTF-8">
+  {{styles}}
+  <link rel="stylesheet" href="./iv_certificate.css">
 </head>
 
 <body>
 
 <div class="certificate">
 
-<div class="watermark">
-  <img src="{{watermark}}">
-</div>
+  <div class="watermark">
+    <img src="{{watermark}}">
+  </div>
 
-<!-- CORNERS -->
-<div class="corner green"></div>
-<div class="corner gold"></div>
-<div class="corner white"></div>
-<div class="corner bottom-green"></div>
-<div class="corner bottom-gold"></div>
-<div class="corner bottom-white"></div>
+  <!-- CORNERS -->
+  <div class="corner green"></div>
+  <div class="corner gold"></div>
+  <div class="corner white"></div>
+  <div class="corner bottom-green"></div>
+  <div class="corner bottom-gold"></div>
+  <div class="corner bottom-white"></div>
 
-<!-- LOGOS -->
-<div class="top-bar">
-  <img src="{{tansamLogo}}">
-  <img src="{{tidcoLogo}}">
-  <img src="{{siemensLogo}}">
-</div>
+  <!-- LOGOS -->
+  <div class="top-bar">
+    <img src="{{tansamLogo}}">
+    <img src="{{tidcoLogo}}">
+    <img src="{{siemensLogo}}">
+  </div>
 
-<!-- TITLE -->
-<h1 class="title">INDUSTRIAL VISIT CERTIFICATE</h1>
+  <!-- TITLE -->
+  <h1 class="title">INDUSTRIAL VISIT CERTIFICATE</h1>
 
-<p class="award-text">Presented to</p>
+  <p class="award-text">Presented to</p>
 
-<p class="content">
-This is to certify that <b>{{name}}</b> of <b>{{college_name}}</b> from the
-Department of <b>{{department}}</b> has been a part of the Industrial Visit to
-<b>TANSAM - Tamil Nadu Smart and Advanced Manufacturing Center</b>
-on <b>{{visited_date}}</b>.
-</p>
+  <p class="content">
+    This is to certify that <b>{{name}}</b> of <b>{{college_name}}</b> from the
+    Department of <b>{{department}}</b> has been a part of the Industrial Visit to
+    <b>TANSAM - Tamil Nadu Smart and Advanced Manufacturing Center</b>
+    on <b>{{visited_date}}</b>.
+  </p>
 
-<!-- SIGNATURE -->
-<div class="signatures">
-  <div class="sign">
-     <img src="{{signatureImage}}" style="height:70px;margin-bottom:8px">
+  <!-- SIGNATURES – LEFT & RIGHT -->
+<!-- SIGNATURES – LEFT & RIGHT -->
+<div class="signatures-container">
+  <!-- Left Signature -->
+  <div class="sign left-sign">
+    <img src="{{leftSignatureImage}}" alt="Left Signature" class="signature-img" />
     <div class="line"></div>
-    <p><b>{{signName}}</b></p>
-    <p>{{signDesignation}}</p>
+    <!-- <p><b>{{leftSignName}}</b></p> -->
+    <p>{{leftSignDesignation}}</p>
+  </div>
+
+  <!-- Right Signature -->
+  <div class="sign right-sign">
+    <img src="{{rightSignatureImage}}" alt="Right Signature" class="signature-img" />
+    <div class="line"></div>
+    <!-- <p><b>{{rightSignName}}</b></p> -->
+    <p>{{rightSignDesignation}}</p>
   </div>
 </div>
 
-<!-- CERTIFICATE NUMBER -->
-<div class="certificate-number">
-  Certificate Number – <b>{{certificateNo}}</b>
-</div>
+  <!-- CERTIFICATE NUMBER -->
+  <div class="certificate-number">
+    Certificate Number – <b>{{certificateNo}}</b>
+  </div>
 
-<!-- QR -->
-<!-- <div class="qr-code">
-  <img src="{{qrCode}}">
-</div> -->
+  <!-- QR (optional – uncomment if needed) -->
+  <!-- <div class="qr-code">
+    <img src="{{qrCode}}">
+  </div> -->
 
 </div>
 

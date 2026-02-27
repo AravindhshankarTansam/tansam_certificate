@@ -1,1 +1,210 @@
-<p>finance-dashboard works!</p>
+<div class="finance-dashboard">
+  <!-- Hero with Wave -->
+  <div class="hero-wave">
+    <div class="wave"></div>
+    <div class="wave wave2"></div>
+    <div class="hero-content">
+      <h1>Finance Dashboard</h1>
+      <p>Track payments, transactions & financial approvals</p>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoadingCounts || isLoadingBatches || isLoadingBatchDetails">
+    <div class="loader">
+      <div class="dual-ring"></div>
+      <span>Loading Finance Dashboard...</span>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-message premium-error" *ngIf="errorMessageCounts || errorMessageBatches">
+    <i class="fas fa-exclamation-circle"></i>
+    <p>{{ errorMessageCounts || errorMessageBatches }}</p>
+    <button class="retry-btn" (click)="loadTransactionCounts(); onTypeChange()">Retry</button>
+  </div>
+
+  <!-- Transaction Count Cards -->
+  <div class="stats-grid" *ngIf="!isLoadingCounts && !errorMessageCounts">
+    <div class="stat-card tilt-card sdp">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <i class="card-icon fas fa-file-invoice-dollar"></i>
+        <h3>SDP Transactions</h3>
+        <div class="count animate-number">{{ sdpTransactionCount }}</div>
+        <p>Skill Development Payments</p>
+      </div>
+    </div>
+
+    <div class="stat-card tilt-card fdp">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <i class="card-icon fas fa-chalkboard-teacher"></i>
+        <h3>FDP Transactions</h3>
+        <div class="count animate-number">{{ fdpTransactionCount }}</div>
+        <p>Faculty Development Payments</p>
+      </div>
+    </div>
+
+    <div class="stat-card tilt-card industry">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <i class="card-icon fas fa-industry"></i>
+        <h3>Industry Transactions</h3>
+        <div class="count animate-number">{{ industryTransactionCount }}</div>
+        <p>Industry Collaborator Payments</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Academic Section with Table -->
+<div class="academic-section" *ngIf="!isLoadingCounts && !errorMessageCounts">
+  <div class="academic-header">
+    <div class="header-left">
+      <h2>Academic Bulk Transactions</h2>
+      <p>View and manage payment details for bulk uploaded batches</p>
+    </div>
+
+    <div class="filter-wrapper">
+      <label>Filter by Programme</label>
+      <div class="custom-select">
+        <select [(ngModel)]="selectedType" (ngModelChange)="onTypeChange()">
+          <option value="">All Programmes</option>
+          <option value="sdp">SDP</option>
+          <option value="fdp">FDP</option>
+          <option value="industry">Industry</option>
+        </select>
+        <i class="fas fa-chevron-down select-arrow"></i>
+      </div>
+    </div>
+  </div>
+
+    <!-- Table -->
+    <div class="table-premium-wrapper" *ngIf="selectedType && batches.length > 0; else noBatches">
+      <table class="premium-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Entity / College / Company</th>
+            <th>Code</th>
+            <th>Period</th>
+            <th>Entries</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let batch of paginatedBatches; let i = index" class="premium-row">
+            <td class="row-number">{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+            <td class="entity-cell">{{ batch.college_name || batch.company_name || '—' }}</td>
+            <td>{{ batch.college_short_name || batch.company_short_name || '—' }}</td>
+            <td>{{ batch.from_date | date:'dd MMM yyyy' }} — {{ batch.to_date | date:'dd MMM yyyy' }}</td>
+            <td class="entries-count">{{ batch.total_students || batch.total_employees || batch.total || 0 }}</td>
+            <td>
+              <span class="status-chip" [ngClass]="batch.generated_count > 0 ? 'Done' : 'pending'">
+                {{ batch.generated_count > 0 ? 'Done' : 'Pending' }}
+              </span>
+            </td>
+            <td>
+              <button class="action-btn view-btn" (click)="viewBatch(batch)">
+                <i class="fas fa-eye"></i>
+                <span>View</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination-premium" *ngIf="totalPages > 1">
+        <button class="page-nav" [disabled]="currentPage === 1" (click)="changePage(-1)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="page-display">Page {{ currentPage }} / {{ totalPages }}</span>
+        <button class="page-nav" [disabled]="currentPage === totalPages" (click)="changePage(1)">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- No Batches -->
+    <ng-template #noBatches>
+      <div class="no-batches premium-empty">
+        <i class="fas fa-layer-group fa-4x"></i>
+        <h3>No Academic Batches Found</h3>
+        <p>Select a programme type above to view bulk transactions</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Batch Details Modal -->
+  <div class="modal-backdrop premium-backdrop" *ngIf="showBatchModal">
+    <div class="batch-modal premium-modal">
+      <div class="modal-header premium-header">
+        <div class="header-title">
+          <h2>{{ selectedType.toUpperCase() }} Batch Details</h2>
+          <p class="batch-meta">
+            {{ selectedBatch?.college_name || selectedBatch?.company_name || '—' }}
+            <span>•</span>
+            {{ selectedBatch?.from_date | date:'dd MMM yyyy' }} — {{ selectedBatch?.to_date | date:'dd MMM yyyy' }}
+          </p>
+        </div>
+        <button class="close-modal-btn" (click)="closeBatchModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-content premium-content">
+        <div class="modal-loader" *ngIf="isLoadingBatchDetails">
+          <div class="dual-ring"></div>
+          <p>Loading batch entries...</p>
+        </div>
+
+        <div class="modal-table-container" *ngIf="!isLoadingBatchDetails && batchEntries.length > 0">
+          <table class="premium-modal-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>ID/Register</th>
+                <th>Department</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of batchEntries; let i = index" class="modal-row">
+                <td>{{ i + 1 }}</td>
+                <td class="name-cell">{{ entry.student_name || entry.staff_name || entry.employee_name || '—' }}</td>
+                <td>{{ entry.register_no || entry.staff_id || entry.employee_id_no || '—' }}</td>
+                <td>{{ entry.department || '—' }}</td>
+                <td>{{ entry.phone || '—' }}</td>
+                <td class="email-cell">{{ entry.email || '—' }}</td>
+                <td>
+                  <span class="certificate-status" [ngClass]="entry.certificate_generated ? 'generated' : 'pending'">
+                    {{ entry.certificate_generated ? 'Generated' : 'Pending' }}
+                  </span>
+                </td>
+                <td>
+                  <button class="modal-download-btn" 
+                          [disabled]="!entry.certificate_generated"
+                          (click)="downloadSingle(entry)">
+                    <i class="fas fa-file-download"></i> Download
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="no-entries-modal" *ngIf="!isLoadingBatchDetails && batchEntries.length === 0">
+          <i class="fas fa-inbox fa-5x"></i>
+          <h3>No Entries Found</h3>
+          <p>This batch has no records or data is unavailable.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

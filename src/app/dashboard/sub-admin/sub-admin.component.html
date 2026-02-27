@@ -1,5 +1,214 @@
-<div class="leads-container">
-  <h2>Sub Admin Dashboard</h2>
+<div class="subadmin-dashboard">
+  <!-- Welcome Header with subtle gradient -->
+  <div class="welcome-hero">
+    <div class="hero-content">
+      <h1>Sub Admin Dashboard</h1>
+      <p>Monitor registrations & bulk uploads at a glance</p>
+    </div>
+  </div>
 
-  <p>Welcome!!</p>
+  <!-- Counts Cards – Glassmorphism + Hover Lift -->
+  <div class="cards-container" *ngIf="!isLoadingCounts && !errorMessageCounts; else loadingBlock">
+    <div class="stat-card" [ngClass]="{'sdp': true}">
+      <div class="card-glow"></div>
+      <div class="card-icon"><i class="fas fa-users-rectangle"></i></div>
+      <div class="card-content">
+        <h3>SDP Registrations</h3>
+        <div class="count animate-count">{{ sdpCount }}</div>
+        <p class="subtitle">Skill Development Programme</p>
+      </div>
+    </div>
+
+    <div class="stat-card" [ngClass]="{'fdp': true}">
+      <div class="card-glow"></div>
+      <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+      <div class="card-content">
+        <h3>FDP Registrations</h3>
+        <div class="count animate-count">{{ fdpCount }}</div>
+        <p class="subtitle">Faculty Development Programme</p>
+      </div>
+    </div>
+
+    <div class="stat-card" [ngClass]="{'industry': true}">
+      <div class="card-glow"></div>
+      <div class="card-icon"><i class="fas fa-industry"></i></div>
+      <div class="card-content">
+        <h3>Industry Registrations</h3>
+        <div class="count animate-count">{{ industryCount }}</div>
+        <p class="subtitle">Industry Collaborators</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading / Error -->
+  <ng-template #loadingBlock>
+    <div class="loading-block" *ngIf="isLoadingCounts || isLoadingBatches">
+      <div class="spinner"></div>
+      <p>Loading dashboard...</p>
+    </div>
+
+    <div class="error-block" *ngIf="errorMessageCounts || errorMessageBatches">
+      <i class="fas fa-exclamation-triangle"></i>
+      <p>{{ errorMessageCounts || errorMessageBatches }}</p>
+      <button class="retry-btn" (click)="loadCounts(); onTypeChange()">Retry</button>
+    </div>
+  </ng-template>
+
+  <!-- Batches Table Section – Modern Card Style -->
+  <div class="batches-card" *ngIf="!isLoadingCounts && !errorMessageCounts">
+    <div class="batches-header">
+      <h2>Bulk Upload Batches</h2>
+      <div class="filter-wrapper">
+        <label>Filter by Type</label>
+        <div class="custom-select">
+          <select [(ngModel)]="selectedType" (ngModelChange)="onTypeChange()">
+            <option value="">All Types</option>
+            <option value="sdp">SDP</option>
+            <option value="fdp">FDP</option>
+            <option value="industry">Industry</option>
+          </select>
+          <i class="fas fa-chevron-down select-arrow"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container" *ngIf="selectedType && batches.length > 0; else noData">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name / Entity</th>
+            <th>Short Code</th>
+            <th>Date Range</th>
+            <th>Total Entries</th>
+            <th>Status</th>
+            <th>Action</th> <!-- NEW COLUMN FOR VIEW BUTTON -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let batch of paginatedBatches; let i = index" class="table-row">
+            <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+            <td class="entity-name">
+              {{ batch.college_name || batch.company_name || batch.institution_name || '—' }}
+            </td>
+            <td>{{ batch.college_short_name || batch.company_short_name || '—' }}</td>
+            <td class="date-range">
+              {{ batch.from_date | date:'dd MMM yyyy' }} — {{ batch.to_date | date:'dd MMM yyyy' }}
+            </td>
+            <td class="total">{{ batch.total_students || batch.total_employees || batch.total || 0 }}</td>
+            <td>
+              <span class="status-pill" 
+                    [ngClass]="batch.generated_count > 0 ? 'success' : 'warning'">
+                {{ batch.generated_count > 0 ? 'Certificates Ready' : 'Pending Generation' }}
+              </span>
+            </td>
+            <td>
+              <!-- VIEW BUTTON - opens the modal -->
+              <button class="view-btn" (click)="viewBatch(batch)">
+                <i class="fas fa-eye"></i> View
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination-controls" *ngIf="totalPages > 1">
+        <button class="page-arrow" [disabled]="currentPage === 1" (click)="changePage(-1)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="page-number">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button class="page-arrow" [disabled]="currentPage === totalPages" (click)="changePage(1)">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- No Data / Prompt -->
+    <ng-template #noData>
+      <div class="no-data">
+        <i class="fas fa-folder-open fa-3x"></i>
+        <p>
+          <ng-container *ngIf="selectedType; else selectPrompt">
+            No {{ selectedType.toUpperCase() }} bulk batches found.
+          </ng-container>
+          <ng-template #selectPrompt>
+            Select a type above to view batches.
+          </ng-template>
+        </p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- ==============================================
+       BATCH DETAILS MODAL (added here at the bottom)
+  ============================================== -->
+  <div class="modal-backdrop" *ngIf="showBatchModal">
+    <div class="batch-modal">
+      <div class="modal-header">
+        <h2>
+          {{ selectedType.toUpperCase() }} Batch Details
+          <span class="batch-info">
+            {{ selectedBatch?.college_name || selectedBatch?.company_name || '—' }}
+            ({{ selectedBatch?.from_date | date:'dd-MM-yyyy' }} to 
+             {{ selectedBatch?.to_date | date:'dd-MM-yyyy' }})
+          </span>
+        </h2>
+        <button class="close-btn" (click)="closeBatchModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Loading inside modal -->
+        <div class="modal-loading" *ngIf="isLoadingBatchDetails">
+          <div class="spinner"></div>
+          <p>Loading entries...</p>
+        </div>
+
+        <!-- Table of entries -->
+        <div class="modal-table-wrapper" *ngIf="!isLoadingBatchDetails && batchEntries.length > 0">
+          <table class="modal-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>ID / Register</th>
+                <th>Department</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Certificate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of batchEntries; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ entry.student_name || entry.staff_name || entry.employee_name || '—' }}</td>
+                <td>{{ entry.register_no || entry.staff_id || entry.employee_id_no || '—' }}</td>
+                <td>{{ entry.department || '—' }}</td>
+                <td>{{ entry.phone || '—' }}</td>
+                <td>{{ entry.email || '—' }}</td>
+                <td>
+                  <button 
+                    class="download-btn small"
+                    [disabled]="!entry.certificate_generated"
+                    (click)="downloadSingle(entry)">
+                    <i class="fas fa-download"></i> Download
+                  </button>
+                  <span class="status-text" 
+                        [ngClass]="entry.certificate_generated ? 'success' : 'pending'">
+                    {{ entry.certificate_generated ? 'Ready' : 'Pending' }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- No entries -->
+        <div class="no-entries" *ngIf="!isLoadingBatchDetails && batchEntries.length === 0">
+          No entries found in this batch.
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -143,14 +143,48 @@ body{
 
 
 /* SIGNATURE */
-.signatures{
-  position:absolute;
-  bottom:75px;
-  left:50%;
-  transform:translateX(-50%);
-  text-align:center;
+/* SIGNATURES – TWO SIDE BY SIDE */
+.signatures-container {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 60px;
+  z-index: 5;
 }
 
+.sign {
+  text-align: center;
+  width: 45%;
+}
+
+.left-sign {
+  margin-left: 0;
+}
+
+.right-sign {
+  margin-right: 0;
+}
+
+.signature-img {
+  height: 80px;
+  margin-bottom: 10px;
+  object-fit: contain;
+}
+
+.sign .line {
+  width: 220px;
+  border-top: 2px solid #000;
+  margin: 0 auto 10px;
+}
+
+.sign p {
+  margin: 4px 0;
+  font-size: 18px;
+  font-weight: bold;
+}
 .line{
   width:260px;
   border-top:2px solid #000;
