@@ -9,7 +9,7 @@
   </div>
 
   <!-- Loading Overlay -->
-  <div class="loading-overlay" *ngIf="isLoadingCounts || isLoadingBatches || isLoadingParticipants">
+  <div class="loading-overlay" *ngIf="isLoadingCounts || isLoadingBatches || isLoadingParticipants || isLoadingCalendar">
     <div class="loader">
       <div class="dual-ring"></div>
       <span>Loading Dashboard...</span>
@@ -130,7 +130,7 @@
     </ng-template>
   </div>
 
-  <!-- ===================== PARTICIPANT MODAL ===================== -->
+  <!-- ===================== PARTICIPANT LIST MODAL ===================== -->
   <div class="modal-backdrop" *ngIf="showParticipantModal">
     <div class="participant-modal">
       <div class="modal-header">
@@ -146,13 +146,11 @@
       </div>
 
       <div class="modal-body">
-        <!-- Loading inside modal -->
         <div class="modal-loading" *ngIf="isLoadingParticipants">
           <div class="spinner"></div>
           <p>Loading participants...</p>
         </div>
 
-        <!-- Table of participants -->
         <div class="modal-table-wrapper" *ngIf="!isLoadingParticipants && participants.length > 0">
           <table class="modal-table">
             <thead>
@@ -168,7 +166,7 @@
               <tr *ngFor="let p of participants; let i = index">
                 <td>{{ i + 1 }}</td>
                 <td>{{ p.student_name || p.staff_name || p.employee_name || '—' }}</td>
-                <td>{{ p.register_no || p.staff_id || p.employee_id_no || '—' }}</td>
+                <td>{{ p.register_no || p.staff_id || p.staff_id_no || p.employee_id_no || '—' }}</td>
                 <td>
                   <button class="calendar-btn" (click)="openCalendarForParticipant(p)">
                     Open Calendar
@@ -188,10 +186,57 @@
           </table>
         </div>
 
-        <!-- No participants message - made more visible -->
         <div class="no-participants" *ngIf="!isLoadingParticipants && participants.length === 0">
           <i class="fas fa-users-slash fa-3x"></i>
           <p>No participants found in this batch.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CALENDAR VIEW MODAL (READ-ONLY) ===================== -->
+  <div class="modal-backdrop" *ngIf="showCalendarModal">
+    <div class="calendar-modal">
+      <div class="modal-header">
+        <h2>
+          Attendance Calendar - {{ selectedParticipant?.student_name || selectedParticipant?.staff_name || selectedParticipant?.employee_name || 'Participant' }}
+        </h2>
+        <button class="close-btn" (click)="closeCalendarModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Legend -->
+        <div class="legend">
+          <span><span class="box present"></span> Present</span>
+          <span><span class="box holiday"></span> Holiday</span>
+          <span><span class="box normal"></span> Working Day (Absent)</span>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-grid" *ngIf="!isLoadingCalendar">
+          <div *ngFor="let date of calendarDays" 
+               class="calendar-day"
+               [ngClass]="{
+                 'present': isPresent(date),
+                 'holiday': isHoliday(date),
+                 'absent': !isPresent(date) && !isHoliday(date)
+               }">
+            {{ formatDay(date) }}
+            <span *ngIf="isHoliday(date)" class="holiday-icon">🎉</span>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="calendar-summary" *ngIf="!isLoadingCalendar">
+          <p><strong>Present Days:</strong> {{ presentCount }}</p>
+          <p><strong>Total Working Days:</strong> {{ totalWorkingDays }}</p>
+          <p><strong>Attendance Percentage:</strong> {{ attendancePercentage }}%</p>
+        </div>
+
+        <!-- Loading -->
+        <div class="modal-loading" *ngIf="isLoadingCalendar">
+          <div class="spinner"></div>
+          <p>Loading calendar...</p>
         </div>
       </div>
     </div>
