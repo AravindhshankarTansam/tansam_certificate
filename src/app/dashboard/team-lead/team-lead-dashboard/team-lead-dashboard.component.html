@@ -8,17 +8,16 @@
     </div>
   </div>
 
-  <!-- Loading -->
-  <div class="loading-overlay" *ngIf="isLoading">
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoadingCounts || isLoadingBatches || isLoadingParticipants">
     <div class="loader">
       <div class="dual-ring"></div>
       <span>Loading Dashboard...</span>
     </div>
   </div>
 
-  <!-- Main Stats Cards -->
-  <div class="stats-grid" *ngIf="!isLoading">
-    <!-- SDP Card -->
+  <!-- Stats Cards -->
+  <div class="stats-grid" *ngIf="!isLoadingCounts">
     <div class="stat-card sdp">
       <div class="card-inner">
         <div class="card-glow"></div>
@@ -29,7 +28,6 @@
       </div>
     </div>
 
-    <!-- FDP Card -->
     <div class="stat-card fdp">
       <div class="card-inner">
         <div class="card-glow"></div>
@@ -40,7 +38,6 @@
       </div>
     </div>
 
-    <!-- Industry Card -->
     <div class="stat-card industry">
       <div class="card-inner">
         <div class="card-glow"></div>
@@ -52,20 +49,152 @@
     </div>
   </div>
 
-  <!-- Quick Links / Navigation (optional but useful) -->
-  <!-- <div class="quick-links" *ngIf="!isLoading">
-    <a routerLink="/tl/sdp" class="link-card">
-      <i class="fas fa-arrow-right"></i>
-      Manage SDP Attendance
-    </a>
-    <a routerLink="/tl/fdp" class="link-card">
-      <i class="fas fa-arrow-right"></i>
-      Manage FDP Attendance
-    </a>
-    <a routerLink="/tl/industry" class="link-card">
-      <i class="fas fa-arrow-right"></i>
-      Manage Industry Attendance
-    </a>
-  </div> -->
+  <!-- Bulk Batches Table Section -->
+  <div class="batches-section" *ngIf="!isLoadingCounts">
+    <div class="batches-header">
+      <div class="header-left">
+        <h2>Bulk Attendance Batches</h2>
+        <p>Manage attendance for uploaded bulk programmes</p>
+      </div>
+
+      <div class="filter-wrapper">
+        <label>Filter by Programme</label>
+        <div class="custom-select">
+          <select [(ngModel)]="selectedType" (ngModelChange)="onTypeChange()">
+            <option value="">All Programmes</option>
+            <option value="sdp">SDP</option>
+            <option value="fdp">FDP</option>
+            <option value="industry">Industry</option>
+          </select>
+          <i class="fas fa-chevron-down select-arrow"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container" *ngIf="selectedType && batches.length > 0; else noData">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name / Entity</th>
+            <th>Short Code</th>
+            <th>Date Range</th>
+            <th>Total Entries</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let batch of paginatedBatches; let i = index">
+            <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+            <td class="entity-name">
+              {{ batch.college_name || batch.company_name || batch.institution_name || '—' }}
+            </td>
+            <td>{{ batch.college_short_name || batch.company_short_name || '—' }}</td>
+            <td>{{ batch.from_date | date:'dd MMM yyyy' }} — {{ batch.to_date | date:'dd MMM yyyy' }}</td>
+            <td class="total">{{ batch.total_students || batch.total_employees || batch.total || 0 }}</td>
+            <td>
+              <button class="view-btn" (click)="viewBatch(batch)">
+                <i class="fas fa-eye"></i> View & Take Attendance
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination-controls" *ngIf="totalPages > 1">
+        <button class="page-arrow" [disabled]="currentPage === 1" (click)="changePage(-1)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="page-number">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button class="page-arrow" [disabled]="currentPage === totalPages" (click)="changePage(1)">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- No Data -->
+    <ng-template #noData>
+      <div class="no-data">
+        <i class="fas fa-folder-open fa-3x"></i>
+        <p>
+          <ng-container *ngIf="selectedType; else selectPrompt">
+            No {{ selectedType.toUpperCase() }} bulk batches found.
+          </ng-container>
+          <ng-template #selectPrompt>
+            Select a programme type above to view batches.
+          </ng-template>
+        </p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- ===================== PARTICIPANT MODAL ===================== -->
+  <div class="modal-backdrop" *ngIf="showParticipantModal">
+    <div class="participant-modal">
+      <div class="modal-header">
+        <h2>
+          {{ selectedType.toUpperCase() }} Participants
+          <span class="batch-info">
+            {{ selectedBatchForModal?.college_name || selectedBatchForModal?.company_name || '—' }}
+            ({{ selectedBatchForModal?.from_date | date:'dd MMM yyyy' }} — 
+             {{ selectedBatchForModal?.to_date | date:'dd MMM yyyy' }})
+          </span>
+        </h2>
+        <button class="close-btn" (click)="closeParticipantModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Loading inside modal -->
+        <div class="modal-loading" *ngIf="isLoadingParticipants">
+          <div class="spinner"></div>
+          <p>Loading participants...</p>
+        </div>
+
+        <!-- Table of participants -->
+        <div class="modal-table-wrapper" *ngIf="!isLoadingParticipants && participants.length > 0">
+          <table class="modal-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>ID / Register</th>
+                <th>Attendance Action</th>
+                <th>Eligibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of participants; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ p.student_name || p.staff_name || p.employee_name || '—' }}</td>
+                <td>{{ p.register_no || p.staff_id || p.employee_id_no || '—' }}</td>
+                <td>
+                  <button class="calendar-btn" (click)="openCalendarForParticipant(p)">
+                    Open Calendar
+                  </button>
+                </td>
+                <td>
+                  <span class="eligibility-badge"
+                        [ngClass]="{
+                          'eligible': (p.attendance_percentage || 0) >= (selectedType === 'sdp' ? 80 : 90),
+                          'not-eligible': (p.attendance_percentage || 0) < (selectedType === 'sdp' ? 80 : 90)
+                        }">
+                    {{ p.attendance_percentage || 0 }}%
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- No participants message - made more visible -->
+        <div class="no-participants" *ngIf="!isLoadingParticipants && participants.length === 0">
+          <i class="fas fa-users-slash fa-3x"></i>
+          <p>No participants found in this batch.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
