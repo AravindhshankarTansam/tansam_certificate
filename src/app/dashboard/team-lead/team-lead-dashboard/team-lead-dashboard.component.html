@@ -1,1 +1,71 @@
-<p>team-lead-dashboard works!</p>
+<div class="team-lead-dashboard">
+
+  <!-- Welcome Hero -->
+  <div class="hero-wave">
+    <div class="hero-content">
+      <h1>Team Lead Dashboard</h1>
+      <p>Monitor attendance & certificate generation across programmes</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loader">
+      <div class="dual-ring"></div>
+      <span>Loading Dashboard...</span>
+    </div>
+  </div>
+
+  <!-- Main Stats Cards -->
+  <div class="stats-grid" *ngIf="!isLoading">
+    <!-- SDP Card -->
+    <div class="stat-card sdp">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <i class="card-icon fas fa-users-graduate"></i>
+        <h3>SDP Participants</h3>
+        <div class="count">{{ sdpCount }}</div>
+        <p>Skill Development Programme</p>
+      </div>
+    </div>
+
+    <!-- FDP Card -->
+    <div class="stat-card fdp">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <i class="card-icon fas fa-chalkboard-teacher"></i>
+        <h3>FDP Faculty</h3>
+        <div class="count">{{ fdpCount }}</div>
+        <p>Faculty Development Programme</p>
+      </div>
+    </div>
+
+    <!-- Industry Card -->
+    <div class="stat-card industry">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <i class="card-icon fas fa-industry"></i>
+        <h3>Industry Trainees</h3>
+        <div class="count">{{ industryCount }}</div>
+        <p>Industry Collaboration</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links / Navigation (optional but useful) -->
+  <!-- <div class="quick-links" *ngIf="!isLoading">
+    <a routerLink="/tl/sdp" class="link-card">
+      <i class="fas fa-arrow-right"></i>
+      Manage SDP Attendance
+    </a>
+    <a routerLink="/tl/fdp" class="link-card">
+      <i class="fas fa-arrow-right"></i>
+      Manage FDP Attendance
+    </a>
+    <a routerLink="/tl/industry" class="link-card">
+      <i class="fas fa-arrow-right"></i>
+      Manage Industry Attendance
+    </a>
+  </div> -->
+
+</div>
