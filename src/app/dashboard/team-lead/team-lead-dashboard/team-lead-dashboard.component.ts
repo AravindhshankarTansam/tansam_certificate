@@ -112,8 +112,9 @@ export class TeamLeadDashboardComponent implements OnInit {
   }
 
   // Open participant list modal
+// Open participant list modal
 viewBatch(batch: any) {
-  console.log('Button clicked! Batch:', batch);               // ← must see this
+  console.log('Button clicked! Batch:', batch);
   console.log('Selected type:', this.selectedType);
   console.log('Batch ID:', batch?.id);
 
@@ -129,23 +130,34 @@ viewBatch(batch: any) {
       console.log('Calling getBulkSdpStudents for batch ID:', batch.id);
       apiCall = this.api.getBulkSdpStudents(batch.id);
       break;
-    // ... other cases
+
+    case 'fdp':
+      console.log('Calling getBulkFdpStudents for batch ID:', batch.id);
+      apiCall = this.api.getBulkFdpStudents(batch.id);
+      break;
+
+    case 'industry':
+      console.log('Calling getBulkIndustryEmployees for batch ID:', batch.id);
+      apiCall = this.api.getBulkIndustryEmployees(batch.id);
+      break;
+
     default:
       console.log('No valid type selected');
       this.isLoadingParticipants = false;
+      alert('Invalid programme type selected.');
       return;
   }
 
   apiCall.subscribe({
     next: (res: any[]) => {
-      console.log('Participants loaded:', res);               // ← important!
+      console.log('Participants loaded:', res);
       this.participants = res || [];
       this.isLoadingParticipants = false;
     },
     error: (err) => {
-      console.error('API ERROR:', err);                       // ← will show reason
+      console.error('API ERROR:', err);
       this.isLoadingParticipants = false;
-      alert('Failed to load participant list. Check console.');
+      alert('Failed to load participant list. Check console for details.');
     }
   });
 }
