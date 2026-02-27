@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const compression = require('compression');
 const MySQLStore = require('express-mysql-session')(session);
+const db = require('./db'); // ✅ Use your DB pool
 const app = express();
 
 /* ======================================================
@@ -46,7 +47,9 @@ app.use('/api/auth', authLimiter);
   CORS (Whitelist from .env)
 ====================================================== */
 
-const allowedOrigins = process.env.CORS_ORIGINS.split(',');
+const allowedOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',')
+  : [];
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -60,15 +63,10 @@ app.use(cors({
 }));
 
 /* ======================================================
-   SESSION STORE (MySQL)
+   SESSION STORE (MySQL using existing pool)
 ====================================================== */
 
-const sessionStore = new MySQLStore({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME
-});
+const sessionStore = new MySQLStore({}, db); // ✅ Reuse your pool
 
 app.use(session({
   name: 'tansam.sid',
@@ -134,15 +132,12 @@ app.use('/api/subadmin/industry/bulk', industryBulkRoutes);
 ====================================================== */
 app.use('/uploads', isAuth, express.static('uploads'));
 
-
-// app.use('/images', express.static('public/images'));
-
 /* ======================================================
    GLOBAL ERROR HANDLER
 ====================================================== */
 
 app.use((err, req, res, next) => {
-  // console.error(err);
+  console.error("🔥 GLOBAL ERROR:", err);
   res.status(500).json({ message: 'Internal server error' });
 });
 
