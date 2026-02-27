@@ -285,3 +285,21 @@ input:checked + .slider:before {
 .cancel:hover {
   background: #eef2f5;
 }
+.form-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  background-color: #f5f6f7;
+  font-size: 14px;
+  outline: none;
+  margin-bottom: 15px;
+  appearance: none;          /* removes default browser arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.form-input {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}

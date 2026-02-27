@@ -74,8 +74,8 @@
       [(ngModel)]="form.designation"
       placeholder="Enter designation"
     />
-<select [(ngModel)]="form.lab">
-  <option value="" disabled>Select Lab</option>
+<select [(ngModel)]="form.lab" class="form-input">
+  <option value="" disabled hidden>Select Lab</option>
   <option *ngFor="let lab of labs" [value]="lab.name">
     {{ lab.name }}
   </option>
