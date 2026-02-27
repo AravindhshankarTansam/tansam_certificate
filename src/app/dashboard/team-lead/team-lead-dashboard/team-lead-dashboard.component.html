@@ -1,1 +1,245 @@
-<p>team-lead-dashboard works!</p>
+<div class="team-lead-dashboard">
+
+  <!-- Welcome Hero -->
+  <div class="hero-wave">
+    <div class="hero-content">
+      <h1>Team Lead Dashboard</h1>
+      <p>Monitor attendance & certificate generation across programmes</p>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoadingCounts || isLoadingBatches || isLoadingParticipants || isLoadingCalendar">
+    <div class="loader">
+      <div class="dual-ring"></div>
+      <span>Loading Dashboard...</span>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid" *ngIf="!isLoadingCounts">
+    <div class="stat-card sdp">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <i class="card-icon fas fa-users-graduate"></i>
+        <h3>SDP Participants</h3>
+        <div class="count">{{ sdpCount }}</div>
+        <p>Skill Development Programme</p>
+      </div>
+    </div>
+
+    <div class="stat-card fdp">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <i class="card-icon fas fa-chalkboard-teacher"></i>
+        <h3>FDP Faculty</h3>
+        <div class="count">{{ fdpCount }}</div>
+        <p>Faculty Development Programme</p>
+      </div>
+    </div>
+
+    <div class="stat-card industry">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <i class="card-icon fas fa-industry"></i>
+        <h3>Industry Trainees</h3>
+        <div class="count">{{ industryCount }}</div>
+        <p>Industry Collaboration</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk Batches Table Section -->
+  <div class="batches-section" *ngIf="!isLoadingCounts">
+    <div class="batches-header">
+      <div class="header-left">
+        <h2>Bulk Attendance Batches</h2>
+        <p>Manage attendance for uploaded bulk programmes</p>
+      </div>
+
+      <div class="filter-wrapper">
+        <label>Filter by Programme</label>
+        <div class="custom-select">
+          <select [(ngModel)]="selectedType" (ngModelChange)="onTypeChange()">
+            <option value="">All Programmes</option>
+            <option value="sdp">SDP</option>
+            <option value="fdp">FDP</option>
+            <option value="industry">Industry</option>
+          </select>
+          <i class="fas fa-chevron-down select-arrow"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-container" *ngIf="selectedType && batches.length > 0; else noData">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name / Entity</th>
+            <th>Short Code</th>
+            <th>Date Range</th>
+            <th>Total Entries</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let batch of paginatedBatches; let i = index">
+            <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+            <td class="entity-name">
+              {{ batch.college_name || batch.company_name || batch.institution_name || '—' }}
+            </td>
+            <td>{{ batch.college_short_name || batch.company_short_name || '—' }}</td>
+            <td>{{ batch.from_date | date:'dd MMM yyyy' }} — {{ batch.to_date | date:'dd MMM yyyy' }}</td>
+            <td class="total">{{ batch.total_students || batch.total_employees || batch.total || 0 }}</td>
+            <td>
+              <button class="view-btn" (click)="viewBatch(batch)">
+                <i class="fas fa-eye"></i> View & Take Attendance
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination-controls" *ngIf="totalPages > 1">
+        <button class="page-arrow" [disabled]="currentPage === 1" (click)="changePage(-1)">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <span class="page-number">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button class="page-arrow" [disabled]="currentPage === totalPages" (click)="changePage(1)">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- No Data -->
+    <ng-template #noData>
+      <div class="no-data">
+        <i class="fas fa-folder-open fa-3x"></i>
+        <p>
+          <ng-container *ngIf="selectedType; else selectPrompt">
+            No {{ selectedType.toUpperCase() }} bulk batches found.
+          </ng-container>
+          <ng-template #selectPrompt>
+            Select a programme type above to view batches.
+          </ng-template>
+        </p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- ===================== PARTICIPANT LIST MODAL ===================== -->
+  <div class="modal-backdrop" *ngIf="showParticipantModal">
+    <div class="participant-modal">
+      <div class="modal-header">
+        <h2>
+          {{ selectedType.toUpperCase() }} Participants
+          <span class="batch-info">
+            {{ selectedBatchForModal?.college_name || selectedBatchForModal?.company_name || '—' }}
+            ({{ selectedBatchForModal?.from_date | date:'dd MMM yyyy' }} — 
+             {{ selectedBatchForModal?.to_date | date:'dd MMM yyyy' }})
+          </span>
+        </h2>
+        <button class="close-btn" (click)="closeParticipantModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-loading" *ngIf="isLoadingParticipants">
+          <div class="spinner"></div>
+          <p>Loading participants...</p>
+        </div>
+
+        <div class="modal-table-wrapper" *ngIf="!isLoadingParticipants && participants.length > 0">
+          <table class="modal-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>ID / Register</th>
+                <th>Attendance Action</th>
+                <th>Eligibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of participants; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ p.student_name || p.staff_name || p.employee_name || '—' }}</td>
+                <td>{{ p.register_no || p.staff_id || p.staff_id_no || p.employee_id_no || '—' }}</td>
+                <td>
+                  <button class="calendar-btn" (click)="openCalendarForParticipant(p)">
+                    Open Calendar
+                  </button>
+                </td>
+                <td>
+                  <span class="eligibility-badge"
+                        [ngClass]="{
+                          'eligible': (p.attendance_percentage || 0) >= (selectedType === 'sdp' ? 80 : 90),
+                          'not-eligible': (p.attendance_percentage || 0) < (selectedType === 'sdp' ? 80 : 90)
+                        }">
+                    {{ p.attendance_percentage || 0 }}%
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="no-participants" *ngIf="!isLoadingParticipants && participants.length === 0">
+          <i class="fas fa-users-slash fa-3x"></i>
+          <p>No participants found in this batch.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CALENDAR VIEW MODAL (READ-ONLY) ===================== -->
+  <div class="modal-backdrop" *ngIf="showCalendarModal">
+    <div class="calendar-modal">
+      <div class="modal-header">
+        <h2>
+          Attendance Calendar - {{ selectedParticipant?.student_name || selectedParticipant?.staff_name || selectedParticipant?.employee_name || 'Participant' }}
+        </h2>
+        <button class="close-btn" (click)="closeCalendarModal()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Legend -->
+        <div class="legend">
+          <span><span class="box present"></span> Present</span>
+          <span><span class="box holiday"></span> Holiday</span>
+          <span><span class="box normal"></span> Working Day (Absent)</span>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-grid" *ngIf="!isLoadingCalendar">
+          <div *ngFor="let date of calendarDays" 
+               class="calendar-day"
+               [ngClass]="{
+                 'present': isPresent(date),
+                 'holiday': isHoliday(date),
+                 'absent': !isPresent(date) && !isHoliday(date)
+               }">
+            {{ formatDay(date) }}
+            <span *ngIf="isHoliday(date)" class="holiday-icon">🎉</span>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="calendar-summary" *ngIf="!isLoadingCalendar">
+          <p><strong>Present Days:</strong> {{ presentCount }}</p>
+          <p><strong>Total Working Days:</strong> {{ totalWorkingDays }}</p>
+          <p><strong>Attendance Percentage:</strong> {{ attendancePercentage }}%</p>
+        </div>
+
+        <!-- Loading -->
+        <div class="modal-loading" *ngIf="isLoadingCalendar">
+          <div class="spinner"></div>
+          <p>Loading calendar...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

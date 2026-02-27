@@ -15,6 +15,7 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./bulk-upload.component.css']
 })
 export class BulkUploadComponent implements OnInit{
+visibleHeaders: any;
 
   constructor(private api: ApiService) {}
   visits: any[] = [];

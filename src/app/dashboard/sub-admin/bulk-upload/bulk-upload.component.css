@@ -1021,3 +1021,170 @@
   font-size: 0.95rem;
   color: #475569;
 }
+
+/* ────────────────────────────────────────────────
+   Improved Preview Modal
+───────────────────────────────────────────────── */
+.preview-modal {
+  width: 92vw;
+  max-width: 1200px;
+  max-height: 90vh;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 70px rgba(0, 102, 102, 0.3);
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.3s ease;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #006666, #009999);
+  color: white;
+  padding: 1.4rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: rgba(255,255,255,0.25);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: rgba(255,255,255,0.4);
+  transform: rotate(90deg);
+}
+
+/* Info Bar – Prominent Total Records */
+.preview-info-bar {
+  display: flex;
+  gap: 2rem;
+  padding: 1.2rem 2rem;
+  background: #f0fdfa;
+  border-bottom: 1px solid #99f6e4;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-item .label {
+  font-size: 0.9rem;
+  color: #0f766e;
+  font-weight: 500;
+}
+
+.info-item .value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #006666;
+}
+
+/* Scrollable Table Container */
+.preview-table-container {
+  flex: 1;
+  overflow: auto;
+  padding: 0 2rem 1.5rem;
+  background: #ffffff;
+}
+
+/* Modern Table */
+.preview-table {
+  width: 100%;
+  min-width: 900px; /* forces horizontal scroll if needed */
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.preview-table thead {
+  position: sticky;
+  top: 0;
+  background: #006666;
+  color: white;
+  z-index: 10;
+}
+
+.preview-table th {
+  padding: 14px 12px;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.preview-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.preview-table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.preview-table tbody tr:hover {
+  background: #ecfdf5;
+  transition: background 0.2s;
+}
+
+/* Footer */
+.modal-footer {
+  padding: 1.2rem 2rem;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.9rem 1.8rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #006666;
+  color: #006666;
+}
+
+.btn-outline:hover {
+  background: rgba(0,102,102,0.08);
+}
+
+.btn-primary.confirm-btn {
+  background: #006666;
+  color: white;
+  border: none;
+}
+
+.btn-primary.confirm-btn:hover {
+  background: #005555;
+  transform: translateY(-2px);
+}
+
+/* Animation */
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
