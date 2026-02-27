@@ -23,7 +23,7 @@ exports.add = async (req, res) => {
     console.log('Received body:', req.body);               // ← debug
     console.log('Received file:', req.file);               // ← debug (most important)
 
-    const { name, designation, is_active } = req.body;
+    const { name, designation, is_active, lab } = req.body;
 
     if (!req.file) {
       console.log('No file received');
@@ -34,9 +34,9 @@ exports.add = async (req, res) => {
 
     await db.query(
       `INSERT INTO certificate_signatures
-      (name, designation, signature, is_active)
-      VALUES (?, ?, ?, ?)`,
-      [name, designation, signature, is_active === '1' || is_active === true ? 1 : 0]
+      (name, designation, signature, lab, is_active)
+      VALUES (?, ?, ?, ?, ?)`,
+      [name, designation, signature, lab, is_active === '1' || is_active === true ? 1 : 0]
     );
 
     res.json({ message: 'Added successfully' });
@@ -53,12 +53,12 @@ exports.update = async (req, res) => {
     console.log('Update file:', req.file);
 
     const { id } = req.params;
-    const { name, designation, is_active } = req.body;
+    const { name, designation, is_active, lab } = req.body;
 
     let query = `
       UPDATE certificate_signatures
-      SET name = ?, designation = ?, is_active = ?`;
-    let values = [name, designation, is_active === '1' || is_active === true ? 1 : 0];
+      SET name = ?, designation = ?, lab = ?, is_active = ?`;
+    let values = [name, designation, lab, is_active === '1' || is_active === true ? 1 : 0];
 
     if (req.file) {
       query += `, signature = ?`;

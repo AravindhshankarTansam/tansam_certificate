@@ -21,6 +21,7 @@ export class CertificateSignatureComponent implements OnInit {
     name: '',
     designation: '',
     signature: null,
+    lab: '',
     is_active: true
   };
 
@@ -58,6 +59,7 @@ save() {
 
   fd.append('name', this.form.name);
   fd.append('designation', this.form.designation);
+  fd.append('lab', this.form.lab);
   fd.append('is_active', this.form.is_active ? '1' : '0'); 
 
 
@@ -76,7 +78,7 @@ save() {
     next: () => {
       this.toast.show(this.editing ? 'Updated' : 'Added', 'success');
       this.showModal = false;
-      this.form = { name: '', designation: '', signature: null, is_active: true };
+      this.form = { name: '', designation: '', lab: '', signature: null, is_active: true };
       this.load();
     },
     error: (err) => {

@@ -78,6 +78,7 @@ const db = require('../db');
 
         name VARCHAR(150) NOT NULL,
         designation VARCHAR(150) NOT NULL,
+        lab  VARCHAR(255) NOT NULL,
         signature VARCHAR(255) NOT NULL,
 
         is_active BOOLEAN DEFAULT TRUE,
