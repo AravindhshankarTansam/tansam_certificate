@@ -113,17 +113,14 @@ exports.generateIndustryCertificate = async (data, db) => {
 
     /* ===== PUPPETEER ===== */
 const browser = await puppeteer.launch({
-  headless: true,
+  headless: "new",
+  executablePath: puppeteer.executablePath(),
   args: [
     '--no-sandbox',
     '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-gpu',
-    '--no-zygote',
-    '--single-process'
+    '--disable-dev-shm-usage'
   ]
 });
-
     const page = await browser.newPage();
 
     await page.setContent(html, {
