@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    {{styles}}
+    <link rel="stylesheet" href="./certificate.css" />
+  </head>
+
+  <body>
+    <div class="certificate">
+      <div class="corner left-top1"></div>
+      <div class="corner left-top"></div>
+      <div class="middle-shape"></div>
+      <div class="corner left-bottom"></div>
+      <div class="corner right-top"></div>
+
+      <!-- LOGOS -->
+      <div class="top-left-logo">
+        <img src="{{logoPath}}" />
+      </div>
+
+      <div class="top-center-logos">
+        <img src="{{tidcoLogo}}" />
+        <img src="{{tansamLogo}}" />
+        <img src="{{siemensLogo}}" />
+      </div>
+
+      <h1>Internship Completion Certificate</h1>
+      <p class="presented">Presented to</p>
+
+      <p class="content">
+        This is to certify that <b>{{name}}</b>
+        of <b>{{institution}}</b>
+        pursuing Department of <b>{{department}}</b>
+        has successfully completed the Internship Programme on
+        <b>{{programme}}</b>
+        in <b>TANSAM</b> - 
+        <b>Tamil Nadu Smart and Advance Manufacturing Centre</b> during
+        <b class="date">{{startDate}} – {{endDate}}</b>.
+      </p>
+
+      <div class="certificate-number">
+        Certificate Number – <b>{{certificateNo}}</b>
+      </div>
+
+      <!-- SIGNATURES SECTION -->
+      <div class="signature-section">
+        <div class="signature-left">
+          <img src="{{leftSignatureImage}}" />
+          <div class="signature-line"></div>
+          <p><b>{{leftSignName}}</b></p>
+          <p>{{leftSignDesignation}}</p>
+        </div>
+
+        <div class="signature-right">
+          <img src="{{rightSignatureImage}}" />
+          <div class="signature-line"></div>
+          <p><b>{{rightSignName}}</b></p>
+          <p>{{rightSignDesignation}}</p>
+        </div>
+      </div>
+
+      <!-- QR -->
+      <div class="qr-code">
+        <img src="{{qrCode}}" class="qr-img" />
+      </div>
+    </div>
+  </body>
+</html>

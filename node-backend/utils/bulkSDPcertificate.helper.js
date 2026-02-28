@@ -33,12 +33,12 @@ exports.generateSDPCertificate = async (data, db) => {
     /* ===== TEMPLATE ===== */
     const templatePath = path.join(
       process.cwd(),
-      'templates/certificate.html'
+      'SDPTemplates/SDPcertificate.html'
     );
 
     const cssPath = path.join(
       process.cwd(),
-      'templates/certificate.css'
+      'SDPTemplates/SDPcertificate.css'
     );
       console.log("Template path:", templatePath);
   console.log("CSS path:", cssPath);
@@ -54,7 +54,7 @@ exports.generateSDPCertificate = async (data, db) => {
     const [[sign]] = await db.query(`
       SELECT name, designation, signature
       FROM certificate_signatures
-      WHERE is_active=1
+      WHERE is_active=1 AND designation='CEO'
       LIMIT 1
     `);
 
@@ -101,14 +101,14 @@ exports.generateSDPCertificate = async (data, db) => {
     /* ===== PUPPETEER ===== */
 const browser = await puppeteer.launch({
   headless: true,
-  args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-gpu',
-    '--no-zygote',
-    '--single-process'
-  ]
+  // args: [
+  //   '--no-sandbox',
+  //   '--disable-setuid-sandbox',
+  //   '--disable-dev-shm-usage',
+  //   '--disable-gpu',
+  //   '--no-zygote',
+  //   '--single-process'
+  // ]
 });
 
     const page = await browser.newPage();

@@ -1,0 +1,446 @@
+@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poiret+One&display=swap');
+
+
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+}
+
+
+/* =========================
+   CERTIFICATE BASE
+========================= */
+/* .certificate {
+  position: relative;
+  width: 1000px;
+  height: 700px;
+  margin: auto;
+  padding: 90px 80px 120px;
+  background: #ffffff;
+  font-family: "Times New Roman", serif;
+  overflow: hidden;
+  border: 10px solid #0b8f94;
+} */
+
+.certificate {
+  position: relative;
+  width: 300mm;
+  height: 210mm;
+  margin: 0;
+  padding: 25mm 25mm 30mm;
+  background: #ffffff;
+  font-family: "Times New Roman", serif;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 10px solid #aaf2f400;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================
+   WATERMARK
+========================= */
+.certificate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("{{watermark}}") no-repeat center;
+  background-size: 600px;
+  opacity: 0.18;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* =========================
+   LEFT BIG DIAGONAL STRIP
+========================= */
+
+.certificate::before {
+  content: "";
+  position: absolute;
+  right: 40px;
+  bottom: 30px;
+  width: 800px;
+  height: 470px;
+
+  border-right: 4px solid;
+  border-bottom: 4px solid;
+
+  border-image: linear-gradient(
+    135deg,
+    #92e8eb67 0%,
+    #80dde167 75%,
+    #108387 100%
+  ) 1;
+
+  box-sizing: border-box;
+}
+
+
+
+/* =========================
+   TOP LEFT CORNER
+========================= */
+.corner.left-top1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 360px;
+  height: 500px;
+  background: #00999971;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  z-index: 1;
+}
+
+.corner.left-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 800px;
+  background: linear-gradient(135deg, #0b8f94, #2fbcc0);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  z-index: 1;
+}
+/* =========================
+   middle shape
+========================= */
+
+.middle-shape {
+    position: absolute;
+    top: 520px;        /* fine-tune vertically */
+    left: 0;           /* anchor to left edge */
+    width: 190px;
+    height: 240px;
+    background: #4FD0D0;
+    clip-path: polygon(0 0, 80% 0, 50% 100%, 0 100%);
+    transform: rotate(25deg) scale(1.5);
+    transform-origin: left center;
+    z-index: 1;
+}
+
+/* =========================
+   TOP RIGHT FOLD
+========================= */
+.corner.right-top::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    width: 300px;
+    height: 220px;
+    background: linear-gradient(135deg, #066a6e, #aaf1f4);
+    clip-path: polygon(100% 100%, 88% 100%, 88% 16%, 22% 16%, 22% 0, 100% 0);
+    z-index: 1;
+    border-radius: 8px;
+}
+
+.corner.right-top::after {
+    content: "";
+    position: absolute;
+    top: 80px;
+    right: 100px;
+    width: 120px;
+    height: 80px;
+    background: linear-gradient(135deg, #066a6e, #aaf1f4);
+    clip-path: polygon(100% 100%, 88% 100%, 88% 16%, 22% 16%, 22% 0, 100% 0);
+    z-index: 2;
+    border-radius: 8px;
+}
+
+
+/* =========================
+   BOTTOM LEFT SHAPE
+========================= */
+.corner.left-bottom {
+  position: absolute;
+  bottom: -40px;
+  left: -60px;
+  width: 600px;
+  height: 500px;
+  background: linear-gradient(135deg, #0b8f94, #2fbcc0);
+  clip-path: polygon(0 100%, 0 0, 70% 100%);
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.corner.left-bottom::before {
+    content: "";
+    position: absolute;
+    bottom: 70px;
+    left: 80px;
+    width: 260px;
+    height: 180px;
+    background: linear-gradient(135deg, #aaf1f4, #066a6e);
+    clip-path: polygon(0 0, 12% 0, 12% 84%, 78% 84%, 78% 100%, 0 100%);
+    z-index: 1;
+    border-radius: 8px;
+}
+
+
+
+.corner.left-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 110px;
+    left: 120px;
+    width: 160px;
+    height: 116px;
+    background: linear-gradient(135deg, #aaf1f4, #0b8f94);
+    clip-path: polygon(0 0, 12% 0, 12% 84%, 78% 84%, 78% 100%, 0 100%);
+    z-index: 2;
+}
+
+/* =========================
+   CONTENT LAYER
+========================= */
+.top-left-logo,
+.top-center-logos,
+h1,
+.presented,
+.name,
+.content,
+.signature-section,
+.certificate-number {
+  position: relative;
+  z-index: 3;
+}
+
+/* =========================
+   LOGOS
+========================= */
+.top-left-logo {
+  position: absolute;
+  top: 30px;
+  left: 40px;
+}
+
+.top-left-logo img {
+  height: 95px;
+}
+
+.top-center-logos {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 40px;
+}
+
+.top-center-logos img {
+  height: 95px;
+}
+
+/* =========================
+   TITLE
+========================= */
+h1 {
+  text-align: center;
+  font-size: 45px;
+  margin-top: 80px;
+  color: #1e7e7e;
+  font-weight:bolder;
+  font-family: "DM Sans", sans-serif;
+  /* letter-spacing: 1.5px; */
+  text-transform: uppercase;
+}
+
+
+.presented {
+  text-align: center;
+  margin-top: 25px;
+  font-family: "Poiret One", sans-serif;
+  font-weight: 600;      /* slightly softer than bold */
+  font-size: 24px;       /* better proportion */
+  color: #1e7e7e;
+  letter-spacing: 1px;   /* subtle elegance */
+}
+
+/* =========================
+   NAME
+========================= */
+.name {
+  text-align: center;
+  margin: 22px 0;
+  margin-top: 30px;          /* tightened */
+}
+
+.name-input {
+  font-size: 32px;          /* increased */
+  font-weight: bold;
+}
+
+/* =========================
+   CONTENT
+========================= */
+.content {
+  margin-top: 45px;
+  padding-bottom: 0px;
+  font-size: 25px;          /* increased */
+  line-height: 1.5;         /* tighter */
+  text-align: justify;
+  padding-left: 120px;      /* prevents left band overlap */
+  padding-right: 60px;
+  font-family: "Poiret One", sans-serif;
+  font-weight:590;
+}
+
+.content b{
+  font-weight: 900;
+  font-family: "Poiret One", sans-serif;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 25px;
+
+}
+.date {
+  font-family: "Poiret One", sans-serif; /* same as your bold fields */
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 1px;
+  padding: 4px 10px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+.editable-text {
+  border: none;
+  border-bottom: 1px solid #000;
+  background: transparent;
+  font-family: inherit;
+  text-align: center;
+  font-size: 18px;          /* increased */
+}
+
+.editable-text.inline {
+  width: 200px;             /* increased */
+}
+
+.programme-input {
+  width: 360px;             /* increased */
+}
+
+.editable-text.small {
+  width: 190px;
+  font-size: 14px;
+}
+
+.editable-date {
+  border: none;
+  border-bottom: 1px solid #000;
+  background: transparent;
+  width: 150px;
+  text-align: center;
+  font-size: 15px;
+}
+
+/* =========================
+   SIGNATURE
+========================= */
+.signature-section {
+  position: absolute;
+  margin-top: 20px;
+  bottom: 80px;            /* moved closer to content */
+  right: 80px;
+  text-align: center;
+}
+
+.signature-section img{
+  width: 100px;
+  height: auto;
+  margin-bottom: 5px;
+}
+.signature-line {
+  width: 240px;             /* increased */
+  height: 2px;
+  background: #2fbcc0;
+  margin-bottom: 8px;
+}
+
+/* =========================
+   CERTIFICATE NUMBER
+========================= */
+.certificate-number {
+  position: absolute;
+  bottom: 40px;
+  right: 80px;   /* move to right */
+  font-size: 14px;
+  text-align: right;
+  z-index: 5;
+}
+.qr-code {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  right: 20px;
+}
+
+.qr-img {
+    width: 130px;
+    height: 130px;
+  display: block;
+  margin-bottom: 40px;
+  margin-left: 30px;
+}
+/* =========================
+   SIGNATURE SECTION - TWO SIDES
+========================= */
+.signature-section {
+  position: absolute;
+  bottom: 80px;           /* distance from bottom */
+  left: 50%;              /* center container */
+  transform: translateX(-50%);
+  width: 90%;             /* full width of signature area */
+  display: flex;
+  justify-content: space-between; /* left and right signatures */
+  align-items: flex-start;
+  z-index: 5;
+}
+
+/* Left signature (COO) */
+.signature-left {
+  text-align: center;
+  width: 40%;             /* adjust width as needed */
+}
+
+.signature-left img {
+  width: 120px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.signature-left .signature-line {
+  width: 100%;
+  height: 2px;
+  background: #2fbcc0;
+  margin-bottom: 8px;
+}
+
+/* Right signature (CEO) */
+.signature-right {
+  text-align: center;
+  width: 40%;
+}
+
+.signature-right img {
+  width: 120px;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.signature-right .signature-line {
+  width: 100%;
+  height: 2px;
+  background: #2fbcc0;
+  margin-bottom: 8px;
+}
