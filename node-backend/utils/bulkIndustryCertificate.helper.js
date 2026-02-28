@@ -63,7 +63,7 @@ exports.generateIndustryCertificate = async (data, db) => {
     const [[sign]] = await db.query(`
       SELECT name, designation, signature
       FROM certificate_signatures
-      WHERE is_active = 1
+       WHERE is_active = 1 AND designation = 'CEO'
       LIMIT 1
     `);
 
@@ -113,14 +113,17 @@ exports.generateIndustryCertificate = async (data, db) => {
 
     /* ===== PUPPETEER ===== */
 const browser = await puppeteer.launch({
-  headless: "new",
-  executablePath: puppeteer.executablePath(),
-  args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage'
-  ]
+  headless: true,
+  // args: [
+  //   '--no-sandbox',
+  //   '--disable-setuid-sandbox',
+  //   '--disable-dev-shm-usage',
+  //   '--disable-gpu',
+  //   '--no-zygote',
+  //   '--single-process'
+  // ]
 });
+
     const page = await browser.newPage();
 
     await page.setContent(html, {
