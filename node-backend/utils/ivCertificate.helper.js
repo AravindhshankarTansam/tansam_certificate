@@ -59,15 +59,20 @@ exports.generateIVCertificate = async (data, db) => {
       LIMIT 2
     `);
 
-    const leftSign = signatures[0] || null;
-    const leftSignatureImg = leftSign 
-      ? toBase64(path.join(process.cwd(), 'uploads/signatures', leftSign.signature))
-      : '';
+const leftSign = signatures.find(s => s.designation === 'COO') || null;
+const leftSignatureImg = leftSign 
+  ? toBase64(path.join(process.cwd(), 'uploads/signatures', leftSign.signature))
+  : '';
+const leftSignName = leftSign ? leftSign.name : '';
+const leftSignDesignation = leftSign ? leftSign.designation : '';
 
-    const rightSign = signatures[1] || null;
-    const rightSignatureImg = rightSign 
-      ? toBase64(path.join(process.cwd(), 'uploads/signatures', rightSign.signature))
-      : '';
+// Pick right sign as CEO
+const rightSign = signatures.find(s => s.designation === 'CEO') || null;
+const rightSignatureImg = rightSign 
+  ? toBase64(path.join(process.cwd(), 'uploads/signatures', rightSign.signature))
+  : '';
+const rightSignName = rightSign ? rightSign.name : '';
+const rightSignDesignation = rightSign ? rightSign.designation : '';
 
     /* ================= STATIC IMAGES ================= */
 const logo = toBase64(path.join(__dirname, '../public/images/logo.png'));
@@ -93,15 +98,13 @@ const watermark = toBase64(path.join(__dirname, '../public/images/watermark.png'
     r('visited_date', formatDate(data.visitDate));
     r('certificateNo', data.certificateNo);
     r('qrCode', qr);
+r('leftSignatureImage', leftSignatureImg);
+r('leftSignName', leftSignName);
+r('leftSignDesignation', leftSignDesignation);
 
-    r('leftSignatureImage', leftSignatureImg);
-    r('leftSignName', leftSign?.name || '');
-    r('leftSignDesignation', leftSign?.designation || '');
-
-    r('rightSignatureImage', rightSignatureImg);
-    r('rightSignName', rightSign?.name || '');
-    r('rightSignDesignation', rightSign?.designation || '');
-
+r('rightSignatureImage', rightSignatureImg);
+r('rightSignName', rightSignName);
+r('rightSignDesignation', rightSignDesignation);
     r('logoPath', logo);
     r('tidcoLogo', tidco);
     r('tansamLogo', tansam);
