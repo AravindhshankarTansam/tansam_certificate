@@ -60,12 +60,12 @@ exports.generateIVCertificate = async (data, db) => {
     `);
 
     const leftSign = signatures[0] || null;
-    const leftSignatureImg = leftSign 
+    const leftSignatureImg = leftSign
       ? toBase64(path.join(process.cwd(), 'uploads/signatures', leftSign.signature))
       : '';
 
     const rightSign = signatures[1] || null;
-    const rightSignatureImg = rightSign 
+    const rightSignatureImg = rightSign
       ? toBase64(path.join(process.cwd(), 'uploads/signatures', rightSign.signature))
       : '';
 
@@ -108,12 +108,10 @@ const watermark = toBase64(path.join(__dirname, '../public/images/watermark.png'
     r('siemensLogo', siemens);
     r('watermark', watermark);
 
-    /* ================= PUPPETEER PDF GENERATION ================= */
-    const browser = await puppeteer.launch({
-      headless: 'new',
-    
-      timeout: 60000
-    });
+  /* ================= PUPPETEER ================= */
+const browser = await puppeteer.launch({
+  headless: true
+});
 
     const page = await browser.newPage();
 
