@@ -340,7 +340,6 @@ CREATE TABLE IF NOT EXISTS iv_students (
   /* 🎓 CERTIFICATE */
   certificate_no VARCHAR(150) UNIQUE,
   certificate_generated BOOLEAN DEFAULT FALSE,
-  certificate_path VARCHAR(255) NULL,
   certificate_generated_at TIMESTAMP NULL,
 
   /* AUDIT */
