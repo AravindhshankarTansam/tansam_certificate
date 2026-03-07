@@ -84,8 +84,8 @@ app.use(session({
   proxy: true,
   cookie: {
     httpOnly: true,
-    secure: true,          // REQUIRED for HTTPS
-    sameSite: 'none',      // REQUIRED for cross-site cookies
+    secure: true,
+    sameSite: 'lax',   // <-- change here
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
