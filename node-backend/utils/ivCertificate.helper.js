@@ -110,7 +110,11 @@ const watermark = toBase64(path.join(__dirname, '../public/images/watermark.png'
 
   /* ================= PUPPETEER ================= */
 const browser = await puppeteer.launch({
-  headless: true
+  headless: true,
+  args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox'
+  ]
 });
 
     const page = await browser.newPage();
