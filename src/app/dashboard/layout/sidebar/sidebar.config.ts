@@ -61,7 +61,7 @@ export const ROLE_MENUS: Record<string, MenuItem[]> = {
       ]
     },
 
-    { label: 'Bulk Upload', route: '/dashboard/sub-admin/bulk-upload' },
+    { label: 'IV College Upload', route: '/dashboard/sub-admin/bulk-upload' },
     { label: 'Reports', route: '/dashboard/sub-admin/reports' }
   ],
 

@@ -35,17 +35,17 @@
               <span class="badge count-badge">{{ college.count }}</span>
             </td>
             <td>
-              <button class="btn btn-primary view-btn" 
+              <button class="btn btn-primary view-btn"
                       (click)="openCollege(college.id)">
                 <i class="fa-solid fa-eye"></i> View Students
               </button>
             </td>
             <td>
               <button class="btn btn-success bulk-btn"
-                      *ngIf="college.count > 0"
-                      (click)="bulkDownload(college.id, college.college_name)">
-                <i class="fa-solid fa-download"></i> Download All
-              </button>
+        *ngIf="college.count > 0"
+        (click)="bulkDownload(college.id, college.college_name)">
+  <i class="fa-solid fa-download"></i> Download All
+</button>
               <span class="text-muted" *ngIf="college.count === 0">No certificates</span>
             </td>
           </tr>
@@ -111,11 +111,11 @@
                 </span>
               </td>
               <td>
-                <button class="btn btn-primary download-btn"
-                        *ngIf="student.certificate_generated"
-                        (click)="download(student.id)">
-                  <i class="fa-solid fa-download"></i> Download
-                </button>
+<button class="btn btn-primary download-btn"
+        *ngIf="student.certificate_generated"
+        (click)="download(student.id, student.student_name)">
+  <i class="fa-solid fa-download"></i> Download
+</button>
               </td>
             </tr>
           </tbody>

@@ -16,12 +16,13 @@ export class CertificateIndustrialVisitsComponent implements OnInit {
   selectedStudents: any[] = [];
   totalCertificates = 0;
   showModal = false;
+  currentVisitId: number | null = null;
 
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
     this.loadData();
-  } 
+  }
 
   loadData() {
     this.api.getIVCertificateSummary()
@@ -32,11 +33,15 @@ export class CertificateIndustrialVisitsComponent implements OnInit {
   }
 
 openCollege(visitId: number) {
+
+  this.currentVisitId = visitId;
+
   this.api.getVisitStudents(visitId)
     .subscribe(res => {
       this.selectedStudents = res;
       this.showModal = true;
     });
+
 }
 
 
@@ -45,35 +50,83 @@ openCollege(visitId: number) {
     this.selectedStudents = [];
   }
 
-download(id: number) {
+download(id: number, studentName: string) {
+
   this.api.downloadIVCertificate(id).subscribe(blob => {
+
     const url = window.URL.createObjectURL(blob);
+
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'Certificate.pdf';
+
+    /* Use student name as filename */
+    const safeName = studentName.replace(/[^a-zA-Z0-9]/g, "_");
+
+    a.download = safeName + ".pdf";
+
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+
     window.URL.revokeObjectURL(url);
 
-    // refresh list after generation
-    this.openCollege(this.selectedStudents[0].visit_id);
+    /* reload modal data */
+    if (this.currentVisitId) {
+      this.openCollege(this.currentVisitId);
+    }
+
   });
+
 }
 
-bulkDownload(visitId: number, collegeName: string) {
+async bulkDownload(visitId: number, collegeShort: string) {
 
-  this.api.bulkDownloadIVCertificates(visitId)
-    .subscribe(blob => {
+  try {
 
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${collegeName}_Certificates.zip`;
-      a.click();
-      window.URL.revokeObjectURL(url);
+    const students: any = await this.api
+      .getVisitStudents(visitId)
+      .toPromise();
 
-    }, err => {
-      alert('No certificates available for download');
+    const generated = students.filter((s: any) => s.certificate_generated);
+
+    if (!generated.length) {
+      alert("No certificates generated");
+      return;
+    }
+
+    /* Ask user to choose folder */
+    const dirHandle = await (window as any).showDirectoryPicker();
+
+    /* Create college folder */
+    const collegeFolder = await dirHandle.getDirectoryHandle(collegeShort, {
+      create: true
     });
+
+    for (const student of generated) {
+
+      const blob: any = await this.api
+        .downloadIVCertificate(student.id)
+        .toPromise();
+
+      const fileName =
+        student.certificate_no.replace(/[\/\\]/g, "_") + ".pdf";
+
+      const fileHandle = await collegeFolder.getFileHandle(fileName, {
+        create: true
+      });
+
+      const writable = await fileHandle.createWritable();
+
+      await writable.write(blob);
+      await writable.close();
+    }
+
+    alert("Certificates downloaded successfully!");
+
+  } catch (err) {
+    console.error(err);
+    alert("Download cancelled or failed");
+  }
 }
 
 

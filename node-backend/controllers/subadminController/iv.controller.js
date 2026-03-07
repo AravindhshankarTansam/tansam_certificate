@@ -1,6 +1,4 @@
 const db = require('../../db');
-const fs = require('fs');
-const path = require('path');
 const { generateIVCertificate } = require('../../utils/ivCertificate.helper');
 const { generateIVCertNo } = require('../../utils/certNo.helper');
 const archiver = require('archiver');
@@ -9,14 +7,14 @@ const archiver = require('archiver');
    SMALL HELPERS
 ====================================================== */
 
-// prevent ../../ attacks or weird chars
 const safeName = (name = '') =>
   name.replace(/[^a-zA-Z0-9_-]/g, '');
 
 
 /* ======================================================
-   BULK UPLOAD (Excel + Students + Save File)
+   BULK UPLOAD
 ====================================================== */
+
 exports.bulkUpload = async (req, res) => {
   try {
 
@@ -26,28 +24,7 @@ exports.bulkUpload = async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    /* ================= SAFE FOLDER ================= */
-
     const short = safeName(collegeShortName);
-
-    const uploadDir = path.join(
-      __dirname,
-      `../../uploads/iv/${short}`
-    );
-
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
-    /* ================= SAVE EXCEL PATH ================= */
-
-    let excelFilePath = null;
-
-    if (req.file) {
-      excelFilePath = `iv/${short}/${req.file.filename}`; // store relative path
-    }
-
-    /* ================= PARSE STUDENTS ================= */
 
     const parsedStudents = req.body.students
       ? JSON.parse(req.body.students)
@@ -57,23 +34,18 @@ exports.bulkUpload = async (req, res) => {
       return res.status(400).json({ message: 'No students found' });
     }
 
-    /* ================= INSERT VISIT ================= */
-
     const [visit] = await db.query(`
       INSERT INTO iv_visits
-      (college_name, college_short_name, visit_date, excel_file, total_count)
-      VALUES (?, ?, ?, ?, ?)
+      (college_name, college_short_name, visit_date, total_count)
+      VALUES (?, ?, ?, ?)
     `, [
       collegeName,
       short,
       visitDate,
-      excelFilePath,
       parsedStudents.length
     ]);
 
     const visitId = visit.insertId;
-
-    /* ================= INSERT STUDENTS ================= */
 
     const values = parsedStudents.map(s => [
       visitId,
@@ -90,11 +62,7 @@ exports.bulkUpload = async (req, res) => {
       VALUES ?
     `, [values]);
 
-
-    res.json({
-      message: 'Bulk upload successful',
-      excelFile: excelFilePath
-    });
+    res.json({ message: 'Bulk upload successful' });
 
   } catch (err) {
     console.error(err);
@@ -105,8 +73,9 @@ exports.bulkUpload = async (req, res) => {
 
 
 /* ======================================================
-   GET ALL VISITS (Finance)
+   GET ALL VISITS
 ====================================================== */
+
 exports.getVisits = async (req, res) => {
   try {
     const [rows] = await db.query(`
@@ -118,11 +87,14 @@ exports.getVisits = async (req, res) => {
   }
 };
 
+
 /* ======================================================
    GET STUDENTS BY VISIT
 ====================================================== */
+
 exports.getStudentsByVisit = async (req, res) => {
   try {
+
     const { id } = req.params;
 
     const [rows] = await db.query(`
@@ -135,7 +107,6 @@ exports.getStudentsByVisit = async (req, res) => {
         department,
         certificate_no,
         certificate_generated,
-        certificate_path,
         paid_status
       FROM iv_students
       WHERE visit_id = ?
@@ -153,34 +124,14 @@ exports.getStudentsByVisit = async (req, res) => {
 
 
 /* ======================================================
-   MARK PAYMENT
+   GENERATE CERTIFICATE (DOWNLOAD)
 ====================================================== */
-// exports.markPaid = async (req, res) => {
-//   try {
 
-//     const { id } = req.params;
-
-//     await db.query(`
-//       UPDATE iv_visits SET paid_status = 1 WHERE id = ?
-//     `, [id]);
-
-//     res.json({ message: 'Payment updated' });
-
-//   } catch {
-//     res.status(500).json({ message: 'Payment update failed' });
-//   }
-// };
-
-
-/* ======================================================
-   GENERATE CERTIFICATE (ONLY PAID)
-====================================================== */
 exports.generate = async (req, res) => {
   try {
 
     const { id } = req.params;
 
-    /* ================= FETCH STUDENT + VISIT ================= */
     const [[row]] = await db.query(`
       SELECT
         s.*,
@@ -197,15 +148,14 @@ exports.generate = async (req, res) => {
       return res.status(404).send('Student not found');
     }
 
-    /* ================= CHECK PAYMENT ================= */
     if (!row.paid_status) {
       return res.status(400).send('Payment not completed');
     }
 
-    /* ================= GENERATE CERTIFICATE NUMBER ================= */
     let certNo = row.certificate_no;
 
     if (!certNo) {
+
       certNo = generateIVCertNo(
         row.college_short_name,
         row.visit_date
@@ -220,7 +170,6 @@ exports.generate = async (req, res) => {
       `, [certNo, id]);
     }
 
-    /* ================= GENERATE PDF (IN MEMORY) ================= */
     const pdfBuffer = await generateIVCertificate({
       name: row.student_name,
       institution: row.college_name,
@@ -229,7 +178,6 @@ exports.generate = async (req, res) => {
       certificateNo: certNo
     }, db);
 
-    /* ================= SEND DIRECT DOWNLOAD ================= */
     const safeCertNo = certNo.replace(/[\/\\]/g, '_');
 
     res.set({
@@ -244,9 +192,13 @@ exports.generate = async (req, res) => {
     res.status(500).send('Certificate generation failed');
   }
 };
+
+
+
 /* ======================================================
-   UPDATE PAYMENT (FINANCE)
+   UPDATE PAYMENT
 ====================================================== */
+
 exports.updatePayment = async (req, res) => {
   try {
 
@@ -260,7 +212,6 @@ exports.updatePayment = async (req, res) => {
       received_by
     } = req.body;
 
-    /* ================= VISIT UPDATE ================= */
     await db.query(`
       UPDATE iv_visits
       SET
@@ -274,9 +225,8 @@ exports.updatePayment = async (req, res) => {
     `, [payment_mode, amount, transaction_id, payment_date, received_by, id]);
 
 
-    /* ================= GET STUDENTS ================= */
     const [students] = await db.query(`
-      SELECT s.*, v.college_name, v.college_short_name, v.visit_date
+      SELECT s.*, v.college_short_name, v.visit_date
       FROM iv_students s
       JOIN iv_visits v ON s.visit_id = v.id
       WHERE s.visit_id = ?
@@ -286,90 +236,56 @@ exports.updatePayment = async (req, res) => {
 
     for (const student of students) {
 
-      /* ========= CERTIFICATE NUMBER ========= */
       const certNo = generateIVCertNo(
         student.college_short_name,
         student.visit_date
       );
 
-      /* ========= GENERATE PDF ========= */
-      const pdfBuffer = await generateIVCertificate({
-        name: student.student_name,
-        institution: student.college_name,
-        department: student.department,
-        visitDate: student.visit_date,
-        certificateNo: certNo
-      }, db);
-
-      const short = safeName(student.college_short_name);
-
-      const folder = path.join(
-        __dirname,
-        `../../uploads/iv/${short}`
-      );
-
-      if (!fs.existsSync(folder)) {
-        fs.mkdirSync(folder, { recursive: true });
-      }
-
-      const safeCertNo = certNo.replace(/[\/\\]/g, '_');
-      const pdfPath = path.join(folder, `${safeCertNo}.pdf`);
-
-      fs.writeFileSync(pdfPath, pdfBuffer);
-
-      /* ========= UPDATE DB ========= */
       await db.query(`
         UPDATE iv_students
         SET
           certificate_generated = 1,
           certificate_no = ?,
-          certificate_path = ?,
           paid_status = 1
         WHERE id = ?
       `, [
         certNo,
-        `iv/${short}/${safeCertNo}.pdf`,
         student.id
       ]);
     }
 
-    /* ================= UPDATE VISIT COUNTS ================= */
 
-// Count generated certificates
-const [[countResult]] = await db.query(`
-  SELECT COUNT(*) AS generated
-  FROM iv_students
-  WHERE visit_id = ?
-  AND certificate_generated = 1
-`, [id]);
+    const [[countResult]] = await db.query(`
+      SELECT COUNT(*) AS generated
+      FROM iv_students
+      WHERE visit_id = ?
+      AND certificate_generated = 1
+    `, [id]);
 
-const generatedCount = countResult.generated;
+    const generatedCount = countResult.generated;
 
-// Get total count
-const [[visitInfo]] = await db.query(`
-  SELECT total_count
-  FROM iv_visits
-  WHERE id = ?
-`, [id]);
+    const [[visitInfo]] = await db.query(`
+      SELECT total_count
+      FROM iv_visits
+      WHERE id = ?
+    `, [id]);
 
-const totalCount = visitInfo.total_count;
+    const totalCount = visitInfo.total_count;
 
-// Update iv_visits
-await db.query(`
-  UPDATE iv_visits
-  SET
-    generated_count = ?,
-    certificate_generated = ?
-  WHERE id = ?
-`, [
-  generatedCount,
-  generatedCount === totalCount,
-  id
-]);
-
+    await db.query(`
+      UPDATE iv_visits
+      SET
+        generated_count = ?,
+        certificate_generated = ?
+      WHERE id = ?
+    `, [
+      generatedCount,
+      generatedCount === totalCount,
+      id
+    ]);
 
     res.json({
-      message: 'Payment updated and certificates generated successfully'
+      message: 'Payment updated and certificate numbers generated'
     });
 
   } catch (err) {
@@ -378,6 +294,11 @@ await db.query(`
   }
 };
 
+
+
+/* ======================================================
+   CERTIFICATE SUMMARY
+====================================================== */
 
 exports.getCertificateSummary = async (req, res) => {
   try {
@@ -413,61 +334,117 @@ exports.getCertificateSummary = async (req, res) => {
 };
 
 
+
+/* ======================================================
+   BULK DOWNLOAD CERTIFICATES (ZIP)
+====================================================== */
+
 exports.bulkDownloadCertificates = async (req, res) => {
   try {
 
     const { visitId } = req.params;
 
-    // Get visit info
-    const [[visit]] = await db.query(`
-      SELECT college_short_name
-      FROM iv_visits
-      WHERE id = ?
-    `, [visitId]);
+    /* ===============================
+       GET VISIT
+    =============================== */
+    const [[visit]] = await db.query(
+      `SELECT college_short_name FROM iv_visits WHERE id = ?`,
+      [visitId]
+    );
 
-    if (!visit) return res.status(404).send('Visit not found');
+    if (!visit) {
+      return res.status(404).send("Visit not found");
+    }
 
-    const short = safeName(visit.college_short_name);
+    const short = visit.college_short_name.replace(/[^a-zA-Z0-9_-]/g, "");
 
-    // Get generated certificates
+    /* ===============================
+       GET STUDENTS
+    =============================== */
     const [students] = await db.query(`
-      SELECT certificate_no, certificate_path
-      FROM iv_students
-      WHERE visit_id = ?
-      AND certificate_generated = 1
-      AND certificate_path IS NOT NULL
+      SELECT
+        s.student_name,
+        s.department,
+        s.certificate_no,
+        v.college_name,
+        v.visit_date
+      FROM iv_students s
+      JOIN iv_visits v ON s.visit_id = v.id
+      WHERE s.visit_id = ?
+      AND s.certificate_generated = 1
+      ORDER BY s.id ASC
     `, [visitId]);
 
     if (!students.length) {
-      return res.status(400).send('No certificates generated');
+      return res.status(400).send("No certificates generated");
     }
 
-    res.setHeader('Content-Type', 'application/zip');
+    console.log("Generating certificates:", students.length);
+
+    /* ===============================
+       SET ZIP HEADERS
+    =============================== */
+    res.setHeader("Content-Type", "application/zip");
     res.setHeader(
-      'Content-Disposition',
+      "Content-Disposition",
       `attachment; filename=${short}_certificates.zip`
     );
 
-    const archive = archiver('zip', { zlib: { level: 9 } });
-    archive.pipe(res);
+    /* ===============================
+       CREATE ARCHIVER
+    =============================== */
+    const archive = archiver("zip", { zlib: { level: 9 } });
 
-    students.forEach(student => {
-      const filePath = path.join(
-        __dirname,
-        `../../uploads/${student.certificate_path}`
-      );
-
-      if (fs.existsSync(filePath)) {
-        archive.file(filePath, {
-          name: `${student.certificate_no}.pdf`
-        });
+    archive.on("error", (err) => {
+      console.error("Archive error:", err);
+      if (!res.headersSent) {
+        res.status(500).send("Archive failed");
       }
     });
 
+    archive.pipe(res);
+
+    /* ===============================
+       GENERATE PDFs AND ADD TO ZIP
+    =============================== */
+    for (const student of students) {
+      try {
+
+        const pdf = await generateIVCertificate({
+          name: student.student_name,
+          institution: student.college_name,
+          department: student.department,
+          visitDate: student.visit_date,
+          certificateNo: student.certificate_no
+        }, db);
+
+        if (!pdf) {
+          console.error("PDF empty:", student.certificate_no);
+          continue;
+        }
+
+        const buffer = Buffer.from(pdf);
+
+        const safeCertNo = student.certificate_no.replace(/[\/\\]/g, "_");
+
+        archive.append(buffer, {
+          name: `${safeCertNo}.pdf`
+        });
+
+      } catch (err) {
+        console.error("Certificate failed:", student.certificate_no, err);
+      }
+    }
+
+    /* ===============================
+       FINALIZE ZIP
+    =============================== */
     await archive.finalize();
 
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Bulk download failed');
+    console.error("Bulk download failed:", err);
+    if (!res.headersSent) {
+      res.status(500).send("Bulk download failed");
+    }
   }
 };
