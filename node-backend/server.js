@@ -79,8 +79,8 @@ app.use(session({
   proxy: true,
   cookie: {
     httpOnly: true,
-    secure: false,
-    sameSite:'lax',
+    secure: true,          // REQUIRED for HTTPS
+    sameSite: 'none',      // REQUIRED for cross-site cookies
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
