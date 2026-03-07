@@ -344,6 +344,23 @@ exports.bulkDownloadCertificates = async (req, res) => {
 
     const { visitId } = req.params;
 
+    /* ===============================
+       GET VISIT
+    =============================== */
+    const [[visit]] = await db.query(
+      `SELECT college_short_name FROM iv_visits WHERE id = ?`,
+      [visitId]
+    );
+
+    if (!visit) {
+      return res.status(404).send("Visit not found");
+    }
+
+    const short = visit.college_short_name.replace(/[^a-zA-Z0-9_-]/g, "");
+
+    /* ===============================
+       GET STUDENTS
+    =============================== */
     const [students] = await db.query(`
       SELECT
         s.student_name,
@@ -355,40 +372,79 @@ exports.bulkDownloadCertificates = async (req, res) => {
       JOIN iv_visits v ON s.visit_id = v.id
       WHERE s.visit_id = ?
       AND s.certificate_generated = 1
+      ORDER BY s.id ASC
     `, [visitId]);
 
     if (!students.length) {
-      return res.status(400).send('No certificates generated');
+      return res.status(400).send("No certificates generated");
     }
 
-    res.setHeader('Content-Type', 'application/zip');
+    console.log("Generating certificates:", students.length);
+
+    /* ===============================
+       SET ZIP HEADERS
+    =============================== */
+    res.setHeader("Content-Type", "application/zip");
     res.setHeader(
-      'Content-Disposition',
-      `attachment; filename=certificates.zip`
+      "Content-Disposition",
+      `attachment; filename=${short}_certificates.zip`
     );
 
-    const archive = archiver('zip', { zlib: { level: 9 } });
+    /* ===============================
+       CREATE ARCHIVER
+    =============================== */
+    const archive = archiver("zip", { zlib: { level: 9 } });
+
+    archive.on("error", (err) => {
+      console.error("Archive error:", err);
+      if (!res.headersSent) {
+        res.status(500).send("Archive failed");
+      }
+    });
+
     archive.pipe(res);
 
+    /* ===============================
+       GENERATE PDFs AND ADD TO ZIP
+    =============================== */
     for (const student of students) {
+      try {
 
-      const pdfBuffer = await generateIVCertificate({
-        name: student.student_name,
-        institution: student.college_name,
-        department: student.department,
-        visitDate: student.visit_date,
-        certificateNo: student.certificate_no
-      }, db);
+        const pdf = await generateIVCertificate({
+          name: student.student_name,
+          institution: student.college_name,
+          department: student.department,
+          visitDate: student.visit_date,
+          certificateNo: student.certificate_no
+        }, db);
 
-      archive.append(pdfBuffer, {
-        name: `${student.certificate_no}.pdf`
-      });
+        if (!pdf) {
+          console.error("PDF empty:", student.certificate_no);
+          continue;
+        }
+
+        const buffer = Buffer.from(pdf);
+
+        const safeCertNo = student.certificate_no.replace(/[\/\\]/g, "_");
+
+        archive.append(buffer, {
+          name: `${safeCertNo}.pdf`
+        });
+
+      } catch (err) {
+        console.error("Certificate failed:", student.certificate_no, err);
+      }
     }
 
+    /* ===============================
+       FINALIZE ZIP
+    =============================== */
     await archive.finalize();
 
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Bulk download failed');
+    console.error("Bulk download failed:", err);
+    if (!res.headersSent) {
+      res.status(500).send("Bulk download failed");
+    }
   }
 };
