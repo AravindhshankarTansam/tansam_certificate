@@ -49,12 +49,17 @@ app.use('/api/auth', authLimiter);
 const allowedOrigins = process.env.CORS_ORIGINS.split(',');
 
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Blocked by CORS'));
+  origin: function (origin, callback) {
+
+    // allow requests with no origin (mobile apps, curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
     }
+
+    console.log("Blocked origin:", origin);
+    return callback(new Error("CORS not allowed"));
   },
   credentials: true
 }));
