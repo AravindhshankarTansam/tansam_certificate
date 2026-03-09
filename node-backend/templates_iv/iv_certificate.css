@@ -170,13 +170,13 @@ body{
 
 .signature-img {
   height: 80px;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
   object-fit: contain;
 }
 
 .sign .line {
   width: 220px;
-  border-top: 2px solid #000;
+  border-top: 2px solid #009999;
   margin: 0 auto 10px;
 }
 
