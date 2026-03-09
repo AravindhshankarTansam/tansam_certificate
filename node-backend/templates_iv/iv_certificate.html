@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   {{styles}}
-  <link rel="stylesheet" href="./iv_certificate.css">
+  <!-- <link rel="stylesheet" href="./iv_certificate.css"> -->
 </head>
 
 <body>
@@ -48,16 +48,16 @@
   <div class="sign left-sign">
     <img src="{{leftSignatureImage}}" alt="Left Signature" class="signature-img" />
     <div class="line"></div>
-    <!-- <p><b>{{leftSignName}}</b></p> -->
-    <p>{{leftSignDesignation}}</p>
+    <p class="sign-name">{{leftSignName}}</p>
+    <p class="sign-designation">{{leftSignDesignation}}</p>
   </div>
 
   <!-- Right Signature -->
   <div class="sign right-sign">
     <img src="{{rightSignatureImage}}" alt="Right Signature" class="signature-img" />
     <div class="line"></div>
-    <!-- <p><b>{{rightSignName}}</b></p> -->
-    <p>{{rightSignDesignation}}</p>
+    <p class="sign-name">{{rightSignName}}</p>
+    <p class="sign-designation">{{rightSignDesignation}}</p>
   </div>
 </div>
 

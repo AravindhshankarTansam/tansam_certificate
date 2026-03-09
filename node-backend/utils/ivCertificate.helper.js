@@ -50,24 +50,34 @@ exports.generateIVCertificate = async (data, db) => {
 
     html = html.replace('{{styles}}', `<style>${css}</style>`);
 
-    /* ================= FETCH TWO ACTIVE SIGNATURES ================= */
-    const [signatures] = await db.query(`
-      SELECT name, designation, signature
-      FROM certificate_signatures
-      WHERE is_active = 1
-      ORDER BY id ASC
-      LIMIT 2
-    `);
+/* ================= FETCH SIGNATURES BY DESIGNATION ================= */
 
-    const leftSign = signatures[0] || null;
-    const leftSignatureImg = leftSign
-      ? toBase64(path.join(process.cwd(), 'uploads/signatures', leftSign.signature))
-      : '';
+const [signatures] = await db.query(`
+  SELECT name, designation, signature
+  FROM certificate_signatures
+  WHERE is_active = 1
+`);
 
-    const rightSign = signatures[1] || null;
-    const rightSignatureImg = rightSign
-      ? toBase64(path.join(process.cwd(), 'uploads/signatures', rightSign.signature))
-      : '';
+let leftSign = null;
+let rightSign = null;
+
+signatures.forEach(sig => {
+  if (sig.designation === 'Chief Operating Officer') {
+    leftSign = sig;
+  }
+
+  if (sig.designation === 'Chief Executive Officer') {
+    rightSign = sig;
+  }
+});
+
+const leftSignatureImg = leftSign
+  ? toBase64(path.join(process.cwd(), 'uploads/signatures', leftSign.signature))
+  : '';
+
+const rightSignatureImg = rightSign
+  ? toBase64(path.join(process.cwd(), 'uploads/signatures', rightSign.signature))
+  : '';
 
     /* ================= STATIC IMAGES ================= */
 const logo = toBase64(path.join(__dirname, '../public/images/logo.png'));

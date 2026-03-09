@@ -41,10 +41,19 @@
               </button>
             </td>
             <td>
-              <button class="btn btn-success bulk-btn"
+<button class="btn btn-success bulk-btn"
         *ngIf="college.count > 0"
-        (click)="bulkDownload(college.id, college.college_name)">
-  <i class="fa-solid fa-download"></i> Download All
+        (click)="bulkDownload(college.id, college.college_name)"
+        [disabled]="bulkLoadingVisitId === college.id">
+
+  <span *ngIf="bulkLoadingVisitId !== college.id">
+    <i class="fa-solid fa-download"></i> Download All
+  </span>
+
+  <span *ngIf="bulkLoadingVisitId === college.id">
+    <i class="fa-solid fa-spinner fa-spin"></i> Downloading...
+  </span>
+
 </button>
               <span class="text-muted" *ngIf="college.count === 0">No certificates</span>
             </td>
@@ -113,8 +122,17 @@
               <td>
 <button class="btn btn-primary download-btn"
         *ngIf="student.certificate_generated"
-        (click)="download(student.id, student.student_name)">
-  <i class="fa-solid fa-download"></i> Download
+        (click)="download(student.id, student.student_name)"
+        [disabled]="loadingStudentId === student.id">
+
+  <span *ngIf="loadingStudentId !== student.id">
+    <i class="fa-solid fa-download"></i> Download
+  </span>
+
+  <span *ngIf="loadingStudentId === student.id">
+    <i class="fa-solid fa-spinner fa-spin"></i> Downloading...
+  </span>
+
 </button>
               </td>
             </tr>

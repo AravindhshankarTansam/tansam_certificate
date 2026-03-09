@@ -137,7 +137,7 @@ app.use('/api/subadmin/industry/bulk', industryBulkRoutes);
 /* ======================================================
  PROTECTED STATIC FILES
 ====================================================== */
-app.use('/uploads', isAuth, express.static('uploads'));
+app.use('/uploads', express.static('uploads'));
 
 
 // app.use('/images', express.static('public/images'));

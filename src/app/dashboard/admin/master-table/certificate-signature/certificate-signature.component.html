@@ -8,7 +8,6 @@
     </button>
   </div>
 
-
   <div class="table-wrapper">
     <table class="lead-table">
 
@@ -24,16 +23,24 @@
 
       <tbody>
         <tr *ngFor="let s of list">
+
           <td>{{ s.name }}</td>
+
           <td>{{ s.designation }}</td>
 
           <td>
-            <img [src]="'http://localhost:5055/uploads/signatures/' + s.signature"
-                 height="40">
+           <img
+            [src]="s.signature"
+            height="40"
+            alt="signature"
+          />
           </td>
 
           <td>
-            <span [class.active]="s.is_active" [class.inactive]="!s.is_active">
+            <span
+              [class.active]="s.is_active"
+              [class.inactive]="!s.is_active"
+            >
               {{ s.is_active ? 'Active' : 'Inactive' }}
             </span>
           </td>
@@ -43,73 +50,115 @@
               <i class="fa-solid fa-pen"></i>
             </button>
           </td>
-        </tr>
 
+        </tr>
       </tbody>
+
     </table>
   </div>
 </div>
 
 
 
-<!-- modal -->
+<!-- ================= MODAL ================= -->
+
 <div class="modal-backdrop" *ngIf="showModal">
+
   <div class="modal">
 
-    <!-- Modal Title -->
     <h3>
       {{ form?.id ? 'Edit Signature' : 'Add Signature' }}
     </h3>
 
-    <!-- Signatory Name -->
+
+    <!-- NAME -->
     <input
       type="text"
       [(ngModel)]="form.name"
       placeholder="Enter signatory name"
     />
 
-    <!-- Designation -->
+
+    <!-- DESIGNATION -->
     <input
       type="text"
       [(ngModel)]="form.designation"
       placeholder="Enter designation"
     />
 
-    <!-- Signature Upload -->
+
+    <!-- FILE UPLOAD -->
     <input
       type="file"
-      accept="image/*"
+      accept="image/png"
       (change)="fileChange($event)"
     />
 
-    <!-- Signature Preview -->
-    <div class="preview" *ngIf="form.signature">
-      <span>Preview</span>
-      <img
-        [src]="'http://localhost:5055/uploads/signatures/' + form.signature"
-        alt="Signature Preview"
-      />
-    </div>
 
-    <!-- Status Toggle -->
-    <label class="switch">
-      <input type="checkbox" [(ngModel)]="form.is_active" />
-      <span class="slider">
-        <span class="toggle-text">
-          {{ form.is_active ? 'Active' : 'Inactive' }}
-        </span>
-      </span>
-    </label>
+    <!-- SIGNATURE PREVIEW -->
 
-    <!-- Actions -->
-    <div class="actions-btn">
-      <button class="cancel" (click)="showModal=false">Cancel</button>
-      <button class="save" (click)="save()">
-        {{ form?.id ? 'Update' : 'Save' }}
-      </button>
-    </div>
+<div class="preview" *ngIf="form.signature || previewUrl">
 
-  </div>
+  <span>Preview</span>
+
+  <!-- Existing Image -->
+  <img
+    *ngIf="form.signature && !isFile(form.signature)"
+    [src]="form.signature"
+    alt="Signature Preview"
+  />
+
+  <!-- New Uploaded Image -->
+  <img
+    *ngIf="isFile(form.signature)"
+    [src]="previewUrl"
+    alt="Signature Preview"
+  />
+
 </div>
 
 
+    <!-- STATUS TOGGLE -->
+
+    <label class="switch">
+
+      <input
+        type="checkbox"
+        [(ngModel)]="form.is_active"
+      />
+
+      <span class="slider">
+
+        <span class="toggle-text">
+          {{ form.is_active ? 'Active' : 'Inactive' }}
+        </span>
+
+      </span>
+
+    </label>
+
+
+
+    <!-- ACTION BUTTONS -->
+
+    <div class="actions-btn">
+
+      <button
+        class="cancel"
+        (click)="showModal=false"
+      >
+        Cancel
+      </button>
+
+      <button
+        class="save"
+        (click)="save()"
+      >
+        {{ form?.id ? 'Update' : 'Save' }}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
