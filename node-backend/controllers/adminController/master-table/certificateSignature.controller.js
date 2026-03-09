@@ -6,17 +6,25 @@ const db = require('../../../db');
 /* ================= GET ================= */
 exports.getAll = async (req, res) => {
   try {
+
     const [rows] = await db.query(
       'SELECT * FROM certificate_signatures ORDER BY id DESC'
     );
-    res.json(rows);
+
+    const baseUrl = `${req.protocol}://${req.get('host')}/uploads/signatures/`;
+
+    const result = rows.map(r => ({
+      ...r,
+      signature: r.signature ? baseUrl + r.signature : null
+    }));
+
+    res.json(result);
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-
-/* ================= ADD ================= */
 /* ================= ADD ================= */
 exports.add = async (req, res) => {
   try {
