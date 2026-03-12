@@ -27,6 +27,8 @@ export class VerifyComponent implements OnInit {
       this.route.snapshot.paramMap.get('certNo') || ''
     );
 
+    console.log('Decoded Certificate No:', certNo); // 🔍 Debug certificate number
+
     if (!certNo) {
       this.error = true;
       return;
@@ -36,10 +38,16 @@ export class VerifyComponent implements OnInit {
       .get(`https://interncertificate.tansam.org/api/certificate/verify/${encodeURIComponent(certNo)}`)
       .subscribe({
         next: (res: any) => {
+
+          console.log('API Response:', res);  // 🔍 See certificate data here
+
           this.data = res;
           this.loading = false;
         },
-        error: () => {
+        error: (err) => {
+
+          console.error('API Error:', err); // 🔍 See error details
+
           this.error = true;
           this.loading = false;
         }
