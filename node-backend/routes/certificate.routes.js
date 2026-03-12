@@ -64,7 +64,7 @@ const [[row]] = await db.query(
 
 
     /* ================= GENERATE PDF ================= */
-      
+
 
     /* ================= SAVE LOW QUALITY ================= */
     // const folder = path.join(__dirname, `../uploads/${type}`);
@@ -77,7 +77,7 @@ const [[row]] = await db.query(
 
     // fs.writeFileSync(filePath, lowQualityPDF);
 
- 
+
       const pdfBuffer = await generateCertificate({
         name: row.student_name || row.staff_name || row.industry_staff_name,
         institution: row.college_name || row.industry_name,
@@ -96,7 +96,7 @@ const [[row]] = await db.query(
 
       return res.send(pdfBuffer);
 
-        
+
 
   } catch (err) {
     console.error(err);
@@ -106,31 +106,77 @@ const [[row]] = await db.query(
 
 
 /* ======================================================
-   VERIFY (QR page)
+   VERIFY CERTIFICATE (QR PAGE)
 ====================================================== */
 router.get('/verify/:certNo', async (req, res) => {
 
-  const certNo = req.params.certNo;
+  try {
 
-  const [rows] = await db.query(`
-    SELECT certificate_no, staff_name AS name, from_date, to_date FROM fdp_staff WHERE certificate_no=?
-    UNION
-    SELECT certificate_no, student_name AS name, from_date, to_date FROM sdp_students WHERE certificate_no=?
-    UNION
-    SELECT certificate_no, industry_staff_name AS name, from_date, to_date FROM industry_staff WHERE certificate_no=?
-  `, [certNo, certNo, certNo]);
+    /* Decode encoded certificate number */
+    const certNo = decodeURIComponent(req.params.certNo);
 
-  if (!rows.length) {
-    return res.json({
+    console.log("Verifying certificate:", certNo);
+
+    const [rows] = await db.query(`
+
+      SELECT
+        certificate_no,
+        staff_name AS name,
+        from_date,
+        to_date
+      FROM fdp_staff
+      WHERE certificate_no=?
+
+      UNION
+
+      SELECT
+        certificate_no,
+        student_name AS name,
+        from_date,
+        to_date
+      FROM sdp_students
+      WHERE certificate_no=?
+
+      UNION
+
+      SELECT
+        certificate_no,
+        industry_staff_name AS name,
+        from_date,
+        to_date
+      FROM industry_staff
+      WHERE certificate_no=?
+
+    `, [certNo, certNo, certNo]);
+
+    if (!rows.length) {
+
+      return res.json({
+        valid: false,
+        message: "Certificate not found or fake"
+      });
+
+    }
+
+    /* Send clean response for Angular */
+    res.json({
+      valid: true,
+      certificate_no: rows[0].certificate_no,
+      name: rows[0].name,
+      from_date: rows[0].from_date,
+      to_date: rows[0].to_date
+    });
+
+  } catch (err) {
+
+    console.error("Verify certificate error:", err);
+
+    res.status(500).json({
       valid: false,
-      message: "Certificate not found or fake"
+      message: "Server error"
     });
   }
 
-  res.json({
-    valid: true,
-    data: rows[0]
-  });
 });
 
 
