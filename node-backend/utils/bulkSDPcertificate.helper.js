@@ -73,7 +73,7 @@ exports.generateSDPCertificate = async (data, db) => {
 
     /* ===== QR ===== */
     const qr = await QRCode.toDataURL(
-      `http://localhost:4200/verify/${encodeURIComponent(data.certificateNo)}`,
+      `https://interncertificate.tansam.org/verify/${encodeURIComponent(data.certificateNo)}`,
       { width: 500 }
     );
 
@@ -101,13 +101,9 @@ exports.generateSDPCertificate = async (data, db) => {
     /* ===== PUPPETEER ===== */
 const browser = await puppeteer.launch({
   headless: true,
-  args: [
+    args: [
     '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-gpu',
-    '--no-zygote',
-    '--single-process'
+    '--disable-setuid-sandbox'
   ]
 });
 

@@ -1,1 +1,175 @@
-<p>certificate-sdp works!</p>
+<div class="certificate-container">
+
+  <div class="header">
+    <h2>SDP Certificates</h2>
+    <p>Manage and download generated certificates</p>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+
+    <div class="summary-card students">
+      <div class="card-icon">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div>
+        <h3>Total Students</h3>
+        <p>{{totalStudents}}</p>
+      </div>
+    </div>
+
+    <div class="summary-card generated">
+      <div class="card-icon">
+        <i class="fa-solid fa-certificate"></i>
+      </div>
+      <div>
+        <h3>Certificates Generated</h3>
+        <p>{{totalGenerated}}</p>
+      </div>
+    </div>
+
+    <!--  -->
+    <div class="summary-card pending">
+
+      <div class="card-icon">
+        <i class="fa-solid fa-clock"></i>
+      </div>
+
+      <div>
+        <h3>Pending Certificates</h3>
+        <p>{{totalPending}}</p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TABLE -->
+  <div class="table-wrapper">
+
+    <table class="modern-table">
+
+      <thead>
+        <tr>
+          <th>College Name</th>
+          <th>Short Code</th>
+          <th>Total Students</th>
+          <th>Generated</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let batch of batches">
+
+          <td class="college">{{batch.college_name}}</td>
+
+          <td>
+            <span class="college-code">
+              {{batch.college_short_name}}
+            </span>
+          </td>
+
+          <td>{{batch.total_students}}</td>
+
+          <td>
+            <span class="badge success">
+              {{batch.generated_count}}
+            </span>
+          </td>
+
+          <td class="actions">
+
+            <button class="icon-btn view" (click)="viewBatch(batch)">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+
+            <button class="icon-btn download" (click)="downloadAll(batch.id)">
+              <i class="fa-solid fa-download"></i>
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal-backdrop" *ngIf="showModal">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <h3>Student Certificates</h3>
+
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <table class="student-table">
+
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Register No</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Download</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let s of students">
+
+            <td>{{s.student_name}}</td>
+            <td>{{s.register_no}}</td>
+            <td>{{s.department}}</td>
+
+            <td>
+
+              <span *ngIf="s.certificate_generated" class="status generated">
+                Generated
+              </span>
+
+              <span *ngIf="!s.certificate_generated" class="status pending">
+                Pending
+              </span>
+
+            </td>
+
+            <td>
+
+              <button *ngIf="s.certificate_generated" (click)="download(s.id)" class="icon-btn download">
+
+                <i class="fa-solid fa-download"></i>
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

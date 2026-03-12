@@ -1,1 +1,192 @@
-<p>certificate-industry works!</p>
+<div class="certificate-container">
+
+  <div class="header">
+    <h2>Industry Certificates</h2>
+    <p>Manage and download generated certificates</p>
+  </div>
+
+  <!-- SUMMARY -->
+
+  <div class="summary-grid">
+
+    <div class="summary-card employees">
+
+      <div class="card-icon">
+        <i class="fa-solid fa-users"></i>
+      </div>
+
+      <div>
+        <h3>Total Employees</h3>
+        <p>{{totalEmployees}}</p>
+      </div>
+
+    </div>
+
+
+    <div class="summary-card generated">
+
+      <div class="card-icon">
+        <i class="fa-solid fa-certificate"></i>
+      </div>
+
+      <div>
+        <h3>Certificates Generated</h3>
+        <p>{{totalGenerated}}</p>
+      </div>
+
+    </div>
+
+
+    <div class="summary-card pending">
+
+      <div class="card-icon">
+        <i class="fa-solid fa-clock"></i>
+      </div>
+
+      <div>
+        <h3>Pending Certificates</h3>
+        <p>{{totalPending}}</p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- TABLE -->
+
+  <div class="table-wrapper">
+
+    <table class="modern-table">
+
+      <thead>
+        <tr>
+          <th>Company Name</th>
+          <th>Short Code</th>
+          <th>Total Employees</th>
+          <th>Generated</th>
+          <th>Pending</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let batch of batches">
+
+          <td class="college">{{batch.company_name}}</td>
+
+          <td>
+            <span class="college-code">
+              {{batch.company_short_name}}
+            </span>
+          </td>
+
+          <td>{{batch.total_employees}}</td>
+
+          <td>
+            <span class="badge success">
+              {{batch.generated_count}}
+            </span>
+          </td>
+
+          <td>
+            <span class="badge pending">
+              {{batch.total_employees - batch.generated_count}}
+            </span>
+          </td>
+
+          <td class="actions">
+
+            <button class="icon-btn view" (click)="viewBatch(batch)">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+
+            <button class="icon-btn download" (click)="downloadAll(batch.id)">
+              <i class="fa-solid fa-download"></i>
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal-backdrop" *ngIf="showModal">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <h3>Employee Certificates</h3>
+
+      <button class="close-btn" (click)="closeModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+    </div>
+
+    <div class="modal-body">
+
+      <table class="student-table">
+
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Employee ID</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Download</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let e of employees">
+
+            <td>{{e.employee_name}}</td>
+            <td>{{e.employee_id_no}}</td>
+            <td>{{e.department}}</td>
+
+            <td>
+
+              <span *ngIf="e.certificate_generated" class="status generated">
+                Generated
+              </span>
+
+              <span *ngIf="!e.certificate_generated" class="status pending">
+                Pending
+              </span>
+
+            </td>
+
+            <td>
+
+              <button *ngIf="e.certificate_generated" (click)="download(e.id)" class="icon-btn download">
+
+                <i class="fa-solid fa-download"></i>
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
