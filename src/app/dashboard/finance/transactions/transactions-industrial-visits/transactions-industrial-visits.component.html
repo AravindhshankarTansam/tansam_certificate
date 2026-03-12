@@ -1,8 +1,10 @@
 <h2>Industrial Visits Payments</h2>
 
+<div class="table-container">
+
 <table class="payment-table">
 
-  <!-- ================= HEADER ================= -->
+  <!-- HEADER -->
   <thead>
     <tr>
       <th>Sl</th>
@@ -17,8 +19,7 @@
     </tr>
   </thead>
 
-
-  <!-- ================= BODY ================= -->
+  <!-- BODY -->
   <tbody>
 
     <tr *ngFor="let v of visits; let i = index">
@@ -37,21 +38,19 @@
 
       <!-- STATUS -->
       <td class="center">
-        <span
-          class="badge"
-          [ngClass]="v.paid_status ? 'paid' : 'pending'">
+        <span class="badge" [ngClass]="v.paid_status ? 'paid' : 'pending'">
           {{ v.paid_status ? 'Paid' : 'Pending' }}
         </span>
       </td>
 
-
-      <!-- ================= MODE ================= -->
+      <!-- MODE -->
       <td class="center">
 
-        <span *ngIf="!v.isEditing">{{ v.payment_mode }}</span>
+        <span *ngIf="!v.isEditing">
+          {{ v.payment_mode || '—' }}
+        </span>
 
-        <select
-          *ngIf="v.isEditing"
+        <select *ngIf="v.isEditing"
           [(ngModel)]="v.payment_mode"
           class="payment-select">
 
@@ -65,11 +64,12 @@
 
       </td>
 
-
-      <!-- ================= TXN / CHEQUE ================= -->
+      <!-- TXN -->
       <td class="center">
 
-        <span *ngIf="!v.isEditing">{{ v.transaction_id }}</span>
+        <span *ngIf="!v.isEditing">
+          {{ v.transaction_id || '—' }}
+        </span>
 
         <input
           *ngIf="v.isEditing"
@@ -82,44 +82,59 @@
 
       </td>
 
-
-      <!-- ================= AMOUNT ================= -->
+      <!-- AMOUNT -->
       <td class="right">
 
-        <span *ngIf="!v.isEditing">₹ {{ v.amount }}</span>
+        <span *ngIf="!v.isEditing">
+          ₹ {{ v.amount }}
+        </span>
 
         <input
           *ngIf="v.isEditing"
           type="number"
           min="0"
           step="1"
-          [(ngModel)]="v.amount" />
+          [(ngModel)]="v.amount"
+          class="amount-input" />
 
       </td>
 
-
-      <!-- ================= ACTION ================= -->
+      <!-- ACTION -->
       <td class="center">
 
-        <!-- EDIT -->
-        <button
-          *ngIf="!v.isEditing"
-          class="edit-btn"
-          (click)="edit(v)">
-          ✏️ Edit
-        </button>
+          <!-- EDIT -->
+          <button
+            *ngIf="!v.isEditing"
+            class="edit-btn"
+            (click)="edit(v)">
+            <i class="fa-solid fa-pen"></i>
+            Edit
+          </button>
 
-        <!-- SAVE -->
-        <button
-          *ngIf="v.isEditing"
-          class="save-btn"
-          (click)="save(v)">
-          💾 Save
-        </button>
+          <!-- SAVE -->
+          <button
+            *ngIf="v.isEditing"
+            class="save-btn"
+            (click)="save(v)">
+            <i class="fa-solid fa-check"></i>
+            Save
+          </button>
+
+          <!-- CANCEL -->
+          <button
+            *ngIf="v.isEditing"
+            class="cancel-btn"
+            (click)="cancel(v)">
+            <i class="fa-solid fa-xmark"></i>
+            Cancel
+          </button>
 
       </td>
 
     </tr>
 
   </tbody>
+
 </table>
+
+</div>

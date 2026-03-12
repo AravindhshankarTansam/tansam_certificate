@@ -70,6 +70,12 @@ save(v: any) {
   });
 }
 
+cancel(v: any) {
+
+  Object.assign(v, v.originalData); // restore original values
+  v.isEditing = false;
+
+}
 
 
 }
