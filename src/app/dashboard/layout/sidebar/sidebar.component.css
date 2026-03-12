@@ -154,3 +154,27 @@
   background: #c0392b;
   box-shadow: 0 5px 12px rgba(231, 76, 60, 0.35);
 }
+/* scroll container */
+.menu-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* scrollbar style */
+.menu-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.menu-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.menu-scroll::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}

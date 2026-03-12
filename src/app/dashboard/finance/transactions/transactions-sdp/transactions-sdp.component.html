@@ -90,7 +90,7 @@
           [class.input-error]="row.submitted && !isTxnValid(row)" [placeholder]="getTxnPlaceholder(row.payment_mode)"
           required />
 
-          
+
           <div class="error-text" *ngIf="row.submitted && !isTxnValid(row)">
             {{ getTxnError(row.payment_mode) }}
           </div>

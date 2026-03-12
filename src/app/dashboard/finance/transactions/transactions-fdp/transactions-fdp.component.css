@@ -91,6 +91,22 @@ h2 {
   box-shadow: 0 0 0 3px rgba(0, 153, 153, 0.15);
 }
 
+/* ************************************************
+  Number input - remove spinner arrows
+**************************************************/
+
+/* Chrome, Safari, Edge */
+.form-input[type="number"]::-webkit-outer-spin-button,
+.form-input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox + Standard property */
+.form-input[type="number"] {
+  appearance: textfield;       /* Standard property */
+  -moz-appearance: textfield;  /* Firefox fallback */
+}
 
 /* new css for dropdown and toast */
 .form-select {

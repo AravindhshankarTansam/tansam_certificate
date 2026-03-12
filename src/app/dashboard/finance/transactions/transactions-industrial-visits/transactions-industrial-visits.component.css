@@ -1,247 +1,218 @@
-/* ================= PAGE TITLE ================= */
-h2 {
-  margin-bottom: 18px;
-  font-weight: 700;
-  color: #0f766e;
-  letter-spacing: 0.3px;
+/* PAGE TITLE */
+
+h2{
+  margin-bottom:20px;
+  font-weight:700;
+  color:#0f766e;
 }
 
 
-/* ================= TABLE CARD CONTAINER ================= */
-.payment-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #ffffff;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
+/* TABLE CONTAINER */
+
+.table-container{
+  overflow-x:auto;
 }
 
 
-/* ================= HEADER ================= */
-.payment-table thead {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-}
+/* TABLE */
 
-.payment-table th {
-  background: linear-gradient(135deg, #0f766e, #14b8a6);
-  color: white;
-  padding: 14px;
-  font-weight: 600;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
+.payment-table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 8px 28px rgba(0,0,0,0.08);
+  border:1px solid #e5e7eb;
 }
 
 
-/* ================= BODY ================= */
-.payment-table td {
-  padding: 12px;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
-  vertical-align: middle;
+/* HEADER */
+
+.payment-table thead{
+  position:sticky;
+  top:0;
+}
+
+.payment-table th{
+  background:linear-gradient(135deg,#0f766e,#14b8a6);
+  color:white;
+  padding:14px;
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  font-weight:600;
 }
 
 
-/* zebra */
-.payment-table tbody tr:nth-child(even) {
-  background: #fafafa;
+/* BODY */
+
+.payment-table td{
+  padding:12px 14px;
+  font-size:14px;
+  border-bottom:1px solid #f1f5f9;
 }
 
 
-/* hover effect */
-.payment-table tbody tr:hover {
-  background: #f0fdfa;
-  transition: 0.2s ease;
-}
+/* zebra rows */
 
-
-/* ================= INPUTS ================= */
-input,
-select {
-  width: 100%;
-  padding: 7px 10px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  background: #f9fafb;
-  font-size: 13px;
-  transition: 0.2s;
-}
-
-input:focus,
-select:focus {
-  outline: none;
-  border-color: #14b8a6;
-  background: #ffffff;
-  box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.15);
-}
-
-
-/* ================= CASH FIELDS GROUP ================= */
-.cash-fields {
-  display: flex;
-  gap: 6px;
-}
-
-
-/* ================= AMOUNT STYLE ================= */
-input[type="number"] {
-  text-align: right;
-  font-weight: 600;
-  color: #0f766e;
-}
-
-
-/* ================= SAVE BUTTON ================= */
-.save-btn {
-  background: linear-gradient(135deg, #14b8a6, #0f766e);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
-}
-
-.save-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(20, 184, 166, 0.4);
-}
-
-.save-btn:active {
-  transform: scale(0.95);
-}
-
-
-/* ================= STATUS BADGE (optional future use) ================= */
-.badge {
-  padding: 6px 10px;
-  border-radius: 9px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.badge.paid {
-  background: #dcfce7;
-  color: #16a34a;
-}
-
-.badge.pending {
-  background: #fee2e2;
-  color: #dc2626;
-}
-/* ================= ALIGNMENT HELPERS ================= */
-
-.center {
-  text-align: center;
-  vertical-align: middle;
-}
-
-.left {
-  text-align: left;
-}
-
-.right {
-  text-align: right;
-}
-
-
-/* make inputs centered inside cells */
-td.center input,
-td.center select {
-  margin: auto;
-  text-align: center;
-}
-
-/* amount input right aligned */
-td.right input {
-  text-align: right;
-}
-/* ================= PREMIUM DROPDOWN ================= */
-
-.select-wrapper {
-  position: relative;
-  width: 130px;
-  margin: auto;
-}
-
-/* remove default arrow */
-.custom-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  width: 100%;
-  padding: 8px 36px 8px 12px;
-
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-
-  background: linear-gradient(145deg, #ffffff, #f1f5f9);
-
-  font-weight: 600;
-  font-size: 13px;
-  color: #0f766e;
-
-  cursor: pointer;
-
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-
-  transition: all 0.2s ease;
+.payment-table tbody tr:nth-child(even){
+  background:#fafafa;
 }
 
 
 /* hover */
-.custom-select:hover {
-  border-color: #14b8a6;
-  box-shadow: 0 4px 10px rgba(20,184,166,0.15);
+
+.payment-table tbody tr:hover{
+  background:#f0fdfa;
+  transition:.2s;
 }
 
 
-/* focus glow */
-.custom-select:focus {
-  outline: none;
-  border-color: #14b8a6;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(20,184,166,0.25);
+/* ALIGNMENT */
+
+.center{
+  text-align:center;
+}
+
+.left{
+  text-align:left;
+}
+
+.right{
+  text-align:right;
 }
 
 
-/* custom arrow */
-.select-wrapper::after {
-  content: "⌄";
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
+/* INPUTS */
 
-  font-size: 14px;
-  font-weight: 700;
-  color: #0f766e;
+input,select{
+  width:100%;
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid #e2e8f0;
+  background:#f9fafb;
+  font-size:13px;
+  transition:.2s;
+}
+
+input:focus,select:focus{
+  outline:none;
+  border-color:#14b8a6;
+  background:white;
+  box-shadow:0 0 0 3px rgba(20,184,166,.15);
 }
 
 
-/* click animation */
-.custom-select:active {
-  transform: scale(0.98);
-}
-.edit-btn {
-  background: #e2e8f0;
-  color: #0f766e;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
+/* NUMBER INPUT */
+
+input[type="number"]{
+  text-align:right;
+  font-weight:600;
+  color:#0f766e;
 }
 
-.edit-btn:hover {
-  background: #cbd5e1;
+
+/* remove number arrows */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button{
+  -webkit-appearance:none;
+  margin:0;
+}
+
+input[type="number"]{
+  appearance:textfield;
+  -moz-appearance:textfield;
+}
+
+
+/* STATUS BADGES */
+
+.badge{
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.badge.paid{
+  background:#dcfce7;
+  color:#16a34a;
+}
+
+.badge.pending{
+  background:#fee2e2;
+  color:#dc2626;
+}
+
+
+/* BUTTON ICON SPACING */
+
+button i{
+  margin-right:6px;
+}
+
+
+/* EDIT BUTTON */
+
+.edit-btn{
+  background:#e2e8f0;
+  color:#0f766e;
+  border:none;
+  padding:7px 14px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.edit-btn:hover{
+  background:#cbd5e1;
+}
+
+
+/* SAVE BUTTON */
+
+.save-btn{
+  background:linear-gradient(135deg,#14b8a6,#0f766e);
+  color:white;
+  border:none;
+  padding:7px 14px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+  box-shadow:0 4px 12px rgba(20,184,166,.3);
+}
+
+.save-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 18px rgba(20,184,166,.4);
+}
+
+.save-btn:active{
+  transform:scale(.95);
+}
+/* CANCEL BUTTON */
+
+.cancel-btn{
+  background:#ef4444;
+  color:white;
+  border:none;
+  padding:7px 14px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  margin-left:6px;
+  transition:.2s;
+}
+
+.cancel-btn:hover{
+  background:#dc2626;
+  transform:translateY(-1px);
+}
+
+.cancel-btn:active{
+  transform:scale(.95);
 }
