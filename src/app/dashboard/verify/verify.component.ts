@@ -14,7 +14,6 @@ export class VerifyComponent implements OnInit {
 
   loading = true;
   error = false;
-
   data: any = null;
 
   constructor(
@@ -25,9 +24,8 @@ export class VerifyComponent implements OnInit {
   ngOnInit() {
 
     const certNo = decodeURIComponent(
-  this.route.snapshot.paramMap.get('certNo') || ''
-);
-
+      this.route.snapshot.paramMap.get('certNo') || ''
+    );
 
     if (!certNo) {
       this.error = true;
@@ -35,7 +33,7 @@ export class VerifyComponent implements OnInit {
     }
 
     this.http
-      .get(`http://192.168.1.79:5055/api/certificate/verify/${certNo}`)
+      .get(`https://interncertificate.tansam.org/api/certificate/verify/${encodeURIComponent(certNo)}`)
       .subscribe({
         next: (res: any) => {
           this.data = res;
