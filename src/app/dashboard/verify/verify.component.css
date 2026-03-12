@@ -1,51 +1,137 @@
-.verify-container {
+.verify-wrapper {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f5f7fa;
-  font-family: Arial, sans-serif;
+
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 
-.loading {
-  font-size: 20px;
-  color: #555;
-}
+/* CARD */
 
-.error {
-  color: red;
-  font-size: 20px;
-}
-
-.card {
-  background: white;
+.verify-card {
+  width: 420px;
   padding: 40px;
-  width: 380px;
-  border-radius: 14px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-}
 
-.card h2 {
-  text-align: center;
-  color: #0b8f94;
-  margin-bottom: 25px;
-}
+  border-radius: 16px;
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
-}
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(14px);
 
-label {
-  font-weight: bold;
-}
-
-.success-badge {
-  margin-top: 20px;
-  padding: 10px;
-  background: #0b8f94;
   color: white;
   text-align: center;
-  border-radius: 8px;
+
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.verify-card h2{
+  margin-bottom:25px;
+}
+
+/* SUCCESS ICON */
+
+.success-icon{
+  font-size:55px;
+  color:#2ecc71;
+  margin-bottom:15px;
+}
+
+/* INFO */
+
+.info{
+  margin-top:20px;
+}
+
+.info-row{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 0;
+
+  border-bottom:1px solid rgba(255,255,255,0.2);
+}
+
+.label{
+  opacity:0.8;
+}
+
+.label i{
+  margin-right:6px;
+}
+
+.value{
+  font-weight:600;
+}
+
+.highlight{
+  color:#00ffd5;
+}
+
+/* BADGE */
+
+.auth-badge{
+  margin-top:25px;
+
+  background:#2ecc71;
+  padding:12px;
+
+  border-radius:8px;
+
+  font-weight:600;
+}
+
+.auth-badge i{
+  margin-right:6px;
+}
+
+/* LOADING */
+
+.loading-box{
+  text-align:center;
+  color:white;
+}
+
+.spinner{
+  width:40px;
+  height:40px;
+
+  border:4px solid rgba(255,255,255,0.2);
+  border-top:4px solid white;
+
+  border-radius:50%;
+
+  animation:spin 1s linear infinite;
+  margin:auto;
+  margin-bottom:15px;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* ERROR */
+
+.error-card{
+  width:400px;
+  padding:35px;
+
+  background:white;
+
+  border-radius:14px;
+  text-align:center;
+
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.error-card .icon{
+  font-size:45px;
+  color:#e74c3c;
+  margin-bottom:10px;
+}
+
+.error-card h2{
+  color:#e74c3c;
 }

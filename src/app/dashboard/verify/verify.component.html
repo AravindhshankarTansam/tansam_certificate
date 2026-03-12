@@ -1,44 +1,84 @@
-<div class="verify-container">
+<div class="verify-wrapper">
 
   <!-- Loading -->
-  <div *ngIf="loading" class="loading">
-    🔄 Verifying certificate...
+  <div *ngIf="loading" class="loading-box">
+    <div class="spinner"></div>
+    <p>Verifying Certificate...</p>
   </div>
 
-
   <!-- Error -->
-  <div *ngIf="error" class="error">
-    ❌ Invalid or Not Found Certificate
+  <div *ngIf="error" class="error-card">
+
+    <div class="icon">
+      <i class="fa-solid fa-circle-xmark"></i>
+    </div>
+
+    <h2>Certificate Not Found</h2>
+    <p>This certificate is invalid or may have been tampered.</p>
+
   </div>
 
 
   <!-- Success -->
-  <div *ngIf="data" class="card">
+  <div *ngIf="data" class="verify-card">
 
-    <h2>✅ Certificate Verified</h2>
-
-    <div class="row">
-      <label>Name</label>
-      <span>{{ data.name || data.student_name || data.staff_name || data.employee_name }}</span>
+    <div class="success-icon">
+      <i class="fa-solid fa-circle-check"></i>
     </div>
 
-    <div class="row">
-      <label>Certificate No</label>
-      <span>{{ data.certificate_no }}</span>
+    <h2>Certificate Verified</h2>
+
+    <div class="info">
+
+      <div class="info-row">
+        <span class="label">
+          <i class="fa-solid fa-user"></i> Name
+        </span>
+
+        <span class="value">
+          {{ data.name || data.student_name || data.staff_name || data.employee_name }}
+        </span>
+      </div>
+
+
+      <div class="info-row">
+        <span class="label">
+          <i class="fa-solid fa-id-card"></i> Certificate No
+        </span>
+
+        <span class="value highlight">
+          {{ data.certificate_no }}
+        </span>
+      </div>
+
+
+      <div class="info-row">
+        <span class="label">
+          <i class="fa-solid fa-calendar-days"></i> From
+        </span>
+
+        <span class="value">
+          {{ data.from_date | date:'dd MMM yyyy' }}
+        </span>
+      </div>
+
+
+      <div class="info-row">
+        <span class="label">
+          <i class="fa-solid fa-calendar-check"></i> To
+        </span>
+
+        <span class="value">
+          {{ data.to_date | date:'dd MMM yyyy' }}
+        </span>
+      </div>
+
     </div>
 
-    <div class="row">
-      <label>From</label>
-      <span>{{ data.from_date | date:'dd/MM/yyyy' }}</span>
-    </div>
 
-    <div class="row">
-      <label>To</label>
-      <span>{{ data.to_date | date:'dd/MM/yyyy' }}</span>
-    </div>
-
-    <div class="success-badge">
-      🎓 Authentic Certificate
+    <div class="auth-badge">
+      <i class="fa-solid fa-award"></i>
+      Authentic Certificate
     </div>
 
   </div>
