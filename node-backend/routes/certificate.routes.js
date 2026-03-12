@@ -112,42 +112,77 @@ router.get('/verify/:certNo', async (req, res) => {
 
   try {
 
-    /* Decode encoded certificate number */
     const certNo = decodeURIComponent(req.params.certNo);
 
     console.log("Verifying certificate:", certNo);
 
     const [rows] = await db.query(`
 
-      SELECT
-        certificate_no,
-        staff_name AS name,
-        from_date,
-        to_date
-      FROM fdp_staff
-      WHERE certificate_no=?
-
-      UNION
-
+      /* SDP NORMAL */
       SELECT
         certificate_no,
         student_name AS name,
         from_date,
         to_date
       FROM sdp_students
-      WHERE certificate_no=?
+      WHERE certificate_no = ?
 
       UNION
 
+      /* FDP NORMAL */
+      SELECT
+        certificate_no,
+        staff_name AS name,
+        from_date,
+        to_date
+      FROM fdp_staff
+      WHERE certificate_no = ?
+
+      UNION
+
+      /* INDUSTRY NORMAL */
       SELECT
         certificate_no,
         industry_staff_name AS name,
         from_date,
         to_date
       FROM industry_staff
-      WHERE certificate_no=?
+      WHERE certificate_no = ?
 
-    `, [certNo, certNo, certNo]);
+      UNION
+
+      /* SDP BULK */
+      SELECT
+        certificate_no,
+        student_name AS name,
+        from_date,
+        to_date
+      FROM sdp_students_bulk
+      WHERE certificate_no = ?
+
+      UNION
+
+      /* FDP BULK */
+      SELECT
+        certificate_no,
+        staff_name AS name,
+        from_date,
+        to_date
+      FROM fdp_staff_bulk
+      WHERE certificate_no = ?
+
+      UNION
+
+      /* INDUSTRY BULK */
+      SELECT
+        certificate_no,
+        employee_name AS name,
+        from_date,
+        to_date
+      FROM industry_employee_bulk
+      WHERE certificate_no = ?
+
+    `, [certNo, certNo, certNo, certNo, certNo, certNo]);
 
     if (!rows.length) {
 
@@ -158,7 +193,6 @@ router.get('/verify/:certNo', async (req, res) => {
 
     }
 
-    /* Send clean response for Angular */
     res.json({
       valid: true,
       certificate_no: rows[0].certificate_no,
@@ -175,6 +209,7 @@ router.get('/verify/:certNo', async (req, res) => {
       valid: false,
       message: "Server error"
     });
+
   }
 
 });
