@@ -161,30 +161,6 @@
 
 
 /* ================================
-   QR CODE
-================================ */
-
-.qr{
-  text-align:center;
-}
-
-.qr img{
-  width:70px;
-  height:70px;
-  background:white;
-  padding:4px;
-  border-radius:6px;
-}
-
-.qr p{
-  font-size:12px;
-  opacity:.8;
-  margin-top:5px;
-}
-
-
-
-/* ================================
    LOADING
 ================================ */
 
