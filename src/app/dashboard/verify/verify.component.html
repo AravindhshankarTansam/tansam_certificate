@@ -1,20 +1,40 @@
 <div class="verify-wrapper">
 
+  <!-- TITLE -->
+  <div class="page-title">
+    Certificate Verification
+  </div>
+
+  <!-- LOGOS ROW -->
+  <div class="logo-row">
+
+    <div class="logo">
+      <img src="assets/images/gov-logo.png" alt="TN Government Logo">
+    </div>
+
+    <div class="logo">
+      <img src="assets/images/tansam-logo.png" alt="TANSAM Logo">
+    </div>
+
+  </div>
+
+
   <!-- Loading -->
   <div *ngIf="loading" class="loading-box">
     <div class="spinner"></div>
     <p>Verifying Certificate...</p>
   </div>
 
+
   <!-- Error -->
   <div *ngIf="error" class="error-card">
 
     <div class="icon">
-      <i class="fa-solid fa-circle-xmark"></i>
+      <i class="fa-solid fa-shield-halved"></i>
     </div>
 
-    <h2>Certificate Not Found</h2>
-    <p>This certificate is invalid or may have been tampered.</p>
+    <h2>Fraud Certificate</h2>
+    <p>This certificate is invalid, fake, or not issued by <span class="boldletter">TANSAM</span></p>
 
   </div>
 
@@ -31,54 +51,41 @@
     <div class="info">
 
       <div class="info-row">
-        <span class="label">
-          <i class="fa-solid fa-user"></i> Name
-        </span>
-
+        <span class="label"><i class="fa-solid fa-user"></i> Name</span>
         <span class="value">
           {{ data.name || data.student_name || data.staff_name || data.employee_name }}
         </span>
       </div>
 
-
       <div class="info-row">
-        <span class="label">
-          <i class="fa-solid fa-id-card"></i> Certificate No
-        </span>
-
-        <span class="value highlight">
-          {{ data.certificate_no }}
-        </span>
+        <span class="label"><i class="fa-solid fa-id-card"></i> Certificate No</span>
+        <span class="value highlight">{{ data.certificate_no }}</span>
       </div>
 
-
       <div class="info-row">
-        <span class="label">
-          <i class="fa-solid fa-calendar-days"></i> From
-        </span>
-
-        <span class="value">
-          {{ data.from_date | date:'dd MMM yyyy' }}
-        </span>
+        <span class="label"><i class="fa-solid fa-calendar-days"></i> From</span>
+        <span class="value">{{ data.from_date | date:'dd MMM yyyy' }}</span>
       </div>
 
-
       <div class="info-row">
-        <span class="label">
-          <i class="fa-solid fa-calendar-check"></i> To
-        </span>
-
-        <span class="value">
-          {{ data.to_date | date:'dd MMM yyyy' }}
-        </span>
+        <span class="label"><i class="fa-solid fa-calendar-check"></i> To</span>
+        <span class="value">{{ data.to_date | date:'dd MMM yyyy' }}</span>
       </div>
 
     </div>
 
+    <div class="security-section">
 
-    <div class="auth-badge">
-      <i class="fa-solid fa-award"></i>
-      Authentic Certificate
+      <div class="seal">
+        <i class="fa-solid fa-award"></i>
+        <span>Official Seal</span>
+      </div>
+
+      <div class="qr">
+        <img src="assets/images/qr-scan.png">
+        <p>Scan to Verify</p>
+      </div>
+
     </div>
 
   </div>

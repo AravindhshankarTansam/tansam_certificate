@@ -34,23 +34,30 @@ export class VerifyComponent implements OnInit {
       return;
     }
 
-    this.http
-      .get(`https://interncertificate.tansam.org/api/certificate/verify/${encodeURIComponent(certNo)}`)
-      .subscribe({
-        next: (res: any) => {
+this.http
+  .get(`https://interncertificate.tansam.org/api/certificate/verify/${encodeURIComponent(certNo)}`)
+  .subscribe({
+    next: (res: any) => {
 
-          console.log('API Response:', res);  // 🔍 See certificate data here
+      console.log('API Response:', res);
 
-          this.data = res;
-          this.loading = false;
-        },
-        error: (err) => {
+      // ✅ If API returns empty or no certificate number
+      if (!res || !res.certificate_no) {
+        this.error = true;
+        this.loading = false;
+        return;
+      }
 
-          console.error('API Error:', err); // 🔍 See error details
+      // ✅ Valid certificate
+      this.data = res;
+      this.loading = false;
+    },
 
-          this.error = true;
-          this.loading = false;
-        }
-      });
+    error: (err) => {
+      console.error('API Error:', err);
+      this.error = true;
+      this.loading = false;
+    }
+  });
   }
 }
